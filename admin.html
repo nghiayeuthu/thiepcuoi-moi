@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Tạo link mời khách</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;500&family=Be+Vietnam+Pro:wght@300;400;500&display=swap">
+<style>
+:root{--cream:#fbf7ef;--ivory:#fffdf8;--ink:#3b3128;--ink-soft:#7a6c5d;--gold:#a8843f;--line:#e9dfca;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:300 15px/1.6 "Be Vietnam Pro",system-ui,sans-serif;padding:32px 16px 56px}
+main{max-width:600px;margin:0 auto;display:grid;gap:16px}
+.eyebrow{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin:0;font-weight:500}
+h1{font-family:"Playfair Display",serif;font-weight:400;font-size:30px;line-height:1.2;margin:0}
+h1 em{font-family:"Great Vibes",cursive;font-style:normal;color:var(--gold);font-size:1.3em}
+p{margin:0;color:var(--ink-soft)}
+label{display:grid;gap:6px;font-size:13px;font-weight:500}
+input,textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:6px;background:#fff;font:400 16px/1.5 inherit;font-family:inherit;color:var(--ink)}
+textarea{min-height:170px;resize:vertical}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+button{min-height:44px;padding:10px 20px;border-radius:999px;border:1px solid var(--gold);background:transparent;color:var(--gold);font:500 13px/1 inherit;font-family:inherit;cursor:pointer}
+button.solid{background:var(--gold);color:#fff}
+button:hover{background:#8e6d2f;border-color:#8e6d2f;color:#fff}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+li{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:var(--ivory);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+li div{min-width:0}
+li b{display:block;font-weight:500}
+li a{display:block;font-size:12px;color:var(--ink-soft);overflow-wrap:anywhere}
+li button{min-height:38px;padding:8px 14px}
+li.empty{display:block;text-align:center;border-style:dashed;background:transparent;color:var(--ink-soft)}
+.count{font-size:13px;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Thiệp cưới Tuấn Nghĩa &amp; Hoài Thu</p>
+  <h1>Tạo link <em>mời khách</em></h1>
+  <p>Dán danh sách khách, mỗi dòng một người (có thể kèm cách xưng hô, ví dụ “Anh Hùng và gia đình”). Khi mở link, thiệp hiện “Trân trọng kính mời” kèm đúng tên đó.</p>
+  <label>Địa chỉ thiệp
+    <input id="base" inputmode="url" autocomplete="off" spellcheck="false">
+  </label>
+  <label>Danh sách khách mời
+    <textarea id="names" placeholder="Anh Hùng và gia đình&#10;Chị Lan&#10;Cô Mai, chú Bình"></textarea>
+  </label>
+  <div class="row">
+    <button class="solid" type="button" id="make">Tạo link</button>
+    <button type="button" id="copyAll">Sao chép tất cả</button>
+  </div>
+  <p class="count" id="count" aria-live="polite"></p>
+  <ul id="out"><li class="empty">Danh sách link sẽ hiện ở đây.</li></ul>
+</main>
+<script>
+(function(){
+  var ta=document.getElementById('names'),base=document.getElementById('base'),out=document.getElementById('out'),links=[];
+  base.value=new URL('./',location.href).href;
+  try{ta.value=localStorage.getItem('guests')||'';if(localStorage.getItem('base'))base.value=localStorage.getItem('base')}catch(e){}
+  function copy(text,btn,label){
+    function ok(){btn.textContent='Đã chép';setTimeout(function(){btn.textContent=label},1500)}
+    function fb(){var t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(e){prompt('Sao chép:',text)}t.remove()}
+    if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(text).then(ok,fb);else fb();
+  }
+  function make(){
+    var b=base.value.trim()||new URL('./',location.href).href;
+    try{localStorage.setItem('guests',ta.value);localStorage.setItem('base',b)}catch(e){}
+    var seen={},names=ta.value.split('\n').map(function(s){return s.replace(/\s+/g,' ').trim()}).filter(function(s){if(!s||seen[s])return false;return seen[s]=true});
+    links=names.map(function(n){var u=new URL(b);u.searchParams.set('guestName',n);return{n:n,u:u.href.replace(/\+/g,'%20')}});
+    out.innerHTML='';document.getElementById('count').textContent=links.length?links.length+' link':'';
+    if(!links.length){var e=document.createElement('li');e.className='empty';e.textContent='Chưa có tên nào.';out.appendChild(e);return}
+    links.forEach(function(l){
+      var li=document.createElement('li'),d=document.createElement('div'),bb=document.createElement('b'),a=document.createElement('a'),btn=document.createElement('button');
+      bb.textContent=l.n;a.href=l.u;a.target='_blank';a.rel='noopener';a.textContent=l.u;btn.type='button';btn.textContent='Sao chép';
+      btn.onclick=function(){copy(l.u,btn,'Sao chép')};
+      d.append(bb,a);li.append(d,btn);out.appendChild(li);
+    });
+  }
+  document.getElementById('make').onclick=make;
+  document.getElementById('copyAll').onclick=function(){if(!links.length)make();if(links.length)copy(links.map(function(l){return l.n+': '+l.u}).join('\n'),this,'Sao chép tất cả')};
+  if(ta.value)make();
+})();
+</script>
+</body>
+</html>
