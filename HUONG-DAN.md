@@ -11,7 +11,7 @@ thiepcuoi-moi/
 ├── js/main.js            Xử lý (phong bì, nhạc, lịch, form, album…)
 ├── js/lunar.js           Đổi ngày dương sang âm lịch
 ├── assets/
-│   ├── photos/01…52.jpg  52 ảnh: 01–18 và 19–20 ảnh chụp mới, 21–52 ảnh từ thiệp cũ
+│   ├── photos/01…55.jpg  55 ảnh: 01–20 ảnh cưới, 21–55 ảnh chụp ở Nhật
 │   ├── photos/thumb/     Ảnh nhỏ cho album và các khung ảnh
 │   ├── og.jpg            Ảnh xem trước khi share Facebook/Zalo (1200×630)
 │   ├── qr-chure.png      ← QR tạm, cần thay

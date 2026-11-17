@@ -268,7 +268,7 @@
     var c = $('#petals'), x = c.getContext('2d'), W, H, dpr = Math.min(2, window.devicePixelRatio || 1), P = [], running = true;
     function size() { W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0); }
     size(); addEventListener('resize', size);
-    var N = W < 600 ? 14 : 22, COLORS = ['#f3e3c3', '#ead2a0', '#f6d9d6', '#fff4e0'];
+    var N = W < 600 ? 14 : 22, COLORS = ['#e2eed6', '#c6dbb2', '#f7e0e2', '#fbfdf6'];
     function mk(top) { return { x: Math.random() * W, y: top ? -20 : Math.random() * H, r: 4 + Math.random() * 5, vy: .35 + Math.random() * .6, vx: -.15 + Math.random() * .4, a: Math.random() * 6.28, va: -.02 + Math.random() * .04, ph: Math.random() * 6.28, o: .55 + Math.random() * .35, c: COLORS[Math.random() * COLORS.length | 0] }; }
     for (var i = 0; i < N; i++) P.push(mk(false));
     function petal(p) {
