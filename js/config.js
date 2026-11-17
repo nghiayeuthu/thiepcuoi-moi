@@ -71,6 +71,6 @@ window.WEDDING = {
 
   music: 'assets/music.mp3',
 
-  // Ảnh album: assets/photos/01.jpg … 18.jpg (ảnh nhỏ trong assets/photos/thumb)
-  photoCount: 18
+  // Ảnh album: assets/photos/01.jpg … 52.jpg (ảnh nhỏ trong assets/photos/thumb)
+  photoCount: 52
 };

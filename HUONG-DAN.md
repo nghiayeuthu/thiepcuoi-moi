@@ -11,7 +11,7 @@ thiepcuoi-moi/
 ├── js/main.js            Xử lý (phong bì, nhạc, lịch, form, album…)
 ├── js/lunar.js           Đổi ngày dương sang âm lịch
 ├── assets/
-│   ├── photos/01…18.jpg  18 ảnh đã chọn (ảnh lớn)
+│   ├── photos/01…52.jpg  52 ảnh: 01–18 và 19–20 ảnh chụp mới, 21–52 ảnh từ thiệp cũ
 │   ├── photos/thumb/     Ảnh nhỏ cho album và các khung ảnh
 │   ├── og.jpg            Ảnh xem trước khi share Facebook/Zalo (1200×630)
 │   ├── qr-chure.png      ← QR tạm, cần thay
@@ -31,7 +31,7 @@ thiepcuoi-moi/
 | `assets/photos/` | Không bắt buộc. Muốn đổi ảnh thì giữ tên `01.jpg`… và ảnh nhỏ cùng tên trong `thumb/`. Nếu đổi số lượng ảnh thì sửa `photoCount` trong config. |
 
 Ảnh dùng ở các vị trí:
-- Ảnh bìa: `01`
+- Ảnh bìa: `19` (KAN09763)
 - Chú rể và cô dâu: `thumb/08`, `thumb/10`
 - Phần đếm ngược: `thumb/17`
 - Hai địa điểm: `05`, `13`
