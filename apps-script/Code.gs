@@ -9,9 +9,12 @@
 
 var SHEET_RSVP = 'XacNhan';
 var SHEET_WISH = 'LoiChuc';
+// ID bảng tính (đoạn giữa /d/ và /edit trong link Google Sheets).
+// Để trống nếu script được tạo từ menu Tiện ích mở rộng → Apps Script của chính bảng tính.
+var SHEET_ID = '';
 
 function sheet_(name, header) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = SHEET_ID ? SpreadsheetApp.openById(SHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName(name);
   if (!sh) {
     sh = ss.insertSheet(name);

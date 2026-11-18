@@ -5,13 +5,13 @@
 window.WEDDING = {
   // Dán link Web App của Google Apps Script vào đây (xem HUONG-DAN.md, phần 2).
   // Để trống thì form vẫn chạy thử được nhưng không lưu lên Google Sheets.
-  scriptUrl: '',
+  scriptUrl: 'https://script.google.com/macros/s/AKfycbzkedR9zNyRqJ-CzBlVRV4Tlm3oGkeZzOqHQSySFAK6IMfG_Nf6nWZ2YwWiRPWM2WAdFw/exec',
 
   groom: {
     name: 'Tuấn Nghĩa',
     fullName: '',                            // ✏️ họ tên đầy đủ (để trống thì hiện tên ngắn)
-    father: 'Ông …',                          // ✏️
-    mother: 'Bà …',                           // ✏️
+    father: 'Ông Vũ Đức Tùng',
+    mother: 'Bà Trần Thị Tuyết',
     address: 'Ngô Quyền, Hải Phòng'           // ✏️
   },
   bride: {

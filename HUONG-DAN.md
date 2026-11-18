@@ -40,6 +40,8 @@ thiepcuoi-moi/
 
 ## 2. Nối Google Sheets (lưu xác nhận tham dự và lời chúc)
 
+> **Đã nối xong (18/11/2026):** bảng tính “Thiệp cưới - Khách mời” trong Google Drive, script “Thiệp cưới - API”. `scriptUrl` trong `js/config.js` đã điền. Các bước dưới đây chỉ cần khi muốn làm lại từ đầu. Nếu tạo script riêng (không từ menu của bảng tính) thì điền ID bảng tính vào `SHEET_ID` trong `Code.gs`.
+
 1. Vào https://sheets.new để tạo một bảng tính mới, đặt tên, ví dụ “Thiệp cưới – Khách mời”.
 2. Trên thanh menu, chọn **Tiện ích mở rộng → Apps Script**.
 3. Xóa hết code có sẵn, dán toàn bộ nội dung file `apps-script/Code.gs` vào, rồi bấm 💾 **Lưu**.
