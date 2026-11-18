@@ -17,13 +17,17 @@ window.WEDDING = {
   bride: {
     name: 'Hoài Thu',
     fullName: '',                            // ✏️ họ tên đầy đủ (để trống thì hiện tên ngắn)
-    father: 'Ông …',                          // ✏️
-    mother: 'Bà …',                           // ✏️
+    father: 'Ông Phạm Văn Thành',
+    mother: 'Bà Hoàng Thị Thơ',
     address: 'An Dương, Hải Phòng'            // ✏️
   },
 
   // Ngày giờ chính (đếm ngược tới mốc này). Giờ Việt Nam.
-  date: { day: 28, month: 11, year: 2026, hour: 11, minute: 0 },
+  date: { day: 28, month: 11, year: 2026, hour: 11, minute: 0,
+    place: { name: 'Khách sạn Hải Đăng', address: 'Cung Happy Place, tầng 1, Trung tâm tiệc cưới Hải Đăng, Số 19 Trần Khánh Dư, Ngô Quyền, Hải Phòng' } },
+  // Ngày thứ hai: tiệc tại tư gia nhà gái (cùng tháng, năm với ngày chính)
+  secondDay: { day: 29, hour: 10, minute: 0,
+    place: { name: 'Tư gia nhà gái', address: 'Số 15 đường Cây Chè, Cách Thượng, Nam Sơn, An Dương, Hải Phòng' } },
   // Ngày phụ cũng được đánh dấu trái tim trên lịch
   extraDays: [29],
 
@@ -40,10 +44,11 @@ window.WEDDING = {
       label: 'Tiệc cưới · Thứ Bảy 28/11/2026',
       time: '11 giờ 00 trưa',
       name: 'Khách sạn Hải Đăng',
-      hall: 'Tầng 2 · Happy Place · Hải Đăng Plaza',
-      address: 'Số 19 + 35 Trần Khánh Dư, Ngô Quyền, Hải Phòng',
-      map: 'https://www.google.com/maps/search/?api=1&query=Kh%C3%A1ch%20s%E1%BA%A1n%20H%E1%BA%A3i%20%C4%90%C4%83ng%20Plaza%2019%20Tr%E1%BA%A7n%20Kh%C3%A1nh%20D%C6%B0%20Ng%C3%B4%20Quy%E1%BB%81n%20H%E1%BA%A3i%20Ph%C3%B2ng',
-      photo: 'assets/photos/05.jpg'
+      hall: 'Cung Happy Place · Tầng 1 · Trung tâm tiệc cưới Hải Đăng',
+      address: 'Số 19 Trần Khánh Dư, Ngô Quyền, Hải Phòng',
+      copy: 'Cung Happy Place, tầng 1, Trung tâm tiệc cưới Hải Đăng, Số 19 Trần Khánh Dư, Ngô Quyền, Hải Phòng',
+      map: 'https://www.google.com/maps/search/?api=1&query=Trung%20t%C3%A2m%20ti%E1%BB%87c%20c%C6%B0%E1%BB%9Bi%20H%E1%BA%A3i%20%C4%90%C4%83ng%2C%20S%E1%BB%91%2019%20Tr%E1%BA%A7n%20Kh%C3%A1nh%20D%C6%B0%2C%20Ng%C3%B4%20Quy%E1%BB%81n%2C%20H%E1%BA%A3i%20Ph%C3%B2ng',
+      photo: 'assets/photos/59.jpg', photoPos: '50% 62%'
     },
     {
       label: 'Tiệc tại nhà gái · Chủ Nhật 29/11/2026',
@@ -52,15 +57,15 @@ window.WEDDING = {
       hall: 'Số 15 đường Cây Chè',
       address: 'Số 15 đường Cây Chè, Cách Thượng, Nam Sơn, An Dương, Hải Phòng',
       map: 'https://www.google.com/maps/search/?api=1&query=S%E1%BB%91%2015%20%C4%91%C6%B0%E1%BB%9Dng%20C%C3%A2y%20Ch%C3%A8%2C%20C%C3%A1ch%20Th%C6%B0%E1%BB%A3ng%2C%20Nam%20S%C6%A1n%2C%20An%20D%C6%B0%C6%A1ng%2C%20H%E1%BA%A3i%20Ph%C3%B2ng',
-      photo: 'assets/photos/13.jpg'
+      photo: 'assets/photos/60.jpg', photoPos: '50% 62%'
     }
   ],
 
   // Câu chuyện tình yêu ✏️ (viết lại bằng chuyện thật của hai bạn)
   story: [
-    { when: 'Lần đầu gặp gỡ', text: 'Một buổi chiều rất bình thường, hai người xa lạ bắt chuyện với nhau, chẳng ai nghĩ đó là khởi đầu của cả một hành trình.' },
-    { when: 'Những ngày thương nhau', text: 'Cùng nhau đi qua những chuyến đi, những bữa cơm và cả những lần giận hờn, chúng mình hiểu nhau hơn từng ngày.' },
-    { when: 'Về chung một nhà', text: 'Và rồi một lời cầu hôn, một cái gật đầu. Chúng mình quyết định nắm tay nhau đi tiếp quãng đời còn lại.' }
+    { when: 'Gặp nhau nơi xứ người', text: 'Hai người Việt xa quê, tình cờ gặp nhau trên đất Nhật. Giữa nơi xa lạ, chúng mình tìm thấy một người thật quen.' },
+    { when: '7 năm bên nhau ở Nhật', text: 'Bảy mùa hoa anh đào, bảy mùa đông tuyết trắng. Chúng mình cùng học, cùng làm, cùng đi qua những ngày vui và cả những lúc nhớ nhà.' },
+    { when: 'Lời cầu hôn', text: 'Rồi một ngày, anh ngỏ lời và em gật đầu. Sau 7 năm, chúng mình về chung một nhà.' }
   ],
 
   // Mừng cưới ✏️ (thay ảnh QR trong /assets và số tài khoản)
@@ -70,7 +75,4 @@ window.WEDDING = {
   ],
 
   music: 'assets/music.mp3',
-
-  // Ảnh album: assets/photos/01.jpg … 55.jpg (ảnh nhỏ trong assets/photos/thumb)
-  photoCount: 55
 };

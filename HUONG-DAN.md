@@ -28,16 +28,15 @@ thiepcuoi-moi/
 | `assets/qr-chure.png`, `assets/qr-codau.png` | Thay bằng ảnh QR ngân hàng thật. Lấy trong app ngân hàng, phần “Mã QR nhận tiền”, rồi lưu ảnh. Giữ nguyên tên file. |
 | `js/config.js` | Điền tên bố mẹ, địa chỉ hai nhà, họ tên đầy đủ, giờ lịch trình, câu chuyện tình yêu, số tài khoản và tên ngân hàng. Các chỗ cần điền có dấu ✏️. |
 | `assets/og.jpg` | Không bắt buộc. Muốn đổi ảnh xem trước thì thay bằng ảnh ngang 1200×630. |
-| `assets/photos/` | Không bắt buộc. Muốn đổi ảnh thì giữ tên `01.jpg`… và ảnh nhỏ cùng tên trong `thumb/`. Nếu đổi số lượng ảnh thì sửa `photoCount` trong config. |
+| `assets/photos/` | Không bắt buộc. Muốn đổi ảnh ở vị trí nào thì sửa tên file trong `index.html` hoặc `js/config.js`. |
 
 Ảnh dùng ở các vị trí:
 - Ảnh bìa: `19` (KAN09763)
-- Chú rể và cô dâu: `thumb/08`, `thumb/10`
+- Chú rể và cô dâu: `thumb/57` (KAN00201), `thumb/56` (KAN00138)
+- 3 khung ảnh lớn xen giữa: `20` (trước Love story), `58` (sau Love story), `37` (trước phần xác nhận tham dự)
 - Phần đếm ngược: `thumb/17`
-- Hai địa điểm: `05`, `13`
+- Hai địa điểm: `59` (KAN09897, đã sửa chữ trên bảng thành Khách sạn Hải Đăng), `60` (KAN09893, đã sửa chữ trên bảng thành Tư gia nhà gái)
 - Lời cảm ơn: `18`
-
-Muốn đổi ảnh ở vị trí nào thì sửa tên file trong `index.html` hoặc `js/config.js`.
 
 ## 2. Nối Google Sheets (lưu xác nhận tham dự và lời chúc)
 
