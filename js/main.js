@@ -186,6 +186,8 @@
   $('#giftBtn').onclick = function () { modal.hidden = false; document.body.style.overflow = 'hidden'; $('.sheet-x').focus(); };
   $('.sheet-x').onclick = closeModal;
   modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  // Link có ?qr=0 thì ẩn phần mừng cưới (QR chuyển khoản)
+  try { if (new URLSearchParams(location.search).get('qr') === '0') { $('.gift').style.display = 'none'; modal.remove(); } } catch (e) {}
 
   document.addEventListener('keydown', function (e) {
     if (!modal.hidden && e.key === 'Escape') closeModal();

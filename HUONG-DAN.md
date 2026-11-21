@@ -105,7 +105,7 @@ Có 3 phiên bản thiệp:
 | `…/thiepcuoi-moi/nha-gai/` | Khách nhà gái | Chỉ tiệc Chủ Nhật 29/11, 10 giờ, tư gia nhà gái. Nhà gái, cô dâu đứng trước |
 | `…/thiepcuoi-moi/` | Chung | Cả hai ngày (các link đã gửi trước đây vẫn là bản này) |
 
-Ở trang tạo link, chọn **Nhà trai**, **Nhà gái** hoặc **Chung** trước khi bấm **Tạo link**. Xác nhận tham dự từ thiệp nhà trai/nhà gái tự ghi đúng bên vào cột “Khách của”.
+Ở trang tạo link, chọn **Nhà trai**, **Nhà gái** hoặc **Chung** trước khi bấm **Tạo link**. Xác nhận tham dự từ thiệp nhà trai/nhà gái tự ghi đúng bên vào cột “Khách của”. Tích ô **Ẩn phần mừng cưới** thì link có thêm `qr=0` và thiệp không hiện mục mừng cưới, mã QR chuyển khoản. Dùng được cho cả 3 phiên bản.
 
 Ngày giờ, địa điểm, lịch trình của từng bên sửa trong `js/config.js`, mục `sides`. Hai trang `nha-trai/index.html` và `nha-gai/index.html` được tạo tự động từ `index.html`: **sau khi sửa `index.html` phải chạy** `python3 tools/build_sides.py` rồi mới đẩy lên.
 
