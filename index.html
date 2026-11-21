@@ -20,13 +20,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Be+Vietnam+Pro:wght@300;400;500&display=swap">
-<link rel="stylesheet" href="css/style.css?v=20261121b">
+<link rel="stylesheet" href="css/style.css?v=20261121g">
 </head>
 <body class="locked">
 
 <!-- 1. Màn hình mở thiệp -->
 <div class="opener" id="opener">
+  <canvas class="op-fx" id="opFx" aria-hidden="true"></canvas>
+  <div class="op-leaf tl" aria-hidden="true"></div><div class="op-leaf tr" aria-hidden="true"></div>
+  <div class="op-leaf bl" aria-hidden="true"></div><div class="op-leaf br" aria-hidden="true"></div>
   <p class="opener-top">Thiệp mời cưới</p>
+  <div class="env-wrap" id="envWrap">
   <div class="env" id="env">
     <div class="env-back"></div>
     <div class="env-letter">
@@ -37,6 +41,7 @@
     <div class="env-front"></div>
     <div class="env-flap"></div>
     <button class="wax" id="openBtn" type="button" aria-label="Mở thiệp"><span>N<i>&amp;</i>T</span></button>
+  </div>
   </div>
   <p class="opener-tap" id="tapHint">Chạm để mở thiệp</p>
   <p class="opener-guest" id="openerGuest" hidden></p>
@@ -248,8 +253,8 @@
   </div>
 </div>
 
-<script src="js/config.js?v=20261121b"></script>
-<script src="js/lunar.js?v=20261121b"></script>
-<script src="js/main.js?v=20261121b"></script>
+<script src="js/config.js?v=20261121g"></script>
+<script src="js/lunar.js?v=20261121g"></script>
+<script src="js/main.js?v=20261121g"></script>
 </body>
 </html>

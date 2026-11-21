@@ -150,15 +150,103 @@
 
   // ---------- Mở phong bì ----------
   var opener = $('#opener'), env = $('#env'), opened = false;
+  var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var PETAL = ['#ffffff', '#fde9ee', '#f9d3dc', '#e2eed6', '#c6dbb2'], SPARK = ['#f2c96b', '#e3b04f', '#ffffff', '#9cc483', '#f4b6c2'];
+  function petalPath(x, p) {
+    x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.scale(1, .5 + .5 * Math.abs(Math.sin(p.ph))); x.globalAlpha = p.o;
+    x.beginPath(); x.moveTo(0, -p.r); x.bezierCurveTo(p.r * .9, -p.r * .8, p.r * .8, p.r * .6, 0, p.r); x.bezierCurveTo(-p.r * .8, p.r * .6, -p.r * .9, -p.r * .8, -p.r * .15, -p.r * .95); x.closePath();
+    x.fillStyle = p.c; x.shadowColor = 'rgba(60,80,50,.18)'; x.shadowBlur = 3; x.fill(); x.restore();
+  }
+  function star(x, s) {
+    x.save(); x.translate(s.x, s.y); x.rotate(s.a); x.globalAlpha = Math.max(0, s.life); x.fillStyle = s.c; x.shadowColor = s.c; x.shadowBlur = 8;
+    var r = s.r; x.beginPath(); x.moveTo(0, -r); x.quadraticCurveTo(r * .18, -r * .18, r, 0); x.quadraticCurveTo(r * .18, r * .18, 0, r); x.quadraticCurveTo(-r * .18, r * .18, -r, 0); x.quadraticCurveTo(-r * .18, -r * .18, 0, -r); x.fill(); x.restore();
+  }
+  function canvasOf(c) {
+    var x = c.getContext('2d'), dpr = Math.min(2, window.devicePixelRatio || 1), o = { x: x, W: 0, H: 0 };
+    o.size = function () { o.W = c.clientWidth; o.H = c.clientHeight; c.width = o.W * dpr; c.height = o.H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0); };
+    o.size(); return o;
+  }
+
+  // Nền màn hình chờ: đốm sáng bay lên, vài cánh hoa rơi chậm; khi mở thì bung tia sáng từ dấu sáp
+  var opFx = null;
+  if (!calm) (function () {
+    var cv = canvasOf($('#opFx')), x = cv.x, dots = [], petals = [], run = true;
+    addEventListener('resize', cv.size);
+    for (var i = 0; i < 26; i++) dots.push({ x: Math.random() * cv.W, y: Math.random() * cv.H, r: 1.2 + Math.random() * 2.8, vy: -(.12 + Math.random() * .35), vx: -.12 + Math.random() * .24, ph: Math.random() * 6.28, c: Math.random() < .5 ? '255,255,255' : '255,240,200' });
+    function mkPetal(top) { return { x: Math.random() * cv.W, y: top ? -20 : Math.random() * cv.H, r: 4 + Math.random() * 4, vy: .35 + Math.random() * .5, vx: -.2 + Math.random() * .4, a: Math.random() * 6.28, va: -.02 + Math.random() * .04, ph: Math.random() * 6.28, o: .65 + Math.random() * .3, c: PETAL[Math.random() * PETAL.length | 0] }; }
+    for (var j = 0; j < 12; j++) petals.push(mkPetal(false));
+    function f() {
+      if (!run) return;
+      x.clearRect(0, 0, cv.W, cv.H);
+      dots.forEach(function (d) {
+        d.ph += .03; d.y += d.vy; d.x += d.vx; if (d.y < -10) { d.y = cv.H + 10; d.x = Math.random() * cv.W; }
+        var a = .25 + .35 * (1 + Math.sin(d.ph)) / 2, g = x.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r * 4);
+        g.addColorStop(0, 'rgba(' + d.c + ',' + a + ')'); g.addColorStop(1, 'rgba(' + d.c + ',0)'); x.fillStyle = g; x.beginPath(); x.arc(d.x, d.y, d.r * 4, 0, 6.283); x.fill();
+      });
+      petals.forEach(function (p, i) { p.ph += .03; p.y += p.vy; p.x += p.vx + Math.sin(p.ph) * .5; p.a += p.va; if (p.y > cv.H + 20) petals[i] = mkPetal(true); petalPath(x, p); });
+      requestAnimationFrame(f);
+    }
+    f();
+    opFx = { stop: function () { run = false; }, W: function () { return cv.W; } };
+  })();
+
+  function sparkle(cx, cy) {
+    var c = el('canvas', 'shower'); c.setAttribute('aria-hidden', 'true'); document.body.appendChild(c);
+    var cv = canvasOf(c), x = cv.x, burst = [];
+    for (var i = 0; i < 70; i++) {
+      var a = Math.random() * 6.283, v = 2 + Math.random() * 6;
+      burst.push({ x: cx, y: cy, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1.5, r: 2 + Math.random() * 4, a: Math.random() * 3, va: .1, life: 1, d: .012 + Math.random() * .014, c: SPARK[Math.random() * SPARK.length | 0] });
+    }
+    for (var j = 0; j < 18; j++) {
+      var b = Math.random() * 6.283, w = 1.5 + Math.random() * 4;
+      burst.push({ petal: true, x: cx, y: cy, vx: Math.cos(b) * w, vy: Math.sin(b) * w - 2, r: 5 + Math.random() * 4, a: Math.random() * 6.28, va: -.08 + Math.random() * .16, ph: Math.random() * 6.28, o: 1, life: 1, d: .008 + Math.random() * .006, c: PETAL[Math.random() * PETAL.length | 0] });
+    }
+    (function f() {
+      x.clearRect(0, 0, cv.W, cv.H);
+      for (var k = burst.length - 1; k >= 0; k--) {
+        var s = burst[k]; s.x += s.vx; s.y += s.vy; s.vx *= .965; s.vy = s.vy * .965 + .05; s.a += s.va; s.life -= s.d;
+        if (s.life <= 0) { burst.splice(k, 1); continue; }
+        if (s.petal) { s.o = Math.min(1, s.life * 1.5); s.ph += .05; petalPath(x, s); } else star(x, s);
+      }
+      if (burst.length) requestAnimationFrame(f); else c.remove();
+    })();
+  }
+
+  // Mưa cánh hoa phủ màn hình lúc thiệp mở ra
+  function shower() {
+    var c = el('canvas', 'shower'); c.setAttribute('aria-hidden', 'true'); document.body.appendChild(c);
+    var cv = canvasOf(c), x = cv.x, P = [], t0 = Date.now();
+    for (var i = 0; i < (cv.W < 600 ? 70 : 110); i++) P.push({ x: Math.random() * cv.W, y: -20 - Math.random() * cv.H * .9, r: 5 + Math.random() * 6, vy: 2 + Math.random() * 2.6, vx: -.6 + Math.random() * 1.2, a: Math.random() * 6.28, va: -.05 + Math.random() * .1, ph: Math.random() * 6.28, o: .8 + Math.random() * .2, c: PETAL[Math.random() * PETAL.length | 0] });
+    (function f() {
+      var el2 = (Date.now() - t0) / 1000;
+      x.clearRect(0, 0, cv.W, cv.H);
+      var alive = 0;
+      P.forEach(function (p) { p.ph += .04; p.y += p.vy; p.x += p.vx + Math.sin(p.ph) * .9; p.a += p.va; if (p.y < cv.H + 20) { alive++; if (el2 > 3.2) p.o = Math.max(0, p.o - .02); petalPath(x, p); } });
+      if (alive && el2 < 6) requestAnimationFrame(f); else c.remove();
+    })();
+  }
+
   function openCard() {
     if (opened) return; opened = true;
     play(); // phát nhạc ngay trong lần chạm (trình duyệt điện thoại chỉ cho phép lúc này)
-    env.classList.add('open'); $('#tapHint').style.visibility = 'hidden';
+    opener.classList.add('opening');
+    if (!calm) {
+      // Dấu sáp tách đôi + bung tia sáng
+      var w = $('#openBtn'), r = w.getBoundingClientRect(), orr = opener.getBoundingClientRect();
+      ['l', 'r'].forEach(function (k) {
+        var h = el('div', 'wax-half ' + k); h.innerHTML = w.innerHTML;
+        h.style.left = (r.left - orr.left) + 'px'; h.style.top = (r.top - orr.top) + 'px'; h.style.width = r.width + 'px'; h.style.height = r.height + 'px';
+        opener.appendChild(h); requestAnimationFrame(function () { requestAnimationFrame(function () { h.classList.add('go'); }); });
+      });
+      sparkle(r.left + r.width / 2, r.top + r.height / 2);
+    }
+    setTimeout(function () { env.classList.add('open'); }, calm ? 0 : 250);
+    setTimeout(function () { if (!calm) { opener.classList.add('zoom'); shower(); } }, calm ? 0 : 1500);
     setTimeout(function () {
       opener.classList.add('gone'); document.body.classList.remove('locked'); mbtn.hidden = audio.error ? true : false;
       window.scrollTo(0, 0);
-    }, 1700);
-    setTimeout(function () { opener.remove(); }, 2700);
+    }, calm ? 900 : 1900);
+    setTimeout(function () { if (opFx) opFx.stop(); opener.remove(); }, calm ? 1900 : 3000);
   }
   env.addEventListener('click', openCard);
   $('#openBtn').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCard(); } });
