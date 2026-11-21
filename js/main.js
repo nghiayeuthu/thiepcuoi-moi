@@ -5,6 +5,27 @@
   var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 
+  // ---------- Thiệp riêng nhà trai / nhà gái (…/nha-trai/, …/nha-gai/ hoặc ?ben=trai|gai) ----------
+  var SIDE = '';
+  try { SIDE = (document.documentElement.getAttribute('data-side') || new URLSearchParams(location.search).get('ben') || '').toLowerCase(); } catch (e) {}
+  var SD = SIDE && C.sides && C.sides[SIDE];
+  if (SD) {
+    var sd = SD.date || {};
+    C.date = { day: sd.day || C.date.day, month: C.date.month, year: C.date.year, hour: sd.hour != null ? sd.hour : C.date.hour, minute: sd.minute != null ? sd.minute : C.date.minute, place: sd.place || C.date.place };
+    C.secondDay = null; C.extraDays = [];
+    if (SD.venues) C.venues = C.venues.filter(function (v, i) { return SD.venues.indexOf(i) > -1; });
+    if (SD.schedule) C.schedule = SD.schedule;
+    document.body.classList.add('side-' + SIDE);
+    document.querySelectorAll('[data-dates]').forEach(function (n) { n.textContent = n.textContent.replace('28 & 29', pad(C.date.day)); });
+    if (SIDE === 'gai') {
+      // Thiệp nhà gái: tên cô dâu đứng trước
+      var h = $('.hero h1'), sp = h.querySelectorAll('span'); h.insertBefore(sp[1], sp[0]); h.appendChild(sp[0]);
+      var es = $('.env-letter .script'); if (es) es.innerHTML = 'Thu <i>&amp;</i> Nghĩa';
+      var sg = $('.thanks .sig'); if (sg) sg.textContent = 'Hoài Thu & Tuấn Nghĩa';
+      document.title = document.title.replace('Tuấn Nghĩa & Hoài Thu', 'Hoài Thu & Tuấn Nghĩa');
+    }
+  }
+
   // ---------- Tên khách từ link ?guestName=... (vẫn nhận ?to=... của thiệp cũ) ----------
   var guest = '';
   try {
@@ -15,7 +36,7 @@
     $('#heroGuest').textContent = guest;
     $('#inviteGuest').textContent = guest;
     var og = $('#openerGuest'); og.textContent = 'Thân gửi ' + guest; og.hidden = false;
-    document.title = 'Kính mời ' + guest + ' · Tuấn Nghĩa & Hoài Thu';
+    document.title = 'Kính mời ' + guest + (SIDE === 'gai' ? ' · Hoài Thu & Tuấn Nghĩa' : ' · Tuấn Nghĩa & Hoài Thu');
     $('#rsvpName').value = guest; $('#wishName').value = guest;
   }
 
@@ -33,6 +54,7 @@
 
   // Lịch trình
   var tl = $('#timeline');
+  if (!C.schedule.length) tl.closest('section').style.display = 'none';
   C.schedule.forEach(function (s) {
     var li = el('li'), c = el('div', 'c');
     c.append(el('h3', '', s.title)); if (s.note) c.append(el('p', '', s.note));
@@ -200,6 +222,7 @@
   var gs = $('#rsvpGuests');
   for (var n = 1; n <= 10; n++) { var o = el('option', '', n); o.value = n; gs.appendChild(o); }
   var rsvpForm = $('#rsvpForm');
+  if (SD) { rsvpForm.side.value = SD.name; rsvpForm.side.closest('label').hidden = true; rsvpForm.side.closest('.row2').classList.add('one'); }
   rsvpForm.addEventListener('change', function () { gs.disabled = rsvpForm.attend.value === 'Không'; });
   bindForm(rsvpForm, function (f) {
     var name = (f.get('name') || '').trim();

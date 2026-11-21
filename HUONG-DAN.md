@@ -97,6 +97,19 @@ Vào https://app.netlify.com/drop rồi kéo thả cả thư mục `thiepcuoi-mo
 
 ## 4. Gửi thiệp cho khách
 
+Có 3 phiên bản thiệp:
+
+| Link | Dành cho | Nội dung |
+|---|---|---|
+| `…/thiepcuoi-moi/nha-trai/` | Khách nhà trai | Chỉ tiệc Thứ Bảy 28/11, 11 giờ, Khách sạn Hải Đăng |
+| `…/thiepcuoi-moi/nha-gai/` | Khách nhà gái | Chỉ tiệc Chủ Nhật 29/11, 10 giờ, tư gia nhà gái. Nhà gái, cô dâu đứng trước |
+| `…/thiepcuoi-moi/` | Chung | Cả hai ngày (các link đã gửi trước đây vẫn là bản này) |
+
+Ở trang tạo link, chọn **Nhà trai**, **Nhà gái** hoặc **Chung** trước khi bấm **Tạo link**. Xác nhận tham dự từ thiệp nhà trai/nhà gái tự ghi đúng bên vào cột “Khách của”.
+
+Ngày giờ, địa điểm, lịch trình của từng bên sửa trong `js/config.js`, mục `sides`. Hai trang `nha-trai/index.html` và `nha-gai/index.html` được tạo tự động từ `index.html`: **sau khi sửa `index.html` phải chạy** `python3 tools/build_sides.py` rồi mới đẩy lên.
+
+
 1. Mở `…/admin.html`.
 2. Dán danh sách khách, mỗi dòng một người (ví dụ `Anh Hùng và gia đình`), rồi bấm **Tạo link**.
 3. Bấm **Sao chép** ở từng dòng để gửi qua Zalo hoặc Messenger, hoặc bấm **Sao chép tất cả**.

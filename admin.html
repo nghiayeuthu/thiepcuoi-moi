@@ -31,6 +31,15 @@ li a{display:block;font-size:12px;color:var(--ink-soft);overflow-wrap:anywhere}
 li button{min-height:38px;padding:8px 14px}
 li.empty{display:block;text-align:center;border-style:dashed;background:transparent;color:var(--ink-soft)}
 .count{font-size:13px;color:var(--ink-soft)}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:6px}
+legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
+.sides{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sides label{display:block;cursor:pointer}
+.sides input{position:absolute;opacity:0;width:1px;height:1px}
+.sides span{display:grid;place-items:center;min-height:52px;padding:8px;border:1px solid var(--line);border-radius:6px;background:#fff;text-align:center;font-size:13px;line-height:1.35;font-weight:400}
+.sides span small{display:block;color:var(--ink-soft);font-size:11px}
+.sides input:checked+span{border-color:var(--gold);background:#eef5e6;font-weight:500}
+.sides input:focus-visible+span{outline:2px solid var(--gold);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -41,6 +50,14 @@ li.empty{display:block;text-align:center;border-style:dashed;background:transpar
   <label>Địa chỉ thiệp
     <input id="base" inputmode="url" autocomplete="off" spellcheck="false">
   </label>
+  <fieldset>
+    <legend>Thiệp của bên nào</legend>
+    <div class="sides">
+      <label><input type="radio" name="side" value="nha-trai/"><span>Nhà trai<small>28/11 · Hải Đăng</small></span></label>
+      <label><input type="radio" name="side" value="nha-gai/"><span>Nhà gái<small>29/11 · Tư gia</small></span></label>
+      <label><input type="radio" name="side" value=""><span>Chung<small>Cả hai ngày</small></span></label>
+    </div>
+  </fieldset>
   <label>Danh sách khách mời
     <textarea id="names" placeholder="Anh Hùng và gia đình&#10;Chị Lan&#10;Cô Mai, chú Bình"></textarea>
   </label>
@@ -55,7 +72,9 @@ li.empty{display:block;text-align:center;border-style:dashed;background:transpar
 (function(){
   var ta=document.getElementById('names'),base=document.getElementById('base'),out=document.getElementById('out'),links=[];
   base.value=new URL('./',location.href).href;
-  try{ta.value=localStorage.getItem('guests')||'';if(localStorage.getItem('base'))base.value=localStorage.getItem('base')}catch(e){}
+  var sideVal='nha-trai/';
+  try{ta.value=localStorage.getItem('guests')||'';if(localStorage.getItem('base'))base.value=localStorage.getItem('base');var sv=localStorage.getItem('side');if(sv!==null)sideVal=sv}catch(e){}
+  document.querySelectorAll('input[name=side]').forEach(function(r){r.checked=r.value===sideVal;r.onchange=function(){sideVal=r.value;try{localStorage.setItem('side',sideVal)}catch(e){}if(ta.value.trim())make()}});
   function copy(text,btn,label){
     function ok(){btn.textContent='Đã chép';setTimeout(function(){btn.textContent=label},1500)}
     function fb(){var t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(e){prompt('Sao chép:',text)}t.remove()}
@@ -65,7 +84,7 @@ li.empty{display:block;text-align:center;border-style:dashed;background:transpar
     var b=base.value.trim()||new URL('./',location.href).href;
     try{localStorage.setItem('guests',ta.value);localStorage.setItem('base',b)}catch(e){}
     var seen={},names=ta.value.split('\n').map(function(s){return s.replace(/\s+/g,' ').trim()}).filter(function(s){if(!s||seen[s])return false;return seen[s]=true});
-    links=names.map(function(n){var u=new URL(b);u.searchParams.set('guestName',n);return{n:n,u:u.href.replace(/\+/g,'%20')}});
+    links=names.map(function(n){var u=new URL(sideVal,b.replace(/\/?$/,'/'));u.searchParams.set('guestName',n);return{n:n,u:u.href.replace(/\+/g,'%20')}});
     out.innerHTML='';document.getElementById('count').textContent=links.length?links.length+' link':'';
     if(!links.length){var e=document.createElement('li');e.className='empty';e.textContent='Chưa có tên nào.';out.appendChild(e);return}
     links.forEach(function(l){

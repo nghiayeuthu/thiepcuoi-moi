@@ -61,6 +61,25 @@ window.WEDDING = {
     }
   ],
 
+  // Thiệp riêng cho từng bên: …/nha-trai/ và …/nha-gai/
+  // Mỗi bên chỉ hiện một ngày, một địa điểm (venues: số thứ tự trong danh sách venues ở trên, bắt đầu từ 0).
+  sides: {
+    trai: {
+      name: 'Nhà trai',
+      date: { day: 28, hour: 11, minute: 0,
+        place: { name: 'Khách sạn Hải Đăng', address: 'Cung Happy Place, tầng 1, Trung tâm tiệc cưới Hải Đăng, Số 19 Trần Khánh Dư, Ngô Quyền, Hải Phòng' } },
+      venues: [0]
+      // schedule: dùng lịch trình chung ở trên
+    },
+    gai: {
+      name: 'Nhà gái',
+      date: { day: 29, hour: 10, minute: 0,
+        place: { name: 'Tư gia nhà gái', address: 'Số 15 đường Cây Chè, Cách Thượng, Nam Sơn, An Dương, Hải Phòng' } },
+      venues: [1],
+      schedule: []                                // ✏️ lịch trình ngày 29 (để trống thì ẩn phần Lịch trình)
+    }
+  },
+
   // Câu chuyện tình yêu ✏️ (viết lại bằng chuyện thật của hai bạn)
   story: [
     { when: 'Gặp nhau nơi xứ người', text: 'Hai người Việt xa quê, tình cờ gặp nhau trên đất Nhật. Giữa nơi xa lạ, chúng mình tìm thấy một người thật quen.' },
