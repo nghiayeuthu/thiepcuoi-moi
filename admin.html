@@ -35,6 +35,8 @@ fieldset{border:0;margin:0;padding:0;display:grid;gap:6px}
 legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
 .sides{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .sides.four{grid-template-columns:repeat(5,1fr)}
+.sides.two{grid-template-columns:1fr 1fr}
+#xhBox.off{opacity:.4;pointer-events:none}
 @media (max-width:420px){.sides.four{grid-template-columns:repeat(3,1fr)}}
 .sides label{display:block;cursor:pointer}
 .sides input{position:absolute;opacity:0;width:1px;height:1px}
@@ -75,6 +77,13 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     </div>
   </fieldset>
   <fieldset>
+    <legend>Ngôn ngữ thiệp</legend>
+    <div class="sides two">
+      <label><input type="radio" name="lang" value=""><span>Tiếng Việt<small>khách Việt</small></span></label>
+      <label><input type="radio" name="lang" value="ja"><span>日本語<small>khách Nhật</small></span></label>
+    </div>
+  </fieldset>
+  <fieldset id="xhBox">
     <legend>Xưng hô</legend>
     <div class="sides four">
       <label><input type="radio" name="xh" value=""><span>Bạn bè<small>bạn – mình</small></span></label>
@@ -111,6 +120,9 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   try{ta.value=localStorage.getItem('guests')||'';var sv=localStorage.getItem('side');if(sv!==null)sideVal=sv;noqr.checked=localStorage.getItem('noqr')==='1'}catch(e){}
   noqr.onchange=function(){try{localStorage.setItem('noqr',noqr.checked?'1':'0')}catch(e){}if(ta.value.trim())make()};
   var xhVal='';try{xhVal=localStorage.getItem('xh')||''}catch(e){}
+  var langVal='';try{langVal=localStorage.getItem('lang')||''}catch(e){}
+  function langUI(){document.getElementById('xhBox').classList.toggle('off',langVal==='ja')}
+  document.querySelectorAll('input[name=lang]').forEach(function(r){r.checked=r.value===langVal;r.onchange=function(){langVal=r.value;try{localStorage.setItem('lang',langVal)}catch(e){}langUI();loadTpl();if(ta.value.trim())make()}});
   document.querySelectorAll('input[name=xh]').forEach(function(r){r.checked=r.value===xhVal;r.onchange=function(){xhVal=r.value;try{localStorage.setItem('xh',xhVal)}catch(e){}if(ta.value.trim())make()}});
   document.querySelectorAll('input[name=side]').forEach(function(r){r.checked=r.value===sideVal;r.onchange=function(){sideVal=r.value;try{localStorage.setItem('side',sideVal)}catch(e){}if(ta.value.trim())make()}});
   function copy(text,btn,label){
@@ -122,7 +134,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     var b=base.value.trim();if(!b||isLocal(b)||/github\.io/.test(b)){b=PUBLIC;base.value=PUBLIC}
     try{localStorage.setItem('guests',ta.value);localStorage.setItem('base',b)}catch(e){}
     var seen={},names=ta.value.split('\n').map(function(s){return s.replace(/\s+/g,' ').trim()}).filter(function(s){if(!s||seen[s])return false;return seen[s]=true});
-    links=names.map(function(n){var u=new URL(sideVal,b.replace(/\/?$/,'/')),h=new URLSearchParams();h.set('to',n);if(xhVal)h.set('xh',xhVal);if(noqr.checked)h.set('qr','0');
+    links=names.map(function(n){var u=new URL(sideVal,b.replace(/\/?$/,'/')),h=new URLSearchParams();h.set('to',n);if(langVal==='ja')h.set('lang','ja');else if(xhVal)h.set('xh',xhVal);if(noqr.checked)h.set('qr','0');
       // Tên khách để sau dấu #: Messenger / Zalo coi mọi link là cùng một trang nên luôn hiện ảnh xem trước của thiệp
       return{n:n,u:u.href+'#'+h.toString().replace(/\+/g,'%20')}});
     render();
@@ -132,10 +144,11 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   var BAN='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\n{ten} ơi 🥰 tụi mình cưới rồi nè! 💍💒\nMời {ten} ghé xem thiệp 🎀 và tới chung vui với tụi mình nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
   var EM='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\nEm gửi {ten} thiệp cưới của tụi em ạ 💍💒\nMong {ten} sắp xếp tới chung vui cùng tụi em nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
   var DI='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\n{ten} ơi, dì cưới rồi nè 🥰💍💒\nDì gửi {ten} thiệp cưới, mong {ten} tới chung vui cùng dì nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
-  var TPL={'':BAN,chi:EM,anh:EM,anhchi:EM,di:DI};
-  function tplKey(){return 'tpl4_'+xhVal}
-  function loadTpl(){var v='';try{v=localStorage.getItem(tplKey())||''}catch(e){}tpl.value=v||TPL[xhVal]||TPL['']}
-  loadTpl();
+  var JA='💌✨ 結婚式のご招待 ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\n{ten}\nこのたび私たちは結婚することになりました 💍💒\nぜひお祝いに来ていただけたら嬉しいです 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
+  var TPL={'':BAN,chi:EM,anh:EM,anhchi:EM,di:DI,ja:JA};
+  function tplKey(){return 'tpl4_'+(langVal==='ja'?'ja':xhVal)}
+  function loadTpl(){var v='';try{v=localStorage.getItem(tplKey())||''}catch(e){}tpl.value=v||TPL[langVal==='ja'?'ja':xhVal]||TPL['']}
+  loadTpl();langUI();
   tpl.oninput=function(){try{localStorage.setItem(tplKey(),tpl.value)}catch(e){}};
   document.querySelectorAll('input[name=xh]').forEach(function(r){r.addEventListener('change',loadTpl)});
   var sent={};try{sent=JSON.parse(localStorage.getItem('sent')||'{}')}catch(e){}

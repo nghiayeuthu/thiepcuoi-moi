@@ -370,3 +370,18 @@ footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 .dlunar{margin-top:10px}
 .dat{margin-top:24px}
 .dmap{margin-top:22px}
+
+/* ============ Bản tiếng Nhật ============ */
+[data-lang=ja] body{font-family:"Noto Sans JP",var(--f-body)}
+[data-lang=ja] .inv-kinh,[data-lang=ja] .inv-to,[data-lang=ja] .announce,[data-lang=ja] .dtime,[data-lang=ja] .drow span,[data-lang=ja] .dplace,[data-lang=ja] .dmap,
+[data-lang=ja] .families .eyebrow,[data-lang=ja] .parent,[data-lang=ja] .thanks p,[data-lang=ja] .sheet h3,[data-lang=ja] .venue-item h3,[data-lang=ja] .venue-item .vtime{font-family:"Noto Serif JP",var(--f-serif);letter-spacing:.04em}
+[data-lang=ja] .inv-guest,[data-lang=ja] .dlabel,[data-lang=ja] .q-tx,[data-lang=ja] .opener-tap,[data-lang=ja] .door-guest,[data-lang=ja] .opener-guest,[data-lang=ja] .hero-guest{font-family:"Noto Serif JP",serif;font-weight:500}
+[data-lang=ja] .inv-guest{font-size:30px}
+[data-lang=ja] .dlabel{font-size:22px}
+[data-lang=ja] .q-tx{font-size:17px;line-height:1.9}
+[data-lang=ja] .opener-tap{font-size:18px;letter-spacing:.1em}
+[data-lang=ja] .door-guest,[data-lang=ja] .opener-guest{font-size:22px}
+[data-lang=ja] .hero-guest{font-size:20px}
+[data-lang=ja] .inv-to{font-size:17px;text-transform:none;letter-spacing:.1em}
+[data-lang=ja] .drow span{font-size:17px}
+[data-lang=ja] .role{letter-spacing:.2em}

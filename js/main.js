@@ -12,6 +12,10 @@
     new URLSearchParams(location.hash.replace(/^#/, '')).forEach(function (v, k) { QP.set(k, v); });
   } catch (e) {}
 
+  // Ngôn ngữ: #lang=ja thì thiệp tiếng Nhật
+  var JA = (QP.get('lang') || '').toLowerCase() === 'ja';
+  function L(vi, ja) { return JA ? ja : vi; }
+
   // ---------- Thiệp riêng nhà trai / nhà gái (…/nha-trai/, …/nha-gai/ hoặc ?ben=trai|gai) ----------
   var SIDE = '';
   try { SIDE = (document.documentElement.getAttribute('data-side') || QP.get('ben') || '').toLowerCase(); } catch (e) {}
@@ -37,7 +41,7 @@
 
   // ---------- Xưng hô: mặc định bạn – mình (bạn bè); ?xh=chi | anh | anhchi thì xưng em; ?xh=di thì cô dâu xưng dì, gọi khách là cháu ----------
   var XH = '';
-  try { XH = (QP.get('xh') || '').toLowerCase(); } catch (e) {}
+  try { XH = JA ? '' : (QP.get('xh') || '').toLowerCase(); } catch (e) {}
   var YOU = { chi: 'chị', anh: 'anh', anhchi: 'anh chị', di: 'cháu' }[XH] || '';
   var ME = XH === 'di' ? 'dì' : 'em', WE = XH === 'di' ? 'dì' : 'tụi em', A = XH === 'di' ? '' : ' ạ';
   var P = YOU ? { you: YOU, me: ME, we: WE, a: A, nha: ' nha' } : { you: 'bạn', me: 'mình', we: 'chúng mình', a: '', nha: ' nhé' };
@@ -64,6 +68,80 @@
     (C.chat || []).forEach(function (m) { m.text = m.text.replace('tụi mình', WE); });
   }
 
+  if (JA) (function () {
+    document.documentElement.lang = 'ja'; document.documentElement.setAttribute('data-lang', 'ja');
+    var lk = document.createElement('link'); lk.rel = 'stylesheet'; lk.href = 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600&display=swap'; document.head.appendChild(lk);
+    var T = function (sel, text, html, all) { (all ? document.querySelectorAll(sel) : [$(sel)]).forEach(function (n) { if (n) n[html ? 'innerHTML' : 'textContent'] = text; }); };
+    var A = function (sel, attr, v) { document.querySelectorAll(sel).forEach(function (n) { n.setAttribute(attr, v); }); };
+    T('.door-hint', 'シーリングをタップして開封'); T('#tapHint', 'タップして開く');
+    T('.hero .eyebrow', 'ご招待'); T('#heroGuest', 'ゲストの皆さま');
+    var fam = document.querySelectorAll('.fam-grid > div:not(.cheers)');
+    fam.forEach(function (d) { var e = d.querySelector('.eyebrow'); if (e) e.textContent = /trai/i.test(e.textContent) ? '新郎側' : '新婦側'; });
+    document.querySelectorAll('.parent').forEach(function (n) { n.textContent = n.textContent.replace(/^Ông\s+/, '父　').replace(/^Bà\s+/, '母　'); });
+    T('.announce', '7年の時を経て、私たちは結婚することになりました');
+    var roles = document.querySelectorAll('.couple-names .role'); if (roles.length > 1) { roles[0].textContent = '新郎'; roles[1].textContent = '新婦'; }
+    T('.inv-kinh', 'ご招待'); T('#invGuest', 'ゲストの皆さま');
+    T('.inv-to', '私たちの結婚披露宴に<br>ぜひお越しください', true);
+    var bl = document.querySelectorAll('.banner-l'); if (bl[0]) bl[0].textContent = 'Forever'; if (bl[1]) bl[1].textContent = 'Just Married';
+    T('.chat-who span', '<i></i>アクティブ', true);
+    T('.q-tx', '出会ってくれてありがとう。何気ない毎日が、かけがえのない思い出になりました。');
+    var cd = document.querySelectorAll('#count span'); ['日', '時間', '分', '秒'].forEach(function (t, i) { if (cd[i]) cd[i].textContent = t; });
+    T('#cdDone', '今日は私たちの結婚式です！');
+    T('.venue h2', 'Venue'); T('.rsvp h2', 'Will you join us?'); T('.wishes h2', 'Messages'); T('.gift h2', 'Wedding gift');
+    T('.rsvp .sub', 'ご出欠をお知らせください。準備の参考にさせていただきます。');
+    var rl = $('#rsvpForm label'); if (rl && rl.firstChild) rl.firstChild.textContent = 'お名前';
+    T('.rsvp legend', 'ご出席いただけますか？');
+    var sp = document.querySelectorAll('.rsvp .seg span'); if (sp.length > 1) { sp[0].textContent = 'はい、出席します'; sp[1].textContent = '残念ながら欠席します'; }
+    var labs = document.querySelectorAll('.rsvp .row2 > label'); if (labs[0] && labs[0].firstChild) labs[0].firstChild.textContent = '人数\n          '; if (labs[1] && labs[1].firstChild) labs[1].firstChild.textContent = 'ゲスト区分\n          ';
+    document.querySelectorAll('.rsvp select[name=side] option').forEach(function (o) { o.value = o.value || o.textContent; o.textContent = /trai/i.test(o.value) ? '新郎側' : '新婦側'; });
+    T('#rsvpForm button[type=submit]', '送信する');
+    var wl = document.querySelectorAll('#wishForm label'); if (wl[0] && wl[0].firstChild) wl[0].firstChild.textContent = 'お名前'; if (wl[1] && wl[1].firstChild) wl[1].firstChild.textContent = 'メッセージ';
+    A('#rsvpName', 'placeholder', 'お名前'); A('#wishName', 'placeholder', 'お名前'); A('#wishForm textarea', 'placeholder', 'お二人へのメッセージをどうぞ…');
+    T('#wishForm button[type=submit]', 'メッセージを送る');
+    T('.gift .sub', 'ご祝儀はこちらからお送りいただくこともできます。'); T('#giftBtn', 'ご祝儀ボックスを開く');
+    T('#giftTitle', 'ご祝儀'); T('.sheet-close', '閉じる');
+    T('.thanks-in p', '招待状をご覧いただきありがとうございます。皆さまにお会いできるのを心より楽しみにしています！');
+    T('#svTime', 'たった今'); T('footer', (SD ? (SIDE === 'gai' ? '2026.11.29' : '2026.11.28') : '2026.11.28 & 29') + ' · Hải Phòng');
+    T('#railShare span', 'シェア'); A('#liveMsg', 'placeholder', 'メッセージを送る…');
+    T('#nickTitle', 'ニックネーム'); T('.nick-sub', 'メッセージと一緒に表示されるお名前です。'); A('#nickIn', 'placeholder', '例：たなか、Mai…'); T('#nickForm button[type=submit]', '保存する');
+    A('.sheet-x', 'aria-label', '閉じる');
+    // Nội dung trong config
+    C.chat = [
+      { from: 'b', text: '私たち、日本で出会ってどれくらい経つっけ？🤔' },
+      { from: 'g', text: 'もう7年だよ。異国の地で偶然出会ったあの日から 🇯🇵' },
+      { from: 'b', text: '7回の桜、7回の雪…あっという間だね 🌸❄️' },
+      { from: 'g', text: '一緒に学んで、働いて、ホームシックの日も乗り越えてきたね 🏠' },
+      { from: 'g', text: 'これからの人生もずっと一緒にいたい。結婚してくれる？💍' },
+      { from: 'b', text: 'はい、喜んで！❤️', react: '❤️' },
+      { from: 'g', text: 'じゃあ、みんなをお祝いに招待しよう 🥂🎉' }
+    ];
+    var VN = function (pl, isHotel) { if (pl) pl.name = isHotel ? 'Hải Đăng ホテル' : '新婦の実家'; };
+    C.venues.forEach(function (v) {
+      var hotel = /Hải Đăng/.test(v.name);
+      v.label = hotel ? '新郎側 披露宴 · 2026年11月28日（土）' : '新婦側 披露宴 · 2026年11月29日（日）';
+      v.time = hotel ? '11:00 開宴' : '10:30 開宴';
+      if (hotel) v.hall = 'Cung Happy Place · 1階 · Hải Đăng ウェディングセンター';
+      v.name = hotel ? 'Hải Đăng ホテル' : '新婦の実家';
+    });
+    VN(C.date.place, /Hải Đăng/.test(C.date.place && C.date.place.name)); if (C.secondDay) VN(C.secondDay.place, false);
+    var SN = ['プロポーズ 💍', '双喜 囍', 'お花畑 🌸', 'ガーデン 🤍', '夕焼け 🌇'];
+    (C.stories || []).forEach(function (g, i) { if (SN[i]) g.name = SN[i]; });
+    var SC = [['受付', 'ゲストのお出迎え・記念撮影'], ['挙式', '指輪の交換・乾杯'], ['披露宴', 'みんなでお祝い']];
+    (C.schedule || []).forEach(function (x, i) { if (SC[i]) { x.title = SC[i][0]; x.note = SC[i][1]; } });
+    C.seedWishes = [
+      { name: 'Yuki', message: 'ご結婚おめでとうございます！末永くお幸せに 💐' },
+      { name: '田中さん', message: 'お二人とも本当におめでとう！素敵な家庭を築いてね 🥂' },
+      { name: 'Mai', message: '7年間ずっと見てきたよ。本当におめでとう！🥰' },
+      { name: '佐藤', message: '写真がとても素敵です！お幸せに ✨' },
+      { name: 'Ken', message: 'Congratulations! 二人の新しい門出を心からお祝いします 🎉' },
+      { name: '鈴木', message: 'ご結婚おめでとう！ベトナムでの結婚式、楽しんでね 🇻🇳' },
+      { name: 'Aoi', message: 'Thuちゃん、とってもきれい！おめでとう 💕' },
+      { name: '山本', message: 'Nghiaさん、おめでとうございます！幸せな家庭を 🏠' },
+      { name: 'Haruka', message: '東京の思い出がたくさんだね。末永くお幸せに 🌸' },
+      { name: '中村', message: '心よりお祝い申し上げます。笑顔あふれる毎日を 😊' }
+    ];
+  })();
+
   // ---------- Tên khách từ link ?guestName=... (vẫn nhận ?to=... của thiệp cũ) ----------
   var guest = '';
   try {
@@ -75,9 +153,9 @@
     if (!n) return;
     $('#heroGuest').textContent = n;
     $('#invGuest').textContent = n;
-    var og = $('#openerGuest'); if (og) { og.textContent = 'Thân gửi ' + n; og.hidden = false; }
-    var dg = $('#doorGuest'); if (dg) { dg.textContent = 'Thân gửi ' + n; dg.hidden = false; }
-    document.title = 'Thân mời ' + n + (SIDE === 'gai' ? ' · Hoài Thu & Tuấn Nghĩa' : ' · Tuấn Nghĩa & Hoài Thu');
+    var og = $('#openerGuest'); if (og) { og.textContent = L('Thân gửi ' + n, n + ' へ'); og.hidden = false; }
+    var dg = $('#doorGuest'); if (dg) { dg.textContent = L('Thân gửi ' + n, n + ' へ'); dg.hidden = false; }
+    document.title = L('Thân mời ', 'ご招待 · ') + n + (SIDE === 'gai' ? ' · Hoài Thu & Tuấn Nghĩa' : ' · Tuấn Nghĩa & Hoài Thu');
     var rn = $('#rsvpName'); if (rn && (!rn.value || flash)) rn.value = n;
     if (flash) ['#invGuest', '#heroGuest'].forEach(function (q) { var x = $(q); x.classList.remove('flash'); void x.offsetWidth; x.classList.add('flash'); });
   }
@@ -146,40 +224,40 @@
     a.append(el('p', 'vlabel', v.label), el('h3', '', v.name), v.hall ? el('p', 'vhall', v.hall) : '', el('p', 'vtime', v.time), el('address', '', v.address));
     var b = el('div', 'btns'), go = el('a', 'btn solid');
     go.href = v.map; go.target = '_blank'; go.rel = 'noopener';
-    go.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Chỉ đường';
-    var cp = el('button', 'btn', 'Sao chép địa chỉ'); cp.type = 'button';
-    cp.onclick = function () { copy(v.copy || v.address, cp, 'Sao chép địa chỉ'); };
+    go.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>' + L('Chỉ đường', '地図を開く');
+    var cpl = L('Sao chép địa chỉ', '住所をコピー'), cp = el('button', 'btn', cpl); cp.type = 'button';
+    cp.onclick = function () { copy(v.copy || v.address, cp, cpl); };
     b.append(go, cp); a.append(b); vbox.appendChild(a);
   });
 
   // ---------- Ngày cưới, âm lịch ----------
   var D = C.date;
-  var DOW = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+  var DOW = JA ? ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'] : ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
   function esc(t) { var d = el('div'); d.textContent = t || ''; return d.innerHTML; }
   function venueOf(p) { for (var i = 0; i < C.venues.length; i++) if (p && C.venues[i].name === p.name) return C.venues[i]; return null; }
   function dayBlock(day, hour, minute, place, label) {
-    var wd = new Date(D.year, D.month - 1, day), L = Lunar.solarToLunar(day, D.month, D.year, 7), v = venueOf(place);
+    var wd = new Date(D.year, D.month - 1, day), LN = Lunar.solarToLunar(day, D.month, D.year, 7), v = venueOf(place);
     var b = el('div', 'dblock');
     b.innerHTML = (label ? '<p class="dlabel">' + esc(label) + '</p>' : '') +
       '<p class="dtime">' + pad(hour) + ':' + pad(minute) + ' · ' + DOW[wd.getDay()] + '</p>' +
-      '<div class="drow"><span>Tháng ' + D.month + '</span><b>' + pad(day) + '</b><span>Năm ' + D.year + '</span></div>' +
-      '<p class="dlunar">(Tức ngày ' + L.day + ' tháng ' + L.month + (L.leap ? ' nhuận' : '') + ' năm ' + Lunar.yearName(L.year) + ')</p>' +
-      (place ? '<p class="dat">' + 'Tiệc cưới được tổ chức tại' + '</p><p class="dplace">' + esc(place.name) + '</p><p class="daddr">' + esc(v && v.copy || place.address) + '</p>' : '');
+      '<div class="drow"><span>' + L('Tháng ' + D.month, D.month + '月') + '</span><b>' + pad(day) + '</b><span>' + L('Năm ' + D.year, D.year + '年') + '</span></div>' +
+      (JA ? '' : '<p class="dlunar">(Tức ngày ' + LN.day + ' tháng ' + LN.month + (LN.leap ? ' nhuận' : '') + ' năm ' + Lunar.yearName(LN.year) + ')</p>') +
+      (place ? '<p class="dat">' + L('Tiệc cưới được tổ chức tại', '会場') + '</p><p class="dplace">' + esc(place.name) + '</p><p class="daddr">' + esc(v && v.copy || place.address) + '</p>' : '');
     if (v && v.map) {
       var a = el('a', 'dmap'); a.href = v.map; a.target = '_blank'; a.rel = 'noopener';
-      a.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.3 7 13 7 13s7-7.7 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>Chỉ đường';
+      a.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.3 7 13 7 13s7-7.7 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>' + L('Chỉ đường', '地図を開く');
       b.appendChild(a);
     }
     return b;
   }
   var days = $('#days');
-  days.appendChild(dayBlock(D.day, D.hour, D.minute, D.place, C.secondDay ? 'Tiệc cưới nhà trai' : ''));
-  if (C.secondDay) { var S2 = C.secondDay; days.appendChild(dayBlock(S2.day, S2.hour, S2.minute, S2.place, 'Tiệc cưới nhà gái')); }
+  days.appendChild(dayBlock(D.day, D.hour, D.minute, D.place, C.secondDay ? L('Tiệc cưới nhà trai', '新郎側 披露宴') : ''));
+  if (C.secondDay) { var S2 = C.secondDay; days.appendChild(dayBlock(S2.day, S2.hour, S2.minute, S2.place, L('Tiệc cưới nhà gái', '新婦側 披露宴'))); }
 
   (function cal() {
     var g = $('#cal'), html = '', days = new Date(D.year, D.month, 0).getDate();
-    $('#calHead').textContent = 'Tháng ' + D.month;
-    ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].forEach(function (d) { html += '<div class="dow">' + d + '</div>'; });
+    $('#calHead').textContent = L('Tháng ' + D.month, 'November');
+    (JA ? ['月', '火', '水', '木', '金', '土', '日'] : ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']).forEach(function (d) { html += '<div class="dow">' + d + '</div>'; });
     var first = (new Date(D.year, D.month - 1, 1).getDay() + 6) % 7;
     for (var i = 0; i < first; i++) html += '<div></div>';
     for (var d = 1; d <= days; d++) {
@@ -204,7 +282,7 @@
 
   // ---------- Sao chép ----------
   function copy(text, btn, label) {
-    function ok() { btn.textContent = 'Đã sao chép'; setTimeout(function () { btn.textContent = label; }, 1600); }
+    function ok() { btn.textContent = L('Đã sao chép', 'コピーしました'); setTimeout(function () { btn.textContent = label; }, 1600); }
     function fallback() {
       var t = el('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
       try { document.execCommand('copy'); ok(); } catch (e) { prompt('Sao chép:', text); }
@@ -347,11 +425,11 @@
   if (!gifts.length) { $('.gift').style.display = 'none'; }
   if (gifts.length < 2) tabs.style.display = 'none';
   gifts.forEach(function (g, i) {
-    var t = el('button', '', g.who); t.type = 'button'; t.setAttribute('role', 'tab'); t.setAttribute('aria-selected', i === 0);
+    var t = el('button', '', JA ? (g.side === 'trai' ? '新郎' : '新婦') : g.who); t.type = 'button'; t.setAttribute('role', 'tab'); t.setAttribute('aria-selected', i === 0);
     var p = el('div'); p.setAttribute('role', 'tabpanel'); p.hidden = i !== 0;
     var img = el('img', 'qr'); img.src = g.qr; img.alt = 'Mã QR chuyển khoản ' + g.who.toLowerCase(); img.loading = 'lazy';
-    var acc = el('div', 'acc'), row = el('div', 'acc-row'), num = el('code', '', g.account), cb = el('button', 'btn', 'Sao chép');
-    cb.type = 'button'; cb.onclick = function () { copy(g.account.replace(/\s/g, ''), cb, 'Sao chép'); };
+    var acc = el('div', 'acc'), row = el('div', 'acc-row'), num = el('code', '', g.account), cb = el('button', 'btn', L('Sao chép', 'コピー'));
+    cb.type = 'button'; cb.onclick = function () { copy(g.account.replace(/\s/g, ''), cb, L('Sao chép', 'コピー')); };
     row.append(num, cb); acc.append(el('span', 'bank', g.bank), el('span', 'holder', g.name), row);
     p.append(img, acc); panels.appendChild(p);
     t.onclick = function () { [].forEach.call(tabs.children, function (x, j) { x.setAttribute('aria-selected', j === i); panels.children[j].hidden = j !== i; }); };
@@ -382,13 +460,13 @@
       e.preventDefault();
       var data = build(new FormData(form));
       if (!data) return;
-      msg.className = 'msg'; msg.textContent = ''; btn.disabled = true; btn.textContent = 'Đang gửi…';
+      msg.className = 'msg'; msg.textContent = ''; btn.disabled = true; btn.textContent = L('Đang gửi…', '送信中…');
       send(data).then(function (r) {
         if (!r || !r.ok) throw new Error((r && r.error) || 'fail');
         msg.className = 'msg ok'; msg.textContent = okText + (r.demo ? ' (chạy thử, chưa nối Google Sheets)' : '');
         if (after) after(data, r);
       }).catch(function () {
-        msg.className = 'msg err'; msg.textContent = 'Chưa gửi được, ' + P.you + ' thử lại giúp ' + P.me + P.nha + '.';
+        msg.className = 'msg err'; msg.textContent = L('Chưa gửi được, ' + P.you + ' thử lại giúp ' + P.me + P.nha + '.', '送信できませんでした。もう一度お試しください。');
       }).then(function () { btn.disabled = false; btn.textContent = label; });
     });
   }
@@ -404,15 +482,15 @@
   rsvpForm.addEventListener('change', function () { gs.disabled = rsvpForm.attend.value === 'Không'; });
   bindForm(rsvpForm, function (f) {
     var name = (f.get('name') || '').trim();
-    if (!need(name, rsvpForm, '[name=name]', cap(P.you) + ' điền tên giúp ' + P.me + P.nha + '.')) return null;
+    if (!need(name, rsvpForm, '[name=name]', L(cap(P.you) + ' điền tên giúp ' + P.me + P.nha + '.', 'お名前を入力してください。'))) return null;
     var attend = f.get('attend');
     return { type: 'rsvp', name: name, attend: attend, guests: attend === 'Có' ? +(f.get('guests') || 1) : 0, side: f.get('side'), invitedAs: guest };
-  }, 'Cảm ơn ' + P.you + ' đã xác nhận' + P.a + '!', function (d) { if (d.attend === 'Có') confetti(); });
+  }, L('Cảm ơn ' + P.you + ' đã xác nhận' + P.a + '!', 'ご回答ありがとうございます！'), function (d) { if (d.attend === 'Có') confetti(); });
 
   var wishForm = $('#wishForm'), list = $('#wishList');
   function renderWishes(items) {
     list.innerHTML = '';
-    if (!items.length) { list.appendChild(el('li', 'empty', 'Hãy là người đầu tiên gửi lời chúc nhé!')); return; }
+    if (!items.length) { list.appendChild(el('li', 'empty', L('Hãy là người đầu tiên gửi lời chúc nhé!', '最初のメッセージを送ってください！'))); return; }
     items.forEach(function (w) {
       var li = el('li'); li.append(el('b', '', w.name), el('p', '', w.message));
       if (w.time) { var t = new Date(w.time); if (!isNaN(t)) li.append(el('time', '', pad(t.getDate()) + '/' + pad(t.getMonth() + 1) + ' · ' + pad(t.getHours()) + ':' + pad(t.getMinutes()))); }
@@ -425,14 +503,14 @@
     fetch(C.scriptUrl + (C.scriptUrl.indexOf('?') > -1 ? '&' : '?') + 'action=wishes')
       .then(function (r) { return r.json(); })
       .then(function (r) { wishes = (r && r.wishes) || []; renderWishes(wishes); })
-      .catch(function () { list.innerHTML = ''; list.appendChild(el('li', 'empty', 'Chưa tải được lời chúc.')); });
+      .catch(function () { list.innerHTML = ''; list.appendChild(el('li', 'empty', L('Chưa tải được lời chúc.', 'メッセージを読み込めませんでした。'))); });
   }
   bindForm(wishForm, function (f) {
     var name = (f.get('name') || '').trim(), message = (f.get('message') || '').trim();
-    if (!need(name, wishForm, '[name=name]', cap(P.you) + ' điền tên giúp ' + P.me + P.nha + '.')) return null;
-    if (!need(message, wishForm, '[name=message]', cap(P.you) + ' viết vài lời chúc' + P.nha + '.')) return null;
+    if (!need(name, wishForm, '[name=name]', L(cap(P.you) + ' điền tên giúp ' + P.me + P.nha + '.', 'お名前を入力してください。'))) return null;
+    if (!need(message, wishForm, '[name=message]', L(cap(P.you) + ' viết vài lời chúc' + P.nha + '.', 'メッセージを入力してください。'))) return null;
     return { type: 'wish', name: name, message: message };
-  }, 'Cảm ơn lời chúc của ' + P.you + P.a + '!', function (d) {
+  }, L('Cảm ơn lời chúc của ' + P.you + P.a + '!', 'メッセージありがとうございます！'), function (d) {
     if (d.name && d.name !== nick) setNick(d.name);
     wishes.unshift({ name: d.name, message: d.message, time: new Date().toISOString() });
     renderWishes(wishes); wishForm.message.value = '';
@@ -468,7 +546,7 @@
   function liveEvent(name, text) { // dòng phụ: vừa vào xem, vừa thả tim…
     var b = el('li', 'bub ev'); b.append(el('b', '', name), document.createTextNode(' ' + text)); push(b);
   }
-  var EVT = ['đã tham gia 👋', 'đã thả ❤️ x5', 'đã chia sẻ thiệp 🔁', 'đã thả 🥰', 'đã tặng 🌹 hoa hồng', 'đang xem cùng ' + P.you + ' 👀'];
+  var EVT = JA ? ['が参加しました 👋', 'が ❤️ x5', 'が招待状をシェアしました 🔁', 'が 🥰', 'が 🌹 を贈りました', 'が一緒に見ています 👀'] : ['đã tham gia 👋', 'đã thả ❤️ x5', 'đã chia sẻ thiệp 🔁', 'đã thả 🥰', 'đã tặng 🌹 hoa hồng', 'đang xem cùng ' + P.you + ' 👀'];
   // Lời chúc mẫu: trộn ngẫu nhiên, hiện sau lời chúc thật của khách
   var seeds = (C.seedWishes || []).slice().sort(function () { return Math.random() - .5; });
   function startLive() {
@@ -497,28 +575,30 @@
   function initial(n) { return (n.replace(/^(Anh|Chị|Cô|Bác|Chú|Bạn|Em|Gia đình)\s+/i, '').trim()[0] || '?').toUpperCase(); }
   function paintNick() {
     var a = $('#nickAv');
-    if (nick) { a.textContent = initial(nick); a.style.background = avColor(nick); a.classList.add('set'); a.setAttribute('aria-label', 'Biệt danh: ' + nick + '. Chạm để đổi'); $('#liveMsg').placeholder = 'Gửi lời chúc với tên ' + nick + '…'; }
+    if (nick) { a.textContent = initial(nick); a.style.background = avColor(nick); a.classList.add('set'); a.setAttribute('aria-label', 'Biệt danh: ' + nick + '. Chạm để đổi'); $('#liveMsg').placeholder = L('Gửi lời chúc với tên ' + nick + '…', nick + ' としてメッセージを送る…'); }
     if (nick && !wishForm.name.value) wishForm.name.value = nick;
   }
   function setNick(n) { nick = n; try { localStorage.setItem('tn_nick', n); } catch (e) {} paintNick(); }
   function openNick(ask) {
+    if (JA) { $('#nickTitle').textContent = 'ニックネーム'; $('.nick-sub').textContent = 'メッセージと一緒に表示されるお名前です。'; } else {
     $('#nickTitle').textContent = ask ? (guest ? 'Đây có phải tên ' + P.you + ' không?' : cap(P.you) + ' tên là gì?') : 'Đặt biệt danh';
     $('.nick-sub').textContent = ask ? 'Cho ' + P.we + ' biết tên hoặc biệt danh của ' + P.you + ', thiệp sẽ mời đúng tên ' + P.you + P.nha + ' 💌' : 'Thiệp sẽ mời đúng tên này, và tên này cũng hiện cùng lời chúc của ' + P.you + '.';
+    }
     nickIn.value = nick || guest || ''; $('#nickMsg').textContent = '';
     var big = $('#nickBig'); big.textContent = nickIn.value ? initial(nickIn.value) : '?'; big.style.background = nickIn.value ? avColor(nickIn.value) : '#b9bfb3';
     nickModal.hidden = false; setTimeout(function () { nickIn.focus(); nickIn.select(); }, 60);
   }
   function closeNick() { nickModal.hidden = true; }
   nickIn.addEventListener('input', function () { var v = nickIn.value.trim(), big = $('#nickBig'); big.textContent = v ? initial(v) : '?'; big.style.background = v ? avColor(v) : '#b9bfb3'; });
-  $('#nickAv').onclick = function () { if (guest) { toast('Lời chúc sẽ gửi với tên ' + guest); return; } openNick(); };
+  $('#nickAv').onclick = function () { if (guest) { toast(L('Lời chúc sẽ gửi với tên ' + guest, guest + ' としてメッセージを送ります')); return; } openNick(); };
   // Chưa biết tên (link không có tên, chưa đặt biệt danh): hỏi một lần sau khi mở thiệp
   $('.sheet-x', nickModal).onclick = function () { pendingMsg = ''; closeNick(); };
   nickModal.addEventListener('click', function (e) { if (e.target === nickModal) { pendingMsg = ''; closeNick(); } });
   $('#nickForm').addEventListener('submit', function (e) {
     e.preventDefault();
     var v = nickIn.value.replace(/\s+/g, ' ').trim();
-    if (v.length < 2) { $('#nickMsg').className = 'msg err'; $('#nickMsg').textContent = cap(P.you) + ' đặt biệt danh ít nhất 2 ký tự' + P.nha + '.'; nickIn.focus(); return; }
-    setNick(v); closeNick(); toast('Đã lưu biệt danh: ' + v);
+    if (v.length < 2) { $('#nickMsg').className = 'msg err'; $('#nickMsg').textContent = L(cap(P.you) + ' đặt biệt danh ít nhất 2 ký tự' + P.nha + '.', '2文字以上で入力してください。'); nickIn.focus(); return; }
+    setNick(v); closeNick(); toast(L('Đã lưu biệt danh: ' + v, 'ニックネームを保存しました：' + v));
     if (pendingMsg) { var m = pendingMsg; pendingMsg = ''; postWish(m); }
   });
   function postWish(msg) {
@@ -632,10 +712,10 @@
   $('#railShare').onclick = function () {
     // Giữ kiểu xưng hô và tuỳ chọn ẩn QR khi chia sẻ, bỏ tên khách riêng
     var keep = new URLSearchParams();
-    ['xh', 'qr', 'ben'].forEach(function (k) { var v = QP.get(k); if (v) keep.set(k, v); });
+    ['xh', 'qr', 'ben', 'lang'].forEach(function (k) { var v = QP.get(k); if (v) keep.set(k, v); });
     var url = location.origin + location.pathname + (keep.toString() ? '#' + keep.toString() : ''), title = document.title.replace(/^Thân mời [^·]*· /, 'Thiệp cưới ');
     if (navigator.share) navigator.share({ title: title, url: url }).catch(function () {});
-    else copyText(url, function () { toast('Đã sao chép link thiệp'); });
+    else copyText(url, function () { toast(L('Đã sao chép link thiệp', 'リンクをコピーしました')); });
   };
   function copyText(t, ok) {
     if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(ok, function () { prompt('Sao chép link:', t); });
