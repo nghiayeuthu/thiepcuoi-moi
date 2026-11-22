@@ -35,11 +35,11 @@
     }
   }
 
-  // ---------- Xưng hô: mặc định bạn – mình (bạn bè); ?xh=chi | anh | anhchi thì xưng em; ?xh=di thì cô dâu chú rể là dì (dượng), gọi khách là cháu ----------
+  // ---------- Xưng hô: mặc định bạn – mình (bạn bè); ?xh=chi | anh | anhchi thì xưng em; ?xh=di thì cô dâu xưng dì, gọi khách là cháu ----------
   var XH = '';
   try { XH = (QP.get('xh') || '').toLowerCase(); } catch (e) {}
   var YOU = { chi: 'chị', anh: 'anh', anhchi: 'anh chị', di: 'cháu' }[XH] || '';
-  var ME = XH === 'di' ? 'dì' : 'em', WE = XH === 'di' ? 'dì dượng' : 'tụi em', A = XH === 'di' ? '' : ' ạ';
+  var ME = XH === 'di' ? 'dì' : 'em', WE = XH === 'di' ? 'dì' : 'tụi em', A = XH === 'di' ? '' : ' ạ';
   var P = YOU ? { you: YOU, me: ME, we: WE, a: A, nha: ' nha' } : { you: 'bạn', me: 'mình', we: 'chúng mình', a: '', nha: ' nhé' };
   function cap(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
   if (YOU) {
