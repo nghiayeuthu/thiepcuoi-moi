@@ -41,15 +41,7 @@ legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
 .sides span small{display:block;color:var(--ink-soft);font-size:11px}
 .sides input:checked+span{border-color:var(--gold);background:#eef5e6;font-weight:500}
 .sides input:focus-visible+span{outline:2px solid var(--gold);outline-offset:2px}
-#msgTpl{min-height:90px}
-.pics{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:thin}
-.pics label{flex:none;display:block;cursor:pointer;position:relative}
-.pics input{position:absolute;opacity:0;width:1px;height:1px}
-.pics span{display:grid;place-items:center;width:76px;height:96px;border-radius:8px;overflow:hidden;border:2px solid transparent;background:#fff;font-size:11px;color:var(--ink-soft);text-align:center;line-height:1.3;padding:0}
-.pics img{width:100%;height:100%;object-fit:cover;display:block}
-.pics input:checked+span{border-color:var(--gold);box-shadow:0 0 0 3px #d5e5c6}
-.pics input:checked+span::after{content:"✓";position:absolute;top:4px;right:6px;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#fff;font-size:12px;display:grid;place-items:center}
-.up{font-size:13px;color:var(--gold);text-decoration:underline;cursor:pointer}
+#msgTpl{min-height:220px}
 .hint{font-size:12px;color:var(--ink-soft);font-weight:400}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .prog{flex:1;min-width:140px;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
@@ -94,22 +86,16 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   <label>Danh sách khách mời
     <textarea id="names" placeholder="Anh Hùng và gia đình&#10;Chị Lan&#10;Cô Mai, chú Bình"></textarea>
   </label>
-  <label>Lời nhắn gửi kèm <span class="hint">({ten} = tên khách, {link} = link thiệp)</span>
+  <label>Lời nhắn gửi kèm <span class="hint">({ten} = tên khách, {link} = link thiệp, {doi} = tên cô dâu chú rể)</span>
     <textarea id="msgTpl"></textarea>
   </label>
-  <fieldset>
-    <legend>Ảnh gửi kèm <span class="hint">(mặc định “Không gửi ảnh”: chỉ gửi lời nhắn + link thành 1 tin, Messenger tự hiện khung ảnh của thiệp. Chọn ảnh thì ảnh sẽ thành 1 tin riêng)</span></legend>
-    <div class="pics" id="pics"></div>
-    <label class="check"><input type="file" id="picFile" accept="image/*" hidden><span class="up" id="picUp">＋ Chọn ảnh khác từ máy</span></label>
-  </fieldset>
   <div class="row">
     <button class="solid" type="button" id="make">Tạo link</button>
     <button type="button" id="copyAll">Sao chép tất cả</button>
   </div>
   <div class="bar"><p class="count" id="count" aria-live="polite"></p><div class="prog" aria-hidden="true"><i id="progBar"></i></div></div>
   <label class="check"><input type="checkbox" id="onlyTodo"> Chỉ hiện người chưa gửi</label>
-  <p class="hint" id="shareCap"></p>
-  <p class="hint">• <b>Gửi</b>: trên điện thoại mở Zalo / Messenger với lời nhắn + link có sẵn → chọn người nhận → gửi. Đợi 1–2 giây cho khung ảnh thiệp hiện ra.<br>• <b>Chép lời</b>: chép lời nhắn + link để dán vào ô chat.<br>Khách nào đã gửi hoặc đã chép sẽ được đánh dấu “đã gửi” (lưu trên máy này).</p>
+  <p class="hint">• <b>Gửi</b>: trên điện thoại mở Zalo / Messenger với lời nhắn + link có sẵn → chọn người nhận → gửi.<br>• <b>Chép lời</b>: chép lời nhắn + link để dán vào ô chat.<br>Khách nào đã gửi hoặc đã chép sẽ được đánh dấu “đã gửi” (lưu trên máy này).</p>
   <div class="toast" id="toast" hidden></div>
   <ul id="out"><li class="empty">Danh sách link sẽ hiện ở đây.</li></ul>
 </main>
@@ -120,7 +106,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   function isLocal(u){return /\/\/(localhost|127\.0\.0\.1|\[::1\]|192\.168\.)/.test(u||'')}
   base.value=PUBLIC; // luôn tạo link địa chỉ thật, kể cả khi mở trang này trên máy
   var sideVal='nha-trai/',noqr=document.getElementById('noqr');
-  try{ta.value=localStorage.getItem('guests')||'';var sb=localStorage.getItem('base');if(sb&&!isLocal(sb))base.value=sb;var sv=localStorage.getItem('side');if(sv!==null)sideVal=sv;noqr.checked=localStorage.getItem('noqr')==='1'}catch(e){}
+  try{ta.value=localStorage.getItem('guests')||'';var sv=localStorage.getItem('side');if(sv!==null)sideVal=sv;noqr.checked=localStorage.getItem('noqr')==='1'}catch(e){}
   noqr.onchange=function(){try{localStorage.setItem('noqr',noqr.checked?'1':'0')}catch(e){}if(ta.value.trim())make()};
   var xhVal='';try{xhVal=localStorage.getItem('xh')||''}catch(e){}
   document.querySelectorAll('input[name=xh]').forEach(function(r){r.checked=r.value===xhVal;r.onchange=function(){xhVal=r.value;try{localStorage.setItem('xh',xhVal)}catch(e){}if(ta.value.trim())make()}});
@@ -131,7 +117,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(text).then(ok,fb);else fb();
   }
   function make(){
-    var b=base.value.trim();if(!b||isLocal(b)){b=PUBLIC;base.value=PUBLIC}
+    var b=base.value.trim();if(!b||isLocal(b)||/github\.io/.test(b)){b=PUBLIC;base.value=PUBLIC}
     try{localStorage.setItem('guests',ta.value);localStorage.setItem('base',b)}catch(e){}
     var seen={},names=ta.value.split('\n').map(function(s){return s.replace(/\s+/g,' ').trim()}).filter(function(s){if(!s||seen[s])return false;return seen[s]=true});
     links=names.map(function(n){var u=new URL(sideVal,b.replace(/\/?$/,'/')),h=new URLSearchParams();h.set('to',n);if(xhVal)h.set('xh',xhVal);if(noqr.checked)h.set('qr','0');
@@ -140,18 +126,18 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     render();
   }
   var tpl=document.getElementById('msgTpl'),onlyTodo=document.getElementById('onlyTodo');
-  var TPL={'':'{ten} ơi, tụi mình cưới rồi nè! 💌 Mời {ten} ghé xem thiệp và tới chung vui với tụi mình nha:\n{link}',
-    chi:'Em gửi {ten} thiệp cưới của tụi em ạ 💌 Mong {ten} sắp xếp tới chung vui cùng tụi em nha:\n{link}',
-    anh:'Em gửi {ten} thiệp cưới của tụi em ạ 💌 Mong {ten} sắp xếp tới chung vui cùng tụi em nha:\n{link}',
-    anhchi:'Em gửi {ten} thiệp cưới của tụi em ạ 💌 Mong {ten} sắp xếp tới chung vui cùng tụi em nha:\n{link}'};
-  function tplKey(){return 'tpl_'+xhVal}
+  // Lời nhắn trang trí bằng biểu tượng cảm xúc cho vui mắt, đỡ giống tin nhắn rác
+  var BAN='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\n{ten} ơi 🥰 tụi mình cưới rồi nè! 💍💒\nMời {ten} ghé xem thiệp 🎀 và tới chung vui với tụi mình nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
+  var EM='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\nEm gửi {ten} thiệp cưới của tụi em ạ 💍💒\nMong {ten} sắp xếp tới chung vui cùng tụi em nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
+  var TPL={'':BAN,chi:EM,anh:EM,anhchi:EM};
+  function tplKey(){return 'tpl4_'+xhVal}
   function loadTpl(){var v='';try{v=localStorage.getItem(tplKey())||''}catch(e){}tpl.value=v||TPL[xhVal]||TPL['']}
   loadTpl();
   tpl.oninput=function(){try{localStorage.setItem(tplKey(),tpl.value)}catch(e){}};
   document.querySelectorAll('input[name=xh]').forEach(function(r){r.addEventListener('change',loadTpl)});
   var sent={};try{sent=JSON.parse(localStorage.getItem('sent')||'{}')}catch(e){}
   function saveSent(){try{localStorage.setItem('sent',JSON.stringify(sent))}catch(e){}}
-  function msgFor(l){return tpl.value.split('{ten}').join(l.n).split('{link}').join(l.u)}
+  function msgFor(l){return tpl.value.split('{ten}').join(l.n).split('{link}').join(l.u).split('{doi}').join(sideVal==='nha-gai/'?'Hoài Thu & Tuấn Nghĩa':'Tuấn Nghĩa & Hoài Thu')}
   function toast(t){var x=document.getElementById('toast');x.textContent=t;x.hidden=false;clearTimeout(x._t);x._t=setTimeout(function(){x.hidden=true},2000)}
   function when(ts){var d=new Date(ts);function p(n){return n<10?'0'+n:n}return 'Gửi lúc '+p(d.getHours())+':'+p(d.getMinutes())+' · '+p(d.getDate())+'/'+p(d.getMonth()+1)}
   function render(){
@@ -169,82 +155,22 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
       tk.onchange=function(){if(tk.checked)sent[l.u]=Date.now();else delete sent[l.u];saveSent();render()};
       bb.textContent=l.n;a.href=l.u;a.target='_blank';a.rel='noopener';a.textContent=l.u;
       d.append(bb,a);if(sent[l.u]){var w=document.createElement('small');w.className='when';w.textContent=when(sent[l.u]);d.appendChild(w)}
-      acts.className='acts';go.type='button';go.className='solid';go.textContent='Gửi';cp.type='button';cp.textContent=picVal?'① Chép ảnh':'Chép lời';
-      cp.onclick=function(){copyRich(l,cp)};
+      acts.className='acts';go.type='button';go.className='solid';go.textContent='Gửi';cp.type='button';cp.textContent='Chép lời';
+      cp.onclick=function(){copy(msgFor(l),cp,'Chép lời');sent[l.u]=sent[l.u]||Date.now();saveSent();setTimeout(render,1600)};
       go.onclick=function(){
         var text=msgFor(l);
         function mark(){sent[l.u]=Date.now();saveSent();render()}
-        var data={text:text};
-        if(picVal&&picFile&&navigator.canShare&&navigator.canShare({files:[picFile]}))data.files=[picFile];
-        if(navigator.share){navigator.share(data).then(mark,function(err){
-          if(data.files&&err&&err.name!=='AbortError'){navigator.share({text:text}).then(mark,function(){})} // app không nhận ảnh thì gửi chữ
-        })}
+        if(navigator.share){navigator.share({text:text}).then(mark,function(){})}
         else{copy(text,go,'Gửi');mark();toast('Đã chép lời nhắn, dán vào Zalo / Messenger để gửi')}
       };
       acts.append(go,cp);li.append(tk,d,acts);out.appendChild(li);
     });
   }
   onlyTodo.onchange=render;
-  // ---- Ảnh gửi kèm ----
-  var PICS=[['og-2611.jpg','assets/og-2611.jpg'],['62','assets/photos/62.jpg'],['73','assets/photos/73.jpg'],['67','assets/photos/67.jpg'],['78','assets/photos/78.jpg'],['82','assets/photos/82.jpg'],['63','assets/photos/63.jpg'],['61','assets/photos/61.jpg']];
-  var picVal='',picFile=null,picsBox=document.getElementById('pics');
-  try{var pv=localStorage.getItem('pic2');if(pv!==null)picVal=pv}catch(e){}
-  // Chép cả ảnh lẫn lời nhắn: dán vào Messenger / Zalo / Facebook trên máy tính sẽ có ảnh kèm chữ
-  var picPng=null;
-  function makePng(file){
-    picPng=null;if(!file)return;
-    var img=new Image(),url=URL.createObjectURL(file);
-    img.onload=function(){var c=document.createElement('canvas'),k=Math.min(1,1200/Math.max(img.width,img.height));c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
-      c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(function(b){picPng=b;URL.revokeObjectURL(url)},'image/png')};
-    img.src=url;
-  }
-  // Ứng dụng chat thường chỉ dán chữ nếu bộ nhớ có cả ảnh lẫn chữ, nên chép làm 2 bước: ảnh trước, lời nhắn sau
-  function copyRich(l,btn){
-    var text=msgFor(l);
-    function markSent(){sent[l.u]=sent[l.u]||Date.now();saveSent()}
-    function step2(){btn.textContent='② Chép lời';btn.classList.add('solid');btn.onclick=function(){copy(text,btn,'② Chép lời');toast('Đã chép lời nhắn. Dán tiếp vào ô chat rồi gửi');markSent();setTimeout(render,1600)}}
-    if(btn.textContent.indexOf('Chép lời')>-1&&btn.textContent.indexOf('②')<0){copy(text,btn,'Chép lời');markSent();setTimeout(render,1600);return}
-    if(picVal&&picPng&&window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write){
-      navigator.clipboard.write([new ClipboardItem({'image/png':picPng})]).then(function(){
-        toast('Đã chép ẢNH. Dán ảnh vào ô chat, rồi bấm ② Chép lời');step2();
-      },function(){copy(text,btn,'① Chép ảnh');toast('Trình duyệt này chặn chép ảnh (đã chép lời nhắn). Hãy mở trang bằng Chrome hoặc Safari');markSent()});
-    } else { copy(text,btn,btn.textContent);markSent();if(picVal)toast(picPng?'Máy này không chép được ảnh, đã chép lời nhắn':'Ảnh đang tải, bấm lại sau 1 giây');setTimeout(render,1600) }
-  }
-  function loadPic(){ // tải sẵn ảnh để lúc bấm Gửi chia sẻ được ngay
-    picFile=null;picPng=null;if(!picVal||picVal==='custom')return;
-    fetch(picVal).then(function(r){return r.blob()}).then(function(b){picFile=new File([b],'thiep-cuoi-tuan-nghia-hoai-thu.jpg',{type:b.type||'image/jpeg'});makePng(picFile)}).catch(function(){});
-  }
-  function drawPics(){
-    picsBox.innerHTML='';
-    var none=document.createElement('label');none.innerHTML='<input type="radio" name="pic" value=""><span>Không<br>gửi ảnh</span>';picsBox.appendChild(none);
-    PICS.forEach(function(p){var lb=document.createElement('label');lb.innerHTML='<input type="radio" name="pic" value="'+p[1]+'"><span><img src="'+(p[1].indexOf('photos/')>-1?p[1].replace('photos/','photos/thumb/'):p[1])+'" alt="Ảnh '+p[0]+'" loading="lazy"></span>';picsBox.appendChild(lb)});
-    picsBox.querySelectorAll('input').forEach(function(r){r.checked=r.value===picVal;r.onchange=function(){picVal=r.value;try{localStorage.setItem('pic2',picVal)}catch(e){}loadPic();render()}});
-  }
-  drawPics();loadPic();
-  (function(){var c=document.getElementById('shareCap'),f=new File([new Blob(['x'],{type:'image/jpeg'})],'a.jpg',{type:'image/jpeg'});
-    var ok=!!(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]}));
-    var inApp=/FBAN|FBAV|FB_IAB|Messenger|Instagram|Zalo|Line\//i.test(navigator.userAgent);
-    try{navigator.permissions&&navigator.permissions.query({name:'clipboard-write'}).then(function(p){if(p.state==='denied')c.innerHTML='⚠️ Trình duyệt này chặn chép ảnh. Hãy mở trang này bằng <b>Chrome</b> hoặc <b>Safari</b> để nút “① Chép ảnh” hoạt động.'},function(){})}catch(e){}
-    c.innerHTML=inApp?'⚠️ Bạn đang mở trang này trong Messenger/Zalo. Hãy bấm ⋯ → <b>Mở bằng Safari/Chrome</b> để nút Gửi kèm được ảnh.':ok?'✅ Máy này gửi kèm ảnh được.':(navigator.share?'ℹ️ Máy này chỉ gửi được chữ, không kèm ảnh. Link vẫn có ảnh xem trước của thiệp.':'ℹ️ Máy tính: nút Gửi sẽ chép lời nhắn để bạn dán.');})();
-  document.getElementById('picUp').onclick=function(){document.getElementById('picFile').click()};
-  document.getElementById('picFile').onchange=function(e){
-    var f=e.target.files&&e.target.files[0];if(!f)return;
-    picFile=new File([f],f.name,{type:f.type});makePng(picFile);picVal='custom';picsBox.querySelectorAll('input').forEach(function(r){r.checked=false});
-    toast('Đã chọn ảnh: '+f.name+' (chỉ dùng trong lần mở trang này)');
-  };
   document.getElementById('make').onclick=make;
-  // Sao chép tất cả: chép cùng lúc ảnh + toàn bộ lời nhắn (dán vào chỗ nhận được cả hai sẽ có ảnh kèm chữ)
   document.getElementById('copyAll').onclick=function(){
     if(!links.length)make();if(!links.length)return;
-    var btn=this,text=links.map(function(l){return msgFor(l)}).join('\n\n');
-    function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-    var imgUrl=PUBLIC+(picVal&&picVal!=='custom'?picVal:'assets/og-2611.jpg');
-    var html='<div><img src="'+imgUrl+'" alt="Thiệp cưới" width="600"><br>'+esc(text).replace(/(https?:\/\/\S+)/g,'<a href="$1">$1</a>').replace(/\n/g,'<br>')+'</div>';
-    function ok(){btn.textContent='Đã chép ảnh + chữ';setTimeout(function(){btn.textContent='Sao chép tất cả'},1800);toast('Đã chép ảnh + lời nhắn của '+links.length+' khách')}
-    if(picVal&&picPng&&window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write){
-      navigator.clipboard.write([new ClipboardItem({'image/png':picPng,'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([text],{type:'text/plain'})})])
-        .then(ok,function(){copy(text,btn,'Sao chép tất cả');toast('Trình duyệt này chặn chép ảnh (đã chép chữ). Hãy mở bằng Chrome hoặc Safari')});
-    } else copy(text,btn,'Sao chép tất cả');
+    copy(links.map(function(l){return msgFor(l)}).join('\n\n'),this,'Sao chép tất cả');toast('Đã chép lời nhắn của '+links.length+' khách');
   };
   if(ta.value)make();
 })();
