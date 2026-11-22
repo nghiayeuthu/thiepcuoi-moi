@@ -108,6 +108,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   </div>
   <div class="bar"><p class="count" id="count" aria-live="polite"></p><div class="prog" aria-hidden="true"><i id="progBar"></i></div></div>
   <label class="check"><input type="checkbox" id="onlyTodo"> Chỉ hiện người chưa gửi</label>
+  <p class="hint" id="shareCap"></p>
   <p class="hint">Bấm <b>Gửi</b> để mở Zalo / Messenger (trên điện thoại) với lời nhắn và link có sẵn; khách đó tự được đánh dấu “đã gửi”. Trên máy tính, nút Gửi sẽ sao chép lời nhắn để bạn dán. Dấu “đã gửi” lưu trên máy này.</p>
   <div class="toast" id="toast" hidden></div>
   <ul id="out"><li class="empty">Danh sách link sẽ hiện ở đây.</li></ul>
@@ -131,7 +132,9 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     var b=base.value.trim()||new URL('./',location.href).href;
     try{localStorage.setItem('guests',ta.value);localStorage.setItem('base',b)}catch(e){}
     var seen={},names=ta.value.split('\n').map(function(s){return s.replace(/\s+/g,' ').trim()}).filter(function(s){if(!s||seen[s])return false;return seen[s]=true});
-    links=names.map(function(n){var u=new URL(sideVal,b.replace(/\/?$/,'/'));u.searchParams.set('guestName',n);if(noqr.checked)u.searchParams.set('qr','0');if(xhVal)u.searchParams.set('xh',xhVal);return{n:n,u:u.href.replace(/\+/g,'%20')}});
+    links=names.map(function(n){var u=new URL(sideVal,b.replace(/\/?$/,'/')),h=new URLSearchParams();h.set('to',n);if(xhVal)h.set('xh',xhVal);if(noqr.checked)h.set('qr','0');
+      // Tên khách để sau dấu #: Messenger / Zalo coi mọi link là cùng một trang nên luôn hiện ảnh xem trước của thiệp
+      return{n:n,u:u.href+'#'+h.toString().replace(/\+/g,'%20')}});
     render();
   }
   var tpl=document.getElementById('msgTpl'),onlyTodo=document.getElementById('onlyTodo');
@@ -195,6 +198,10 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     picsBox.querySelectorAll('input').forEach(function(r){r.checked=r.value===picVal;r.onchange=function(){picVal=r.value;try{localStorage.setItem('pic',picVal)}catch(e){}loadPic()}});
   }
   drawPics();loadPic();
+  (function(){var c=document.getElementById('shareCap'),f=new File([new Blob(['x'],{type:'image/jpeg'})],'a.jpg',{type:'image/jpeg'});
+    var ok=!!(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]}));
+    var inApp=/FBAN|FBAV|FB_IAB|Messenger|Instagram|Zalo|Line\//i.test(navigator.userAgent);
+    c.innerHTML=inApp?'⚠️ Bạn đang mở trang này trong Messenger/Zalo. Hãy bấm ⋯ → <b>Mở bằng Safari/Chrome</b> để nút Gửi kèm được ảnh.':ok?'✅ Máy này gửi kèm ảnh được.':(navigator.share?'ℹ️ Máy này chỉ gửi được chữ, không kèm ảnh. Link vẫn có ảnh xem trước của thiệp.':'ℹ️ Máy tính: nút Gửi sẽ chép lời nhắn để bạn dán.');})();
   document.getElementById('picUp').onclick=function(){document.getElementById('picFile').click()};
   document.getElementById('picFile').onchange=function(e){
     var f=e.target.files&&e.target.files[0];if(!f)return;

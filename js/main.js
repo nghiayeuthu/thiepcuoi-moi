@@ -5,9 +5,16 @@
   var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 
+  // Tham số khách: đọc cả ?… và #… (link mới để tên trong #, Messenger vẫn dùng ảnh xem trước của trang gốc)
+  var QP = new URLSearchParams();
+  try {
+    new URLSearchParams(location.search).forEach(function (v, k) { QP.set(k, v); });
+    new URLSearchParams(location.hash.replace(/^#/, '')).forEach(function (v, k) { QP.set(k, v); });
+  } catch (e) {}
+
   // ---------- Thiệp riêng nhà trai / nhà gái (…/nha-trai/, …/nha-gai/ hoặc ?ben=trai|gai) ----------
   var SIDE = '';
-  try { SIDE = (document.documentElement.getAttribute('data-side') || new URLSearchParams(location.search).get('ben') || '').toLowerCase(); } catch (e) {}
+  try { SIDE = (document.documentElement.getAttribute('data-side') || QP.get('ben') || '').toLowerCase(); } catch (e) {}
   var SD = SIDE && C.sides && C.sides[SIDE];
   if (SD) {
     var sd = SD.date || {};
@@ -30,7 +37,7 @@
 
   // ---------- Xưng hô: mặc định bạn – mình (bạn bè); ?xh=chi | anh | anhchi thì xưng em ----------
   var XH = '';
-  try { XH = (new URLSearchParams(location.search).get('xh') || '').toLowerCase(); } catch (e) {}
+  try { XH = (QP.get('xh') || '').toLowerCase(); } catch (e) {}
   var YOU = { chi: 'chị', anh: 'anh', anhchi: 'anh chị' }[XH] || '';
   var P = YOU ? { you: YOU, me: 'em', we: 'tụi em', a: ' ạ', nha: ' nha' } : { you: 'bạn', me: 'mình', we: 'chúng mình', a: '', nha: ' nhé' };
   function cap(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
@@ -59,7 +66,7 @@
   // ---------- Tên khách từ link ?guestName=... (vẫn nhận ?to=... của thiệp cũ) ----------
   var guest = '';
   try {
-    var q = new URLSearchParams(location.search);
+    var q = QP;
     guest = (q.get('guestName') || q.get('to') || '').replace(/\s+/g, ' ').trim().slice(0, 60);
   } catch (e) {}
   // Tên hiện trên thiệp: biệt danh khách tự đặt (nếu có) được ưu tiên, sau đó tới tên trên link
@@ -354,7 +361,7 @@
   $('.sheet-x').onclick = closeModal;
   modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
   // Link có ?qr=0 thì ẩn phần mừng cưới (QR chuyển khoản)
-  try { if (new URLSearchParams(location.search).get('qr') === '0') { $('.gift').style.display = 'none'; modal.remove(); } } catch (e) {}
+  try { if (QP.get('qr') === '0') { $('.gift').style.display = 'none'; modal.remove(); } } catch (e) {}
 
   document.addEventListener('keydown', function (e) {
     if (!modal.hidden && e.key === 'Escape') closeModal();
@@ -622,9 +629,9 @@
   function toast(t) { var x = $('#toast'); x.textContent = t; x.hidden = false; clearTimeout(x._t); x._t = setTimeout(function () { x.hidden = true; }, 2200); }
   $('#railShare').onclick = function () {
     // Giữ kiểu xưng hô và tuỳ chọn ẩn QR khi chia sẻ, bỏ tên khách riêng
-    var u0 = new URL(location.href), keep = new URLSearchParams();
-    ['xh', 'qr', 'ben'].forEach(function (k) { var v = u0.searchParams.get(k); if (v) keep.set(k, v); });
-    var url = location.origin + location.pathname + (keep.toString() ? '?' + keep.toString() : ''), title = document.title.replace(/^Thân mời [^·]*· /, 'Thiệp cưới ');
+    var keep = new URLSearchParams();
+    ['xh', 'qr', 'ben'].forEach(function (k) { var v = QP.get(k); if (v) keep.set(k, v); });
+    var url = location.origin + location.pathname + (keep.toString() ? '#' + keep.toString() : ''), title = document.title.replace(/^Thân mời [^·]*· /, 'Thiệp cưới ');
     if (navigator.share) navigator.share({ title: title, url: url }).catch(function () {});
     else copyText(url, function () { toast('Đã sao chép link thiệp'); });
   };
