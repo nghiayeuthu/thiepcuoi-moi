@@ -233,7 +233,19 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     toast('Đã chọn ảnh: '+f.name+' (chỉ dùng trong lần mở trang này)');
   };
   document.getElementById('make').onclick=make;
-  document.getElementById('copyAll').onclick=function(){if(!links.length)make();if(links.length)copy(links.map(function(l){return msgFor(l)}).join('\n\n'),this,'Sao chép tất cả')};
+  // Sao chép tất cả: chép cùng lúc ảnh + toàn bộ lời nhắn (dán vào chỗ nhận được cả hai sẽ có ảnh kèm chữ)
+  document.getElementById('copyAll').onclick=function(){
+    if(!links.length)make();if(!links.length)return;
+    var btn=this,text=links.map(function(l){return msgFor(l)}).join('\n\n');
+    function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+    var imgUrl=PUBLIC+(picVal&&picVal!=='custom'?picVal:'assets/og-2611.jpg');
+    var html='<div><img src="'+imgUrl+'" alt="Thiệp cưới" width="600"><br>'+esc(text).replace(/(https?:\/\/\S+)/g,'<a href="$1">$1</a>').replace(/\n/g,'<br>')+'</div>';
+    function ok(){btn.textContent='Đã chép ảnh + chữ';setTimeout(function(){btn.textContent='Sao chép tất cả'},1800);toast('Đã chép ảnh + lời nhắn của '+links.length+' khách')}
+    if(picVal&&picPng&&window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write){
+      navigator.clipboard.write([new ClipboardItem({'image/png':picPng,'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([text],{type:'text/plain'})})])
+        .then(ok,function(){copy(text,btn,'Sao chép tất cả');toast('Trình duyệt này chặn chép ảnh (đã chép chữ). Hãy mở bằng Chrome hoặc Safari')});
+    } else copy(text,btn,'Sao chép tất cả');
+  };
   if(ta.value)make();
 })();
 </script>
