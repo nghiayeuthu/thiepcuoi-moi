@@ -23,7 +23,7 @@ SIDES = {
     'gai': {
         'dir': 'nha-gai',
         'og_title': 'Thiệp cưới Hoài Thu &amp; Tuấn Nghĩa · 29.11.2026',
-        'desc': 'Thân mời bạn tới chung vui đám cưới Hoài Thu &amp; Tuấn Nghĩa: 10 giờ 30 sáng Chủ Nhật 29/11/2026, Lễ Vu Quy tại tư gia nhà gái, phường An Dương, TP. Hải Phòng.',
+        'desc': 'Thân mời bạn tới chung vui đám cưới Hoài Thu &amp; Tuấn Nghĩa: 10 giờ 30 sáng Chủ Nhật 29/11/2026, tiệc cưới tại tư gia nhà gái, phường An Dương, TP. Hải Phòng.',
     },
 }
 

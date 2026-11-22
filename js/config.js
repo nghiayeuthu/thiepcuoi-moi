@@ -76,7 +76,6 @@ window.WEDDING = {
       date: { day: 29, hour: 10, minute: 30,
         place: { name: 'Tư gia nhà gái', address: 'Số nhà 15, đường Cây Chè, TDP Cách Thượng, phường An Dương, TP. Hải Phòng' } },
       venues: [1],
-      venueLabel: 'Lễ Vu Quy · Chủ Nhật 29/11/2026',
       schedule: []                                // ✏️ lịch trình ngày 29 (để trống thì ẩn phần Lịch trình)
     }
   },

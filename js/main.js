@@ -156,7 +156,7 @@
       '<p class="dtime">' + pad(hour) + ':' + pad(minute) + ' · ' + DOW[wd.getDay()] + '</p>' +
       '<div class="drow"><span>Tháng ' + D.month + '</span><b>' + pad(day) + '</b><span>Năm ' + D.year + '</span></div>' +
       '<p class="dlunar">(Tức ngày ' + L.day + ' tháng ' + L.month + (L.leap ? ' nhuận' : '') + ' năm ' + Lunar.yearName(L.year) + ')</p>' +
-      (place ? '<p class="dat">' + (SIDE === 'gai' ? 'Lễ Vu Quy được tổ chức tại' : 'Tiệc cưới được tổ chức tại') + '</p><p class="dplace">' + esc(place.name) + '</p><p class="daddr">' + esc(v && v.copy || place.address) + '</p>' : '');
+      (place ? '<p class="dat">' + 'Tiệc cưới được tổ chức tại' + '</p><p class="dplace">' + esc(place.name) + '</p><p class="daddr">' + esc(v && v.copy || place.address) + '</p>' : '');
     if (v && v.map) {
       var a = el('a', 'dmap'); a.href = v.map; a.target = '_blank'; a.rel = 'noopener';
       a.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.3 7 13 7 13s7-7.7 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>Chỉ đường';
