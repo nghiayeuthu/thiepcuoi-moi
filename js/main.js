@@ -359,6 +359,7 @@
   function closeModal() { modal.hidden = true; document.body.style.overflow = ''; $('#giftBtn').focus(); }
   $('#giftBtn').onclick = function () { modal.hidden = false; document.body.style.overflow = 'hidden'; $('.sheet-x', modal).focus(); };
   $('.sheet-x', modal).onclick = closeModal;
+  $('.sheet-close', modal).onclick = closeModal;
   modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
   // Link có ?qr=0 thì ẩn phần mừng cưới (QR chuyển khoản)
   try { if (QP.get('qr') === '0') { $('.gift').style.display = 'none'; modal.remove(); } } catch (e) {}

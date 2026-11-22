@@ -353,3 +353,5 @@ footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 @keyframes nameFlash{0%{transform:scale(.7);opacity:0;filter:blur(4px)}50%{transform:scale(1.12);opacity:1;filter:none}100%{transform:scale(1)}}
 .couple-names .script{font-size:clamp(21px,6.6vw,27px);white-space:nowrap}
 .couple-names{gap:2px}
+.sheet-x{z-index:3}
+.sheet-close{width:100%;max-width:340px;margin:20px auto 0}
