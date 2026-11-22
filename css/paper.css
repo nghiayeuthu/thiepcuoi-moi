@@ -339,3 +339,11 @@ footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 #nickIn:focus{border-color:#0866ff;background:#fff;box-shadow:0 0 0 3px rgba(8,102,255,.15)}
 .nick-sheet .btn{width:100%;max-width:340px;background:#0866ff;border-color:#0866ff}
 .nick-sheet .btn:hover{background:#0757d6;border-color:#0757d6}
+
+/* ============ Logo T&N ============ */
+.mono{width:100%;height:100%;display:block;overflow:visible}
+.door-seal .mono{width:88%;height:88%;filter:drop-shadow(0 1px 0 rgba(255,255,255,.75)) drop-shadow(0 -1px 0 rgba(110,85,50,.35))}
+.door-seal{color:#a88c5f}
+.wax .mono,.wax-half .mono{width:92%;height:92%;filter:drop-shadow(0 1px 0 rgba(0,0,0,.25))}
+.wax,.wax-half{color:#fbe9d4}
+.wax{width:74px;height:74px;margin:-37px 0 0 -37px}
