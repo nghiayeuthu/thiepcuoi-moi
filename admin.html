@@ -81,7 +81,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
       <label><input type="radio" name="xh" value="chi"><span>Chị<small>chị – em</small></span></label>
       <label><input type="radio" name="xh" value="anh"><span>Anh<small>anh – em</small></span></label>
       <label><input type="radio" name="xh" value="anhchi"><span>Anh chị<small>anh chị – em</small></span></label>
-      <label><input type="radio" name="xh" value="di"><span>Dì<small>dì – cháu</small></span></label>
+      <label><input type="radio" name="xh" value="di"><span>Cháu<small>dì gọi cháu</small></span></label>
     </div>
   </fieldset>
   <label class="check"><input type="checkbox" id="noqr"> Ẩn phần mừng cưới (mã QR chuyển khoản)</label>
@@ -131,7 +131,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   // Lời nhắn trang trí bằng biểu tượng cảm xúc cho vui mắt, đỡ giống tin nhắn rác
   var BAN='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\n{ten} ơi 🥰 tụi mình cưới rồi nè! 💍💒\nMời {ten} ghé xem thiệp 🎀 và tới chung vui với tụi mình nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
   var EM='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\nEm gửi {ten} thiệp cưới của tụi em ạ 💍💒\nMong {ten} sắp xếp tới chung vui cùng tụi em nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
-  var DI='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\nCháu gửi {ten} thiệp cưới của tụi cháu ạ 💍💒\nMong {ten} sắp xếp tới chung vui cùng tụi cháu nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
+  var DI='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\n{ten} ơi, dì dượng cưới rồi nè 🥰💍💒\nDì gửi {ten} thiệp cưới, mong {ten} tới chung vui cùng dì dượng nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
   var TPL={'':BAN,chi:EM,anh:EM,anhchi:EM,di:DI};
   function tplKey(){return 'tpl4_'+xhVal}
   function loadTpl(){var v='';try{v=localStorage.getItem(tplKey())||''}catch(e){}tpl.value=v||TPL[xhVal]||TPL['']}

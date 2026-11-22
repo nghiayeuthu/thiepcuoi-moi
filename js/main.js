@@ -35,12 +35,12 @@
     }
   }
 
-  // ---------- Xưng hô: mặc định bạn – mình (bạn bè); ?xh=chi | anh | anhchi thì xưng em; ?xh=di thì dì – cháu ----------
+  // ---------- Xưng hô: mặc định bạn – mình (bạn bè); ?xh=chi | anh | anhchi thì xưng em; ?xh=di thì cô dâu chú rể là dì (dượng), gọi khách là cháu ----------
   var XH = '';
   try { XH = (QP.get('xh') || '').toLowerCase(); } catch (e) {}
-  var YOU = { chi: 'chị', anh: 'anh', anhchi: 'anh chị', di: 'dì' }[XH] || '';
-  var ME = XH === 'di' ? 'cháu' : 'em', WE = 'tụi ' + ME;
-  var P = YOU ? { you: YOU, me: ME, we: WE, a: ' ạ', nha: ' nha' } : { you: 'bạn', me: 'mình', we: 'chúng mình', a: '', nha: ' nhé' };
+  var YOU = { chi: 'chị', anh: 'anh', anhchi: 'anh chị', di: 'cháu' }[XH] || '';
+  var ME = XH === 'di' ? 'dì' : 'em', WE = XH === 'di' ? 'dì dượng' : 'tụi em', A = XH === 'di' ? '' : ' ạ';
+  var P = YOU ? { you: YOU, me: ME, we: WE, a: A, nha: ' nha' } : { you: 'bạn', me: 'mình', we: 'chúng mình', a: '', nha: ' nhé' };
   function cap(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
   if (YOU) {
     document.documentElement.setAttribute('data-xh', XH);
@@ -51,15 +51,15 @@
     T('#cdDone', 'Hôm nay là ngày cưới của ' + WE + '!');
     T('.venue h2', 'Hẹn gặp ' + YOU + ' tại');
     T('.rsvp h2', cap(YOU) + ' sẽ đến chứ?');
-    T('.rsvp .sub', cap(YOU) + ' phản hồi giúp ' + WE + ' để ' + WE + ' chuẩn bị chu đáo hơn ạ.');
+    T('.rsvp .sub', cap(YOU) + ' phản hồi giúp ' + WE + ' để ' + WE + ' chuẩn bị chu đáo hơn' + A + '.');
     T('.rsvp legend', cap(YOU) + ' sẽ tham dự chứ?');
     var sp = document.querySelectorAll('.rsvp .seg span'); if (sp.length > 1) { sp[0].textContent = 'Có, ' + YOU + ' sẽ đến'; sp[1].textContent = 'Tiếc quá, ' + YOU + ' bận mất rồi'; }
     var sideLb = $('.rsvp .row2 label:last-child'); if (sideLb && sideLb.firstChild) sideLb.firstChild.textContent = cap(YOU) + ' là khách\n          ';
     var wl = $('#wishForm label'); if (wl && wl.firstChild) wl.firstChild.textContent = 'Tên của ' + YOU;
     ['#rsvpName', '#wishName'].forEach(function (q) { var x = $(q); if (x) x.placeholder = 'Tên của ' + YOU; });
     var ta = $('#wishForm textarea'); if (ta) ta.placeholder = 'Viết đôi lời gửi ' + WE + '…';
-    T('.gift .sub', 'Nếu không thể đến chung vui, ' + YOU + ' có thể gửi lời chúc phúc qua đây ạ.');
-    T('.thanks-in p', 'Cảm ơn ' + YOU + ' đã ghé xem thiệp của ' + WE + '. Có ' + YOU + ' tới chung vui là món quà ý nghĩa nhất với ' + WE + ' ạ!');
+    T('.gift .sub', 'Nếu không thể đến chung vui, ' + YOU + ' có thể gửi lời chúc phúc qua đây' + A + '.');
+    T('.thanks-in p', 'Cảm ơn ' + YOU + ' đã ghé xem thiệp của ' + WE + '. Có ' + YOU + ' tới chung vui là món quà ý nghĩa nhất với ' + WE + A + '!');
     T('.nick-sub', 'Thiệp sẽ mời đúng tên này, và tên này cũng hiện cùng lời chúc của ' + YOU + '.');
     (C.chat || []).forEach(function (m) { m.text = m.text.replace('tụi mình', WE); });
   }
