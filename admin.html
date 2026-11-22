@@ -116,9 +116,11 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
 <script>
 (function(){
   var ta=document.getElementById('names'),base=document.getElementById('base'),out=document.getElementById('out'),links=[];
-  base.value=new URL('./',location.href).href;
+  var PUBLIC='https://nghiayeuthu.github.io/thiepcuoi-moi/';
+  function isLocal(u){return /\/\/(localhost|127\.0\.0\.1|\[::1\]|192\.168\.)/.test(u||'')}
+  base.value=PUBLIC; // luôn tạo link địa chỉ thật, kể cả khi mở trang này trên máy
   var sideVal='nha-trai/',noqr=document.getElementById('noqr');
-  try{ta.value=localStorage.getItem('guests')||'';if(localStorage.getItem('base'))base.value=localStorage.getItem('base');var sv=localStorage.getItem('side');if(sv!==null)sideVal=sv;noqr.checked=localStorage.getItem('noqr')==='1'}catch(e){}
+  try{ta.value=localStorage.getItem('guests')||'';var sb=localStorage.getItem('base');if(sb&&!isLocal(sb))base.value=sb;var sv=localStorage.getItem('side');if(sv!==null)sideVal=sv;noqr.checked=localStorage.getItem('noqr')==='1'}catch(e){}
   noqr.onchange=function(){try{localStorage.setItem('noqr',noqr.checked?'1':'0')}catch(e){}if(ta.value.trim())make()};
   var xhVal='';try{xhVal=localStorage.getItem('xh')||''}catch(e){}
   document.querySelectorAll('input[name=xh]').forEach(function(r){r.checked=r.value===xhVal;r.onchange=function(){xhVal=r.value;try{localStorage.setItem('xh',xhVal)}catch(e){}if(ta.value.trim())make()}});
@@ -129,7 +131,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(text).then(ok,fb);else fb();
   }
   function make(){
-    var b=base.value.trim()||new URL('./',location.href).href;
+    var b=base.value.trim();if(!b||isLocal(b)){b=PUBLIC;base.value=PUBLIC}
     try{localStorage.setItem('guests',ta.value);localStorage.setItem('base',b)}catch(e){}
     var seen={},names=ta.value.split('\n').map(function(s){return s.replace(/\s+/g,' ').trim()}).filter(function(s){if(!s||seen[s])return false;return seen[s]=true});
     links=names.map(function(n){var u=new URL(sideVal,b.replace(/\/?$/,'/')),h=new URLSearchParams();h.set('to',n);if(xhVal)h.set('xh',xhVal);if(noqr.checked)h.set('qr','0');
