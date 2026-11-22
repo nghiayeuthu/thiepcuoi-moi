@@ -1,0 +1,10 @@
+# Cho phép Facebook / Messenger / Zalo đọc thiệp để hiện ảnh xem trước.
+# Không cho Google, Bing đưa thiệp lên kết quả tìm kiếm.
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /
+
+User-agent: *
+Allow: /
