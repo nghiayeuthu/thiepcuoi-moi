@@ -109,7 +109,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   <div class="bar"><p class="count" id="count" aria-live="polite"></p><div class="prog" aria-hidden="true"><i id="progBar"></i></div></div>
   <label class="check"><input type="checkbox" id="onlyTodo"> Chỉ hiện người chưa gửi</label>
   <p class="hint" id="shareCap"></p>
-  <p class="hint">• <b>Gửi</b>: trên điện thoại mở Zalo / Messenger với ảnh, lời nhắn và link có sẵn.<br>• <b>Chép ảnh + lời</b>: chép cả ảnh lẫn lời nhắn, dán vào ô chat (Messenger, Zalo, Facebook trên máy tính hoặc điện thoại) là có ảnh kèm chữ.<br>Khách nào đã gửi hoặc đã chép sẽ được đánh dấu “đã gửi” (lưu trên máy này).</p>
+  <p class="hint">• <b>Gửi</b>: trên điện thoại mở Zalo / Messenger với ảnh, lời nhắn và link có sẵn.<br>• <b>① Chép ảnh</b> → dán ảnh vào ô chat Messenger / Zalo / Facebook → bấm <b>② Chép lời</b> → dán lời nhắn → gửi. Người nhận có ảnh cưới kèm lời mời và link.<br>Khách nào đã gửi hoặc đã chép sẽ được đánh dấu “đã gửi” (lưu trên máy này).</p>
   <div class="toast" id="toast" hidden></div>
   <ul id="out"><li class="empty">Danh sách link sẽ hiện ở đây.</li></ul>
 </main>
@@ -169,7 +169,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
       tk.onchange=function(){if(tk.checked)sent[l.u]=Date.now();else delete sent[l.u];saveSent();render()};
       bb.textContent=l.n;a.href=l.u;a.target='_blank';a.rel='noopener';a.textContent=l.u;
       d.append(bb,a);if(sent[l.u]){var w=document.createElement('small');w.className='when';w.textContent=when(sent[l.u]);d.appendChild(w)}
-      acts.className='acts';go.type='button';go.className='solid';go.textContent='Gửi';cp.type='button';cp.textContent='Chép ảnh + lời';
+      acts.className='acts';go.type='button';go.className='solid';go.textContent='Gửi';cp.type='button';cp.textContent=picVal?'① Chép ảnh':'Chép lời';
       cp.onclick=function(){copyRich(l,cp)};
       go.onclick=function(){
         var text=msgFor(l);
@@ -198,19 +198,17 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
       c.getContext('2d').drawImage(img,0,0,c.width,c.height);c.toBlob(function(b){picPng=b;URL.revokeObjectURL(url)},'image/png')};
     img.src=url;
   }
+  // Ứng dụng chat thường chỉ dán chữ nếu bộ nhớ có cả ảnh lẫn chữ, nên chép làm 2 bước: ảnh trước, lời nhắn sau
   function copyRich(l,btn){
-    var text=msgFor(l),label=btn.textContent;
-    function done(t){btn.textContent='Đã chép';setTimeout(function(){btn.textContent=label},1600);toast(t);sent[l.u]=sent[l.u]||Date.now();saveSent();setTimeout(render,1700)}
+    var text=msgFor(l);
+    function markSent(){sent[l.u]=sent[l.u]||Date.now();saveSent()}
+    function step2(){btn.textContent='② Chép lời';btn.classList.add('solid');btn.onclick=function(){copy(text,btn,'② Chép lời');toast('Đã chép lời nhắn. Dán tiếp vào ô chat rồi gửi');markSent();setTimeout(render,1600)}}
+    if(btn.textContent.indexOf('Chép lời')>-1&&btn.textContent.indexOf('②')<0){copy(text,btn,'Chép lời');markSent();setTimeout(render,1600);return}
     if(picVal&&picPng&&window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write){
-      var html='<img src="'+location.origin+location.pathname.replace(/[^/]*$/,'')+(picVal==='custom'?'assets/og-2611.jpg':picVal)+'"><br>'+text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>');
-      navigator.clipboard.write([new ClipboardItem({'image/png':picPng,'text/plain':new Blob([text],{type:'text/plain'}),'text/html':new Blob([html],{type:'text/html'})})])
-        .then(function(){done('Đã chép ảnh + lời nhắn. Dán vào ô chat là có cả ảnh và chữ')},function(){
-          // trình duyệt không cho chép ảnh kèm chữ: chép ảnh trước, chữ sau
-          navigator.clipboard.write([new ClipboardItem({'image/png':picPng})]).then(function(){
-            toast('Đã chép ẢNH. Dán ảnh vào chat, rồi bấm lại nút để chép lời nhắn');btn.textContent='Chép lời nhắn';btn.onclick=function(){copy(text,btn,'Chép ảnh + lời');btn.onclick=function(){copyRich(l,btn)};sent[l.u]=Date.now();saveSent();setTimeout(render,1600)};
-          },function(){copy(text,btn,label);toast('Máy này chỉ chép được chữ')});
-        });
-    } else { copy(text,btn,label); if(picVal)toast('Máy này chỉ chép được chữ, chưa chép được ảnh'); }
+      navigator.clipboard.write([new ClipboardItem({'image/png':picPng})]).then(function(){
+        toast('Đã chép ẢNH. Dán ảnh vào ô chat, rồi bấm ② Chép lời');step2();
+      },function(){copy(text,btn,'① Chép ảnh');toast('Máy này không chép được ảnh, đã chép lời nhắn');markSent()});
+    } else { copy(text,btn,btn.textContent);markSent();if(picVal)toast(picPng?'Máy này không chép được ảnh, đã chép lời nhắn':'Ảnh đang tải, bấm lại sau 1 giây');setTimeout(render,1600) }
   }
   function loadPic(){ // tải sẵn ảnh để lúc bấm Gửi chia sẻ được ngay
     picFile=null;picPng=null;if(!picVal||picVal==='custom')return;
