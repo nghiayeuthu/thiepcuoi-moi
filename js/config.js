@@ -154,5 +154,5 @@ window.WEDDING = {
     { name: 'Lan Hương', message: 'Chúc hai bạn luôn giữ được nụ cười rạng rỡ như hôm nay.' },
   ],
 
-  music: 'assets/music.mp3',
+  music: 'assets/music-2.mp3',
 };
