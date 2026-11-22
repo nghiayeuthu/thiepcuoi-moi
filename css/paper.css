@@ -358,3 +358,15 @@ footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 /* Chữ viết tay có nét vươn ra ngoài khung (đầu chữ N, đuôi chữ g): chừa chỗ để hiệu ứng ánh sáng không cắt mất */
 .inv-names span:not(.amp){display:inline-block;padding:.08em .35em .32em;margin:-.08em -.35em -.32em}
 .couple-names .script,.hero h1 span,.dlabel,.inv-guest{overflow:visible;padding-inline:.12em}
+/* Khối tên ở lời mời: chừa đủ chỗ cho nét cao (chữ h) và giãn khoảng cách cho thoáng */
+.inv-names{line-height:1.25;row-gap:6px;padding-top:18px}
+.inv-names span:not(.amp){padding:.3em .4em .35em;margin:-.3em -.4em -.35em}
+.inv-names .amp{margin:2px 0}
+.inv-kinh{margin-top:40px}
+.inv-guest{margin:10px 0 14px}
+.inv-to{line-height:1.6}
+.dblock{margin-top:40px}
+.dtime{margin-bottom:6px}
+.dlunar{margin-top:10px}
+.dat{margin-top:24px}
+.dmap{margin-top:22px}
