@@ -41,7 +41,7 @@ window.WEDDING = {
   // Địa điểm (giữ đủ 2 ngày như thiệp cũ)
   venues: [
     {
-      label: 'Tiệc cưới · Thứ Bảy 28/11/2026',
+      label: 'Tiệc cưới nhà trai · Thứ Bảy 28/11/2026',
       time: '11 giờ 00 trưa',
       name: 'Khách sạn Hải Đăng',
       hall: 'Cung Happy Place · Tầng 1 · Trung tâm tiệc cưới Hải Đăng',
@@ -51,7 +51,7 @@ window.WEDDING = {
       photo: 'assets/photos/82.jpg', photoPos: '50% 62%'
     },
     {
-      label: 'Lễ Vu Quy · Chủ Nhật 29/11/2026',
+      label: 'Tiệc cưới nhà gái · Chủ Nhật 29/11/2026',
       time: '10 giờ 30 sáng',
       name: 'Tư gia nhà gái',
       hall: 'Số nhà 15 · Đường Cây Chè · TDP Cách Thượng',
@@ -76,6 +76,7 @@ window.WEDDING = {
       date: { day: 29, hour: 10, minute: 30,
         place: { name: 'Tư gia nhà gái', address: 'Số nhà 15, đường Cây Chè, TDP Cách Thượng, phường An Dương, TP. Hải Phòng' } },
       venues: [1],
+      venueLabel: 'Lễ Vu Quy · Chủ Nhật 29/11/2026',
       schedule: []                                // ✏️ lịch trình ngày 29 (để trống thì ẩn phần Lịch trình)
     }
   },
