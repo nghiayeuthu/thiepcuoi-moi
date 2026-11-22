@@ -142,7 +142,7 @@
   C.venues.forEach(function (v) {
     var a = el('article', 'venue-item');
     if (v.photo) { var f = el('figure'), im = el('img'); im.src = v.photo; im.alt = ''; im.loading = 'lazy'; if (v.photoPos) im.style.objectPosition = v.photoPos; f.append(im); a.append(f); }
-    a.append(el('p', 'vlabel', v.label), el('h3', '', v.name), el('p', 'vhall', v.hall), el('p', 'vtime', v.time), el('address', '', v.address));
+    a.append(el('p', 'vlabel', v.label), el('h3', '', v.name), v.hall ? el('p', 'vhall', v.hall) : '', el('p', 'vtime', v.time), el('address', '', v.address));
     var b = el('div', 'btns'), go = el('a', 'btn solid');
     go.href = v.map; go.target = '_blank'; go.rel = 'noopener';
     go.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>Chỉ đường';

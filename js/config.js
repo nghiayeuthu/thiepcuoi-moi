@@ -12,7 +12,7 @@ window.WEDDING = {
     fullName: '',                            // ✏️ họ tên đầy đủ (để trống thì hiện tên ngắn)
     father: 'Ông Vũ Đức Tùng',
     mother: 'Bà Trần Thị Tuyết',
-    address: 'Ngô Quyền, Hải Phòng'           // ✏️
+    address: 'Phường Ngô Quyền, TP. Hải Phòng'
   },
   bride: {
     name: 'Hoài Thu',
@@ -24,7 +24,7 @@ window.WEDDING = {
 
   // Ngày giờ chính (đếm ngược tới mốc này). Giờ Việt Nam.
   date: { day: 28, month: 11, year: 2026, hour: 11, minute: 0,
-    place: { name: 'Khách sạn Hải Đăng', address: 'Cung Happy Place, tầng 1, Trung tâm tiệc cưới Hải Đăng, Số 19 Trần Khánh Dư, Ngô Quyền, Hải Phòng' } },
+    place: { name: 'Khách sạn Hải Đăng', address: 'Cung Happy Place, tầng 1, Trung tâm tiệc cưới Hải Đăng, Số 19 Trần Khánh Dư, phường Ngô Quyền, TP. Hải Phòng' } },
   // Ngày thứ hai: tiệc tại tư gia nhà gái (cùng tháng, năm với ngày chính)
   secondDay: { day: 29, hour: 10, minute: 30,
     place: { name: 'Tư gia nhà gái', address: 'Số nhà 15, đường Cây Chè, TDP Cách Thượng, phường An Dương, TP. Hải Phòng' } },
@@ -45,8 +45,8 @@ window.WEDDING = {
       time: '11 giờ 00 trưa',
       name: 'Khách sạn Hải Đăng',
       hall: 'Cung Happy Place · Tầng 1 · Trung tâm tiệc cưới Hải Đăng',
-      address: 'Số 19 Trần Khánh Dư, Ngô Quyền, Hải Phòng',
-      copy: 'Cung Happy Place, tầng 1, Trung tâm tiệc cưới Hải Đăng, Số 19 Trần Khánh Dư, Ngô Quyền, Hải Phòng',
+      address: 'Số 19 Trần Khánh Dư, phường Ngô Quyền, TP. Hải Phòng',
+      copy: 'Cung Happy Place, tầng 1, Trung tâm tiệc cưới Hải Đăng, Số 19 Trần Khánh Dư, phường Ngô Quyền, TP. Hải Phòng',
       map: 'https://www.google.com/maps/search/?api=1&query=Trung%20t%C3%A2m%20ti%E1%BB%87c%20c%C6%B0%E1%BB%9Bi%20H%E1%BA%A3i%20%C4%90%C4%83ng%2C%20S%E1%BB%91%2019%20Tr%E1%BA%A7n%20Kh%C3%A1nh%20D%C6%B0%2C%20Ng%C3%B4%20Quy%E1%BB%81n%2C%20H%E1%BA%A3i%20Ph%C3%B2ng',
       photo: 'assets/photos/82.jpg', photoPos: '50% 62%'
     },
@@ -54,7 +54,6 @@ window.WEDDING = {
       label: 'Tiệc cưới nhà gái · Chủ Nhật 29/11/2026',
       time: '10 giờ 30 sáng',
       name: 'Tư gia nhà gái',
-      hall: 'Số nhà 15 · Đường Cây Chè · TDP Cách Thượng',
       address: 'Số nhà 15, đường Cây Chè, TDP Cách Thượng, phường An Dương, TP. Hải Phòng',
       map: 'https://www.google.com/maps/search/?api=1&query=S%E1%BB%91%2015%20%C4%91%C6%B0%E1%BB%9Dng%20C%C3%A2y%20Ch%C3%A8%2C%20C%C3%A1ch%20Th%C6%B0%E1%BB%A3ng%2C%20An%20D%C6%B0%C6%A1ng%2C%20H%E1%BA%A3i%20Ph%C3%B2ng',
       photo: 'assets/photos/73.jpg', photoPos: '50% 48%'
@@ -67,7 +66,7 @@ window.WEDDING = {
     trai: {
       name: 'Nhà trai',
       date: { day: 28, hour: 11, minute: 0,
-        place: { name: 'Khách sạn Hải Đăng', address: 'Cung Happy Place, tầng 1, Trung tâm tiệc cưới Hải Đăng, Số 19 Trần Khánh Dư, Ngô Quyền, Hải Phòng' } },
+        place: { name: 'Khách sạn Hải Đăng', address: 'Cung Happy Place, tầng 1, Trung tâm tiệc cưới Hải Đăng, Số 19 Trần Khánh Dư, phường Ngô Quyền, TP. Hải Phòng' } },
       venues: [0]
       // schedule: dùng lịch trình chung ở trên
     },
