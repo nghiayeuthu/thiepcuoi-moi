@@ -9,14 +9,14 @@ window.WEDDING = {
 
   groom: {
     name: 'Tuấn Nghĩa',
-    fullName: 'Vũ Tuấn Nghĩa',                            // ✏️ họ tên đầy đủ (để trống thì hiện tên ngắn)
+    fullName: '',                            // ✏️ họ tên đầy đủ (để trống thì hiện tên ngắn)
     father: 'Ông Vũ Đức Tùng',
     mother: 'Bà Trần Thị Tuyết',
     address: 'Ngô Quyền, Hải Phòng'           // ✏️
   },
   bride: {
     name: 'Hoài Thu',
-    fullName: 'Phạm Hoài Thu',                            // ✏️ họ tên đầy đủ (để trống thì hiện tên ngắn)
+    fullName: '',                            // ✏️ họ tên đầy đủ (để trống thì hiện tên ngắn)
     father: 'Ông Phạm Văn Thành',
     mother: 'Bà Hoàng Thị Thơ',
     address: 'Phường An Dương, TP. Hải Phòng'
