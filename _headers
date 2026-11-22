@@ -1,3 +1,10 @@
 /*
   X-Robots-Tag: googlebot: noindex, nofollow
   X-Robots-Tag: bingbot: noindex, nofollow
+  Cache-Control: public, max-age=1800, s-maxage=86400
+
+/assets/*
+  Cache-Control: public, max-age=604800, immutable
+
+/admin*
+  Cache-Control: no-cache
