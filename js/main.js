@@ -36,7 +36,7 @@
   if (YOU) {
     document.documentElement.setAttribute('data-xh', XH);
     var T = function (sel, text, html) { var n = $(sel); if (n) n[html ? 'innerHTML' : 'textContent'] = text; };
-    T('#heroGuest', cap(YOU)); T('#invGuest', cap(YOU)); T('#invEdit', '✎ Đặt tên của ' + YOU);
+    T('#heroGuest', cap(YOU)); T('#invGuest', cap(YOU));
     T('.announce', 'Sau 7 năm bên nhau, tụi em chính thức về chung một nhà');
     T('.inv-to', 'Tới chung vui<br>trong ngày cưới của tụi em', true);
     T('#cdDone', 'Hôm nay là ngày cưới của tụi em!');
@@ -62,8 +62,6 @@
     guest = (q.get('guestName') || q.get('to') || '').replace(/\s+/g, ' ').trim().slice(0, 60);
   } catch (e) {}
   // Tên hiện trên thiệp: biệt danh khách tự đặt (nếu có) được ưu tiên, sau đó tới tên trên link
-  var savedNick = '';
-  try { savedNick = localStorage.getItem('tn_nick') || ''; } catch (e) {}
   function showGuest(n, flash) {
     if (!n) return;
     $('#heroGuest').textContent = n;
@@ -71,11 +69,10 @@
     var og = $('#openerGuest'); if (og) { og.textContent = 'Thân gửi ' + n; og.hidden = false; }
     var dg = $('#doorGuest'); if (dg) { dg.textContent = 'Thân gửi ' + n; dg.hidden = false; }
     document.title = 'Thân mời ' + n + (SIDE === 'gai' ? ' · Hoài Thu & Tuấn Nghĩa' : ' · Tuấn Nghĩa & Hoài Thu');
-    var ie = $('#invEdit'); if (ie) ie.textContent = '✎ Không phải ' + P.you + '? Đổi tên';
     var rn = $('#rsvpName'); if (rn && (!rn.value || flash)) rn.value = n;
     if (flash) ['#invGuest', '#heroGuest'].forEach(function (q) { var x = $(q); x.classList.remove('flash'); void x.offsetWidth; x.classList.add('flash'); });
   }
-  showGuest(savedNick || guest);
+  showGuest(guest); // tên do người gửi đặt sẵn trên link
 
   // ---------- Điền thông tin từ config ----------
   C.groom.display = C.groom.fullName || C.groom.name;
@@ -465,7 +462,6 @@
   // Lời chúc mẫu: trộn ngẫu nhiên, hiện sau lời chúc thật của khách
   var seeds = (C.seedWishes || []).slice().sort(function () { return Math.random() - .5; });
   function startLive() {
-    askNameOnce();
     live.hidden = false; $('#rail').hidden = false; $('#chatN').textContent = wishes.length + seeds.length;
     var giftOk = $('.gift') && $('.gift').style.display !== 'none' && document.getElementById('giftModal');
     if (!giftOk) $('#liveGift').hidden = true;
@@ -485,6 +481,7 @@
   // ---------- Biệt danh kiểu Facebook: khách tự đặt tên hiện cùng lời chúc ----------
   var nick = '', pendingMsg = '';
   try { nick = localStorage.getItem('tn_nick') || ''; } catch (e) {}
+  if (guest) nick = guest; // có tên trên link thì lời chúc gửi bằng tên đó
   var nickModal = $('#nickModal'), nickIn = $('#nickIn');
   function avColor(n) { return AVC[(n.length + n.charCodeAt(0)) % AVC.length]; }
   function initial(n) { return (n.replace(/^(Anh|Chị|Cô|Bác|Chú|Bạn|Em|Gia đình)\s+/i, '').trim()[0] || '?').toUpperCase(); }
@@ -493,7 +490,7 @@
     if (nick) { a.textContent = initial(nick); a.style.background = avColor(nick); a.classList.add('set'); a.setAttribute('aria-label', 'Biệt danh: ' + nick + '. Chạm để đổi'); $('#liveMsg').placeholder = 'Gửi lời chúc với tên ' + nick + '…'; }
     if (nick && !wishForm.name.value) wishForm.name.value = nick;
   }
-  function setNick(n) { nick = n; try { localStorage.setItem('tn_nick', n); } catch (e) {} paintNick(); showGuest(n, true); }
+  function setNick(n) { nick = n; try { localStorage.setItem('tn_nick', n); } catch (e) {} paintNick(); }
   function openNick(ask) {
     $('#nickTitle').textContent = ask ? (guest ? 'Đây có phải tên ' + P.you + ' không?' : cap(P.you) + ' tên là gì?') : 'Đặt biệt danh';
     $('.nick-sub').textContent = ask ? 'Cho ' + P.we + ' biết tên hoặc biệt danh của ' + P.you + ', thiệp sẽ mời đúng tên ' + P.you + P.nha + ' 💌' : 'Thiệp sẽ mời đúng tên này, và tên này cũng hiện cùng lời chúc của ' + P.you + '.';
@@ -503,14 +500,8 @@
   }
   function closeNick() { nickModal.hidden = true; }
   nickIn.addEventListener('input', function () { var v = nickIn.value.trim(), big = $('#nickBig'); big.textContent = v ? initial(v) : '?'; big.style.background = v ? avColor(v) : '#b9bfb3'; });
-  $('#nickAv').onclick = function () { openNick(); };
-  $('#invEdit').onclick = function () { openNick(!nick); };
+  $('#nickAv').onclick = function () { if (guest) { toast('Lời chúc sẽ gửi với tên ' + guest); return; } openNick(); };
   // Chưa biết tên (link không có tên, chưa đặt biệt danh): hỏi một lần sau khi mở thiệp
-  function askNameOnce() {
-    // Chưa đặt biệt danh thì lần nào mở thiệp cũng hỏi (link có tên thì điền sẵn để khách xác nhận)
-    if (nick) return;
-    setTimeout(function () { if (!nick && nickModal.hidden && $('#sv').hidden) openNick(true); }, 2200);
-  }
   $('.sheet-x', nickModal).onclick = function () { pendingMsg = ''; closeNick(); };
   nickModal.addEventListener('click', function (e) { if (e.target === nickModal) { pendingMsg = ''; closeNick(); } });
   $('#nickForm').addEventListener('submit', function (e) {
