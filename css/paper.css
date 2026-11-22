@@ -351,3 +351,5 @@ footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 .inv-edit:hover{color:var(--rose);border-color:var(--rose)}
 .flash{animation:nameFlash 1.2s ease}
 @keyframes nameFlash{0%{transform:scale(.7);opacity:0;filter:blur(4px)}50%{transform:scale(1.12);opacity:1;filter:none}100%{transform:scale(1)}}
+.couple-names .script{font-size:clamp(21px,6.6vw,27px);white-space:nowrap}
+.couple-names{gap:2px}

@@ -9,25 +9,25 @@ window.WEDDING = {
 
   groom: {
     name: 'Tuấn Nghĩa',
-    fullName: '',                            // ✏️ họ tên đầy đủ (để trống thì hiện tên ngắn)
+    fullName: 'Vũ Tuấn Nghĩa',                            // ✏️ họ tên đầy đủ (để trống thì hiện tên ngắn)
     father: 'Ông Vũ Đức Tùng',
     mother: 'Bà Trần Thị Tuyết',
     address: 'Ngô Quyền, Hải Phòng'           // ✏️
   },
   bride: {
     name: 'Hoài Thu',
-    fullName: '',                            // ✏️ họ tên đầy đủ (để trống thì hiện tên ngắn)
+    fullName: 'Phạm Hoài Thu',                            // ✏️ họ tên đầy đủ (để trống thì hiện tên ngắn)
     father: 'Ông Phạm Văn Thành',
     mother: 'Bà Hoàng Thị Thơ',
-    address: 'An Dương, Hải Phòng'            // ✏️
+    address: 'Phường An Dương, TP. Hải Phòng'
   },
 
   // Ngày giờ chính (đếm ngược tới mốc này). Giờ Việt Nam.
   date: { day: 28, month: 11, year: 2026, hour: 11, minute: 0,
     place: { name: 'Khách sạn Hải Đăng', address: 'Cung Happy Place, tầng 1, Trung tâm tiệc cưới Hải Đăng, Số 19 Trần Khánh Dư, Ngô Quyền, Hải Phòng' } },
   // Ngày thứ hai: tiệc tại tư gia nhà gái (cùng tháng, năm với ngày chính)
-  secondDay: { day: 29, hour: 10, minute: 0,
-    place: { name: 'Tư gia nhà gái', address: 'Số 15 đường Cây Chè, Cách Thượng, Nam Sơn, An Dương, Hải Phòng' } },
+  secondDay: { day: 29, hour: 10, minute: 30,
+    place: { name: 'Tư gia nhà gái', address: 'Số nhà 15, đường Cây Chè, TDP Cách Thượng, phường An Dương, TP. Hải Phòng' } },
   // Ngày phụ cũng được đánh dấu trái tim trên lịch
   extraDays: [29],
 
@@ -51,12 +51,12 @@ window.WEDDING = {
       photo: 'assets/photos/82.jpg', photoPos: '50% 62%'
     },
     {
-      label: 'Tiệc tại nhà gái · Chủ Nhật 29/11/2026',
-      time: '10 giờ 00 sáng',
+      label: 'Lễ Vu Quy · Chủ Nhật 29/11/2026',
+      time: '10 giờ 30 sáng',
       name: 'Tư gia nhà gái',
-      hall: 'Số 15 đường Cây Chè',
-      address: 'Số 15 đường Cây Chè, Cách Thượng, Nam Sơn, An Dương, Hải Phòng',
-      map: 'https://www.google.com/maps/search/?api=1&query=S%E1%BB%91%2015%20%C4%91%C6%B0%E1%BB%9Dng%20C%C3%A2y%20Ch%C3%A8%2C%20C%C3%A1ch%20Th%C6%B0%E1%BB%A3ng%2C%20Nam%20S%C6%A1n%2C%20An%20D%C6%B0%C6%A1ng%2C%20H%E1%BA%A3i%20Ph%C3%B2ng',
+      hall: 'Số nhà 15 · Đường Cây Chè · TDP Cách Thượng',
+      address: 'Số nhà 15, đường Cây Chè, TDP Cách Thượng, phường An Dương, TP. Hải Phòng',
+      map: 'https://www.google.com/maps/search/?api=1&query=S%E1%BB%91%2015%20%C4%91%C6%B0%E1%BB%9Dng%20C%C3%A2y%20Ch%C3%A8%2C%20C%C3%A1ch%20Th%C6%B0%E1%BB%A3ng%2C%20An%20D%C6%B0%C6%A1ng%2C%20H%E1%BA%A3i%20Ph%C3%B2ng',
       photo: 'assets/photos/73.jpg', photoPos: '50% 48%'
     }
   ],
@@ -73,8 +73,8 @@ window.WEDDING = {
     },
     gai: {
       name: 'Nhà gái',
-      date: { day: 29, hour: 10, minute: 0,
-        place: { name: 'Tư gia nhà gái', address: 'Số 15 đường Cây Chè, Cách Thượng, Nam Sơn, An Dương, Hải Phòng' } },
+      date: { day: 29, hour: 10, minute: 30,
+        place: { name: 'Tư gia nhà gái', address: 'Số nhà 15, đường Cây Chè, TDP Cách Thượng, phường An Dương, TP. Hải Phòng' } },
       venues: [1],
       schedule: []                                // ✏️ lịch trình ngày 29 (để trống thì ẩn phần Lịch trình)
     }
