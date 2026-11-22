@@ -347,3 +347,7 @@ footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 .wax .mono,.wax-half .mono{width:92%;height:92%;filter:drop-shadow(0 1px 0 rgba(0,0,0,.25))}
 .wax,.wax-half{color:#fbe9d4}
 .wax{width:74px;height:74px;margin:-37px 0 0 -37px}
+.inv-edit{display:inline-block;margin:0 0 10px;padding:4px 12px;border:1px dashed #cdbfa8;border-radius:999px;background:none;color:var(--ink-soft);font:400 12px/1.4 var(--f-body);cursor:pointer}
+.inv-edit:hover{color:var(--rose);border-color:var(--rose)}
+.flash{animation:nameFlash 1.2s ease}
+@keyframes nameFlash{0%{transform:scale(.7);opacity:0;filter:blur(4px)}50%{transform:scale(1.12);opacity:1;filter:none}100%{transform:scale(1)}}

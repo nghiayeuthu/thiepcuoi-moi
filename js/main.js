@@ -33,14 +33,21 @@
     var q = new URLSearchParams(location.search);
     guest = (q.get('guestName') || q.get('to') || '').replace(/\s+/g, ' ').trim().slice(0, 60);
   } catch (e) {}
-  if (guest) {
-    $('#heroGuest').textContent = guest;
-    $('#invGuest').textContent = guest;
-    var og = $('#openerGuest'); og.textContent = 'Thân gửi ' + guest; og.hidden = false;
-    var dg = $('#doorGuest'); dg.textContent = 'Thân gửi ' + guest; dg.hidden = false;
-    document.title = 'Thân mời ' + guest + (SIDE === 'gai' ? ' · Hoài Thu & Tuấn Nghĩa' : ' · Tuấn Nghĩa & Hoài Thu');
-    $('#rsvpName').value = guest;
+  // Tên hiện trên thiệp: biệt danh khách tự đặt (nếu có) được ưu tiên, sau đó tới tên trên link
+  var savedNick = '';
+  try { savedNick = localStorage.getItem('tn_nick') || ''; } catch (e) {}
+  function showGuest(n, flash) {
+    if (!n) return;
+    $('#heroGuest').textContent = n;
+    $('#invGuest').textContent = n;
+    var og = $('#openerGuest'); if (og) { og.textContent = 'Thân gửi ' + n; og.hidden = false; }
+    var dg = $('#doorGuest'); if (dg) { dg.textContent = 'Thân gửi ' + n; dg.hidden = false; }
+    document.title = 'Thân mời ' + n + (SIDE === 'gai' ? ' · Hoài Thu & Tuấn Nghĩa' : ' · Tuấn Nghĩa & Hoài Thu');
+    var ie = $('#invEdit'); if (ie) ie.textContent = '✎ Không phải bạn? Đổi tên';
+    var rn = $('#rsvpName'); if (rn && (!rn.value || flash)) rn.value = n;
+    if (flash) ['#invGuest', '#heroGuest'].forEach(function (q) { var x = $(q); x.classList.remove('flash'); void x.offsetWidth; x.classList.add('flash'); });
   }
+  showGuest(savedNick || guest);
 
   // ---------- Điền thông tin từ config ----------
   C.groom.display = C.groom.fullName || C.groom.name;
@@ -430,6 +437,7 @@
   // Lời chúc mẫu: trộn ngẫu nhiên, hiện sau lời chúc thật của khách
   var seeds = (C.seedWishes || []).slice().sort(function () { return Math.random() - .5; });
   function startLive() {
+    askNameOnce();
     live.hidden = false; $('#rail').hidden = false; $('#chatN').textContent = wishes.length + seeds.length;
     var giftOk = $('.gift') && $('.gift').style.display !== 'none' && document.getElementById('giftModal');
     if (!giftOk) $('#liveGift').hidden = true;
@@ -457,15 +465,25 @@
     if (nick) { a.textContent = initial(nick); a.style.background = avColor(nick); a.classList.add('set'); a.setAttribute('aria-label', 'Biệt danh: ' + nick + '. Chạm để đổi'); $('#liveMsg').placeholder = 'Gửi lời chúc với tên ' + nick + '…'; }
     if (nick && !wishForm.name.value) wishForm.name.value = nick;
   }
-  function setNick(n) { nick = n; try { localStorage.setItem('tn_nick', n); } catch (e) {} paintNick(); }
-  function openNick() {
+  function setNick(n) { nick = n; try { localStorage.setItem('tn_nick', n); } catch (e) {} paintNick(); showGuest(n, true); }
+  function openNick(ask) {
+    $('#nickTitle').textContent = ask ? 'Bạn tên là gì?' : 'Đặt biệt danh';
+    $('.nick-sub').textContent = ask ? 'Cho tụi mình biết tên hoặc biệt danh của bạn, thiệp sẽ mời đúng tên bạn nhé 💌' : 'Thiệp sẽ mời đúng tên này, và tên này cũng hiện cùng lời chúc của bạn.';
     nickIn.value = nick || guest || ''; $('#nickMsg').textContent = '';
     var big = $('#nickBig'); big.textContent = nickIn.value ? initial(nickIn.value) : '?'; big.style.background = nickIn.value ? avColor(nickIn.value) : '#b9bfb3';
     nickModal.hidden = false; setTimeout(function () { nickIn.focus(); nickIn.select(); }, 60);
   }
   function closeNick() { nickModal.hidden = true; }
   nickIn.addEventListener('input', function () { var v = nickIn.value.trim(), big = $('#nickBig'); big.textContent = v ? initial(v) : '?'; big.style.background = v ? avColor(v) : '#b9bfb3'; });
-  $('#nickAv').onclick = openNick;
+  $('#nickAv').onclick = function () { openNick(); };
+  $('#invEdit').onclick = function () { openNick(!nick); };
+  // Chưa biết tên (link không có tên, chưa đặt biệt danh): hỏi một lần sau khi mở thiệp
+  function askNameOnce() {
+    var asked = false; try { asked = !!localStorage.getItem('tn_nick_asked'); } catch (e) {}
+    if (nick || guest || asked) return;
+    try { localStorage.setItem('tn_nick_asked', '1'); } catch (e) {}
+    setTimeout(function () { if (nickModal.hidden && $('#sv').hidden) openNick(true); }, 2600);
+  }
   $('.sheet-x', nickModal).onclick = function () { pendingMsg = ''; closeNick(); };
   nickModal.addEventListener('click', function (e) { if (e.target === nickModal) { pendingMsg = ''; closeNick(); } });
   $('#nickForm').addEventListener('submit', function (e) {
