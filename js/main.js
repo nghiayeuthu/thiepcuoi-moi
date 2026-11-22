@@ -629,7 +629,10 @@
   $('#railChat').onclick = function () { $('#liveMsg').focus(); };
   function toast(t) { var x = $('#toast'); x.textContent = t; x.hidden = false; clearTimeout(x._t); x._t = setTimeout(function () { x.hidden = true; }, 2200); }
   $('#railShare').onclick = function () {
-    var url = location.origin + location.pathname, title = document.title.replace(/^Thân mời [^·]*· /, 'Thiệp cưới ');
+    // Giữ kiểu xưng hô và tuỳ chọn ẩn QR khi chia sẻ, bỏ tên khách riêng
+    var u0 = new URL(location.href), keep = new URLSearchParams();
+    ['xh', 'qr', 'ben'].forEach(function (k) { var v = u0.searchParams.get(k); if (v) keep.set(k, v); });
+    var url = location.origin + location.pathname + (keep.toString() ? '?' + keep.toString() : ''), title = document.title.replace(/^Thân mời [^·]*· /, 'Thiệp cưới ');
     if (navigator.share) navigator.share({ title: title, url: url }).catch(function () {});
     else copyText(url, function () { toast('Đã sao chép link thiệp'); });
   };

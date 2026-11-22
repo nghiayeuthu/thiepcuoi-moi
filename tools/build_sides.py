@@ -42,7 +42,6 @@ def main():
         s = sub(r'<html lang="vi">', '<html lang="vi" data-side="%s">' % side, s)
         s = sub(r'(<meta charset="utf-8">)', r'\1\n<base href="../">', s)
         s = sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="%s">' % cfg['desc'], s)
-        s = sub(r'<meta property="og:url" content="[^"]*">', '<meta property="og:url" content="%s%s/">' % (BASE_URL, cfg['dir']), s)
         s = sub(r'<meta property="og:title" content="[^"]*">', '<meta property="og:title" content="%s">' % cfg['og_title'], s)
         s = sub(r'<meta property="og:description" content="[^"]*">', '<meta property="og:description" content="%s">' % cfg['desc'], s)
         s = s.replace('<!-- Open Graph:', '<!-- TỰ SINH từ index.html bằng tools/build_sides.py, đừng sửa trực tiếp. -->\n<!-- Open Graph:', 1)
