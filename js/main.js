@@ -39,7 +39,7 @@
     var og = $('#openerGuest'); og.textContent = 'Thân gửi ' + guest; og.hidden = false;
     var dg = $('#doorGuest'); dg.textContent = 'Thân gửi ' + guest; dg.hidden = false;
     document.title = 'Thân mời ' + guest + (SIDE === 'gai' ? ' · Hoài Thu & Tuấn Nghĩa' : ' · Tuấn Nghĩa & Hoài Thu');
-    $('#rsvpName').value = guest; $('#wishName').value = guest;
+    $('#rsvpName').value = guest;
   }
 
   // ---------- Điền thông tin từ config ----------
@@ -391,6 +391,7 @@
     if (!need(message, wishForm, '[name=message]', 'Bạn viết vài lời chúc nhé.')) return null;
     return { type: 'wish', name: name, message: message };
   }, 'Cảm ơn lời chúc của bạn!', function (d) {
+    if (d.name && d.name !== nick) setNick(d.name);
     wishes.unshift({ name: d.name, message: d.message, time: new Date().toISOString() });
     renderWishes(wishes); wishForm.message.value = '';
   });
@@ -445,20 +446,49 @@
     this.setAttribute('aria-label', liveOn ? 'Ẩn lời chúc' : 'Hiện lời chúc');
   };
   $('#liveGift').onclick = function () { $('#giftBtn').click(); };
+  // ---------- Biệt danh kiểu Facebook: khách tự đặt tên hiện cùng lời chúc ----------
+  var nick = '', pendingMsg = '';
+  try { nick = localStorage.getItem('tn_nick') || ''; } catch (e) {}
+  var nickModal = $('#nickModal'), nickIn = $('#nickIn');
+  function avColor(n) { return AVC[(n.length + n.charCodeAt(0)) % AVC.length]; }
+  function initial(n) { return (n.replace(/^(Anh|Chị|Cô|Bác|Chú|Bạn|Em|Gia đình)\s+/i, '').trim()[0] || '?').toUpperCase(); }
+  function paintNick() {
+    var a = $('#nickAv');
+    if (nick) { a.textContent = initial(nick); a.style.background = avColor(nick); a.classList.add('set'); a.setAttribute('aria-label', 'Biệt danh: ' + nick + '. Chạm để đổi'); $('#liveMsg').placeholder = 'Gửi lời chúc với tên ' + nick + '…'; }
+    if (nick && !wishForm.name.value) wishForm.name.value = nick;
+  }
+  function setNick(n) { nick = n; try { localStorage.setItem('tn_nick', n); } catch (e) {} paintNick(); }
+  function openNick() {
+    nickIn.value = nick || guest || ''; $('#nickMsg').textContent = '';
+    var big = $('#nickBig'); big.textContent = nickIn.value ? initial(nickIn.value) : '?'; big.style.background = nickIn.value ? avColor(nickIn.value) : '#b9bfb3';
+    nickModal.hidden = false; setTimeout(function () { nickIn.focus(); nickIn.select(); }, 60);
+  }
+  function closeNick() { nickModal.hidden = true; }
+  nickIn.addEventListener('input', function () { var v = nickIn.value.trim(), big = $('#nickBig'); big.textContent = v ? initial(v) : '?'; big.style.background = v ? avColor(v) : '#b9bfb3'; });
+  $('#nickAv').onclick = openNick;
+  $('.sheet-x', nickModal).onclick = function () { pendingMsg = ''; closeNick(); };
+  nickModal.addEventListener('click', function (e) { if (e.target === nickModal) { pendingMsg = ''; closeNick(); } });
+  $('#nickForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = nickIn.value.replace(/\s+/g, ' ').trim();
+    if (v.length < 2) { $('#nickMsg').className = 'msg err'; $('#nickMsg').textContent = 'Bạn đặt biệt danh ít nhất 2 ký tự nhé.'; nickIn.focus(); return; }
+    setNick(v); closeNick(); toast('Đã lưu biệt danh: ' + v);
+    if (pendingMsg) { var m = pendingMsg; pendingMsg = ''; postWish(m); }
+  });
+  function postWish(msg) {
+    var w = { name: nick, message: msg, time: new Date().toISOString() };
+    wishes.unshift(w); renderWishes(wishes); bubble(w); $('#chatN').textContent = wishes.length + seeds.length;
+    send({ type: 'wish', name: nick, message: msg }).catch(function () {});
+  }
   $('#liveBar').addEventListener('submit', function (e) {
     e.preventDefault();
-    var inp = $('#liveMsg'), msg = inp.value.trim(), name = (wishForm.name.value || guest || '').trim();
+    var inp = $('#liveMsg'), msg = inp.value.trim();
     if (!msg) { inp.focus(); return; }
-    if (!name) { // chưa biết tên: chuyển xuống ô lời chúc để khách điền tên
-      wishForm.message.value = msg; inp.value = '';
-      $('#loi-chuc').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setTimeout(function () { wishForm.name.focus(); }, 700); return;
-    }
     inp.value = ''; inp.blur();
-    var w = { name: name, message: msg, time: new Date().toISOString() };
-    wishes.unshift(w); renderWishes(wishes); bubble(w);
-    send({ type: 'wish', name: name, message: msg }).catch(function () {});
+    if (!nick) { pendingMsg = msg; openNick(); return; } // chưa có biệt danh: hỏi trước, gửi sau
+    postWish(msg);
   });
+  paintNick();
 
   // ---------- Album: xem ảnh lớn ----------
   var lb = $('#lightbox'), lbImg = $('#lbImg'), shots = [].slice.call(document.querySelectorAll('.album .ph')), cur = 0;

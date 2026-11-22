@@ -325,3 +325,17 @@ footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 .bub.ev{padding:3px 11px;background:rgba(15,15,15,.14);font-size:11.5px;color:#f3f3f3}
 .bub.ev b{color:#a6f0ff}
 @keyframes ttIn{from{opacity:0;transform:translateY(18px) scale(.96)}}
+
+/* ============ Biệt danh kiểu Facebook ============ */
+.livebar{padding-left:5px}
+.nick-av{flex:none;width:34px;height:34px;margin-right:8px;border:0;border-radius:50%;display:grid;place-items:center;cursor:pointer;background:#e4e6eb;color:#65676b;font:600 14px/1 var(--f-body)}
+.nick-av.set{color:#fff;box-shadow:0 0 0 2px #fff,0 0 0 3.5px rgba(0,0,0,.08)}
+#nickModal{z-index:85}
+.nick-sheet{display:grid;justify-items:center;gap:10px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",var(--f-body),sans-serif}
+.nick-sheet h3{margin:4px 0 0}
+.nick-big{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;color:#fff;font:600 32px/1 var(--f-body);background:#b9bfb3;box-shadow:0 0 0 4px #fff,0 6px 18px -6px rgba(0,0,0,.35);transition:background .25s}
+.nick-sub{font-size:13px;color:var(--ink-soft);max-width:22em}
+#nickIn{width:100%;max-width:340px;min-height:48px;padding:12px 16px;border:1px solid #dadde1;border-radius:999px;background:#f0f2f5;font:400 16px/1.3 var(--f-body);color:#050505;text-align:center;outline:none}
+#nickIn:focus{border-color:#0866ff;background:#fff;box-shadow:0 0 0 3px rgba(8,102,255,.15)}
+.nick-sheet .btn{width:100%;max-width:340px;background:#0866ff;border-color:#0866ff}
+.nick-sheet .btn:hover{background:#0757d6;border-color:#0757d6}
