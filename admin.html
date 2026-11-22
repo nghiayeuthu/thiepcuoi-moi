@@ -41,6 +41,18 @@ legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
 .sides span small{display:block;color:var(--ink-soft);font-size:11px}
 .sides input:checked+span{border-color:var(--gold);background:#eef5e6;font-weight:500}
 .sides input:focus-visible+span{outline:2px solid var(--gold);outline-offset:2px}
+#msgTpl{min-height:90px}
+.hint{font-size:12px;color:var(--ink-soft);font-weight:400}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.prog{flex:1;min-width:140px;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s}
+li.row3{grid-template-columns:auto 1fr auto}
+li .tick{width:24px;height:24px;margin:0;accent-color:var(--gold)}
+li .acts{display:flex;gap:6px}
+li.sent{background:#eef5e6;opacity:.8}
+li.sent b::after{content:" · đã gửi";font-weight:400;font-size:12px;color:var(--gold)}
+li small.when{display:block;font-size:11px;color:var(--gold)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:rgba(20,20,20,.86);color:#fff;font-size:13px;padding:9px 16px;border-radius:999px}
 .check{display:flex;align-items:center;gap:10px;font-weight:400;font-size:14px;cursor:pointer}
 .check input{width:20px;height:20px;margin:0;accent-color:var(--gold)}
 </style>
@@ -74,11 +86,17 @@ legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
   <label>Danh sách khách mời
     <textarea id="names" placeholder="Anh Hùng và gia đình&#10;Chị Lan&#10;Cô Mai, chú Bình"></textarea>
   </label>
+  <label>Lời nhắn gửi kèm <span class="hint">({ten} = tên khách, {link} = link thiệp)</span>
+    <textarea id="msgTpl"></textarea>
+  </label>
   <div class="row">
     <button class="solid" type="button" id="make">Tạo link</button>
     <button type="button" id="copyAll">Sao chép tất cả</button>
   </div>
-  <p class="count" id="count" aria-live="polite"></p>
+  <div class="bar"><p class="count" id="count" aria-live="polite"></p><div class="prog" aria-hidden="true"><i id="progBar"></i></div></div>
+  <label class="check"><input type="checkbox" id="onlyTodo"> Chỉ hiện người chưa gửi</label>
+  <p class="hint">Bấm <b>Gửi</b> để mở Zalo / Messenger (trên điện thoại) với lời nhắn và link có sẵn; khách đó tự được đánh dấu “đã gửi”. Trên máy tính, nút Gửi sẽ sao chép lời nhắn để bạn dán. Dấu “đã gửi” lưu trên máy này.</p>
+  <div class="toast" id="toast" hidden></div>
   <ul id="out"><li class="empty">Danh sách link sẽ hiện ở đây.</li></ul>
 </main>
 <script>
@@ -101,17 +119,52 @@ legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
     try{localStorage.setItem('guests',ta.value);localStorage.setItem('base',b)}catch(e){}
     var seen={},names=ta.value.split('\n').map(function(s){return s.replace(/\s+/g,' ').trim()}).filter(function(s){if(!s||seen[s])return false;return seen[s]=true});
     links=names.map(function(n){var u=new URL(sideVal,b.replace(/\/?$/,'/'));u.searchParams.set('guestName',n);if(noqr.checked)u.searchParams.set('qr','0');if(xhVal)u.searchParams.set('xh',xhVal);return{n:n,u:u.href.replace(/\+/g,'%20')}});
-    out.innerHTML='';document.getElementById('count').textContent=links.length?links.length+' link':'';
+    render();
+  }
+  var tpl=document.getElementById('msgTpl'),onlyTodo=document.getElementById('onlyTodo');
+  var TPL={'':'{ten} ơi, tụi mình cưới rồi nè! 💌 Mời {ten} ghé xem thiệp và tới chung vui với tụi mình nha:\n{link}',
+    chi:'Em gửi {ten} thiệp cưới của tụi em ạ 💌 Mong {ten} sắp xếp tới chung vui cùng tụi em nha:\n{link}',
+    anh:'Em gửi {ten} thiệp cưới của tụi em ạ 💌 Mong {ten} sắp xếp tới chung vui cùng tụi em nha:\n{link}',
+    anhchi:'Em gửi {ten} thiệp cưới của tụi em ạ 💌 Mong {ten} sắp xếp tới chung vui cùng tụi em nha:\n{link}'};
+  function tplKey(){return 'tpl_'+xhVal}
+  function loadTpl(){var v='';try{v=localStorage.getItem(tplKey())||''}catch(e){}tpl.value=v||TPL[xhVal]||TPL['']}
+  loadTpl();
+  tpl.oninput=function(){try{localStorage.setItem(tplKey(),tpl.value)}catch(e){}};
+  document.querySelectorAll('input[name=xh]').forEach(function(r){r.addEventListener('change',loadTpl)});
+  var sent={};try{sent=JSON.parse(localStorage.getItem('sent')||'{}')}catch(e){}
+  function saveSent(){try{localStorage.setItem('sent',JSON.stringify(sent))}catch(e){}}
+  function msgFor(l){return tpl.value.split('{ten}').join(l.n).split('{link}').join(l.u)}
+  function toast(t){var x=document.getElementById('toast');x.textContent=t;x.hidden=false;clearTimeout(x._t);x._t=setTimeout(function(){x.hidden=true},2000)}
+  function when(ts){var d=new Date(ts);function p(n){return n<10?'0'+n:n}return 'Gửi lúc '+p(d.getHours())+':'+p(d.getMinutes())+' · '+p(d.getDate())+'/'+p(d.getMonth()+1)}
+  function render(){
+    out.innerHTML='';
+    var done=links.filter(function(l){return sent[l.u]}).length;
+    document.getElementById('count').textContent=links.length?('Đã gửi '+done+'/'+links.length):'';
+    document.getElementById('progBar').style.width=links.length?(done/links.length*100)+'%':'0';
     if(!links.length){var e=document.createElement('li');e.className='empty';e.textContent='Chưa có tên nào.';out.appendChild(e);return}
-    links.forEach(function(l){
-      var li=document.createElement('li'),d=document.createElement('div'),bb=document.createElement('b'),a=document.createElement('a'),btn=document.createElement('button');
-      bb.textContent=l.n;a.href=l.u;a.target='_blank';a.rel='noopener';a.textContent=l.u;btn.type='button';btn.textContent='Sao chép';
-      btn.onclick=function(){copy(l.u,btn,'Sao chép')};
-      d.append(bb,a);li.append(d,btn);out.appendChild(li);
+    var shown=links.filter(function(l){return !(onlyTodo.checked&&sent[l.u])});
+    if(!shown.length){var e2=document.createElement('li');e2.className='empty';e2.textContent='Đã gửi hết 🎉';out.appendChild(e2);return}
+    shown.forEach(function(l){
+      var li=document.createElement('li'),d=document.createElement('div'),bb=document.createElement('b'),a=document.createElement('a'),acts=document.createElement('div'),go=document.createElement('button'),cp=document.createElement('button'),tk=document.createElement('input');
+      li.className='row3'+(sent[l.u]?' sent':'');
+      tk.type='checkbox';tk.className='tick';tk.checked=!!sent[l.u];tk.setAttribute('aria-label','Đã gửi cho '+l.n);
+      tk.onchange=function(){if(tk.checked)sent[l.u]=Date.now();else delete sent[l.u];saveSent();render()};
+      bb.textContent=l.n;a.href=l.u;a.target='_blank';a.rel='noopener';a.textContent=l.u;
+      d.append(bb,a);if(sent[l.u]){var w=document.createElement('small');w.className='when';w.textContent=when(sent[l.u]);d.appendChild(w)}
+      acts.className='acts';go.type='button';go.className='solid';go.textContent='Gửi';cp.type='button';cp.textContent='Chép link';
+      cp.onclick=function(){copy(l.u,cp,'Chép link')};
+      go.onclick=function(){
+        var text=msgFor(l);
+        function mark(){sent[l.u]=Date.now();saveSent();render()}
+        if(navigator.share){navigator.share({text:text}).then(mark,function(){})}
+        else{copy(text,go,'Gửi');mark();toast('Đã chép lời nhắn, dán vào Zalo / Messenger để gửi')}
+      };
+      acts.append(go,cp);li.append(tk,d,acts);out.appendChild(li);
     });
   }
+  onlyTodo.onchange=render;
   document.getElementById('make').onclick=make;
-  document.getElementById('copyAll').onclick=function(){if(!links.length)make();if(links.length)copy(links.map(function(l){return l.n+': '+l.u}).join('\n'),this,'Sao chép tất cả')};
+  document.getElementById('copyAll').onclick=function(){if(!links.length)make();if(links.length)copy(links.map(function(l){return msgFor(l)}).join('\n\n'),this,'Sao chép tất cả')};
   if(ta.value)make();
 })();
 </script>
