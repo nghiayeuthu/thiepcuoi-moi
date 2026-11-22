@@ -34,7 +34,8 @@ li.empty{display:block;text-align:center;border-style:dashed;background:transpar
 fieldset{border:0;margin:0;padding:0;display:grid;gap:6px}
 legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
 .sides{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.sides.four{grid-template-columns:repeat(4,1fr)}
+.sides.four{grid-template-columns:repeat(5,1fr)}
+@media (max-width:420px){.sides.four{grid-template-columns:repeat(3,1fr)}}
 .sides label{display:block;cursor:pointer}
 .sides input{position:absolute;opacity:0;width:1px;height:1px}
 .sides span{display:grid;place-items:center;min-height:52px;padding:8px;border:1px solid var(--line);border-radius:6px;background:#fff;text-align:center;font-size:13px;line-height:1.35;font-weight:400}
@@ -80,6 +81,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
       <label><input type="radio" name="xh" value="chi"><span>Chị<small>chị – em</small></span></label>
       <label><input type="radio" name="xh" value="anh"><span>Anh<small>anh – em</small></span></label>
       <label><input type="radio" name="xh" value="anhchi"><span>Anh chị<small>anh chị – em</small></span></label>
+      <label><input type="radio" name="xh" value="di"><span>Dì<small>dì – cháu</small></span></label>
     </div>
   </fieldset>
   <label class="check"><input type="checkbox" id="noqr"> Ẩn phần mừng cưới (mã QR chuyển khoản)</label>
@@ -129,7 +131,8 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   // Lời nhắn trang trí bằng biểu tượng cảm xúc cho vui mắt, đỡ giống tin nhắn rác
   var BAN='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\n{ten} ơi 🥰 tụi mình cưới rồi nè! 💍💒\nMời {ten} ghé xem thiệp 🎀 và tới chung vui với tụi mình nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
   var EM='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\nEm gửi {ten} thiệp cưới của tụi em ạ 💍💒\nMong {ten} sắp xếp tới chung vui cùng tụi em nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
-  var TPL={'':BAN,chi:EM,anh:EM,anhchi:EM};
+  var DI='💌✨ THIỆP MỜI CƯỚI ✨💌\n🌸🌿🌸🌿🌸🌿🌸\n\nCháu gửi {ten} thiệp cưới của tụi cháu ạ 💍💒\nMong {ten} sắp xếp tới chung vui cùng tụi cháu nha 🥂🎉\n\n👇👇👇\n{link}\n\n🤵💕👰 {doi}';
+  var TPL={'':BAN,chi:EM,anh:EM,anhchi:EM,di:DI};
   function tplKey(){return 'tpl4_'+xhVal}
   function loadTpl(){var v='';try{v=localStorage.getItem(tplKey())||''}catch(e){}tpl.value=v||TPL[xhVal]||TPL['']}
   loadTpl();
