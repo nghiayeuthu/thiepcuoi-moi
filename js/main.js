@@ -259,7 +259,11 @@
 
   // ---------- Popup mừng cưới ----------
   var modal = $('#giftModal'), tabs = $('#giftTabs'), panels = $('#giftPanels');
-  C.gifts.forEach(function (g, i) {
+  // Chỉ hiện tài khoản đã điền thật; thiệp riêng mỗi bên chỉ hiện QR của bên đó
+  var gifts = (C.gifts || []).filter(function (g) { return g.account && !/^0+$/.test(g.account.replace(/\s/g, '')) && (!SD || !g.side || g.side === SIDE); });
+  if (!gifts.length) { $('.gift').style.display = 'none'; }
+  if (gifts.length < 2) tabs.style.display = 'none';
+  gifts.forEach(function (g, i) {
     var t = el('button', '', g.who); t.type = 'button'; t.setAttribute('role', 'tab'); t.setAttribute('aria-selected', i === 0);
     var p = el('div'); p.setAttribute('role', 'tabpanel'); p.hidden = i !== 0;
     var img = el('img', 'qr'); img.src = g.qr; img.alt = 'Mã QR chuyển khoản ' + g.who.toLowerCase(); img.loading = 'lazy';

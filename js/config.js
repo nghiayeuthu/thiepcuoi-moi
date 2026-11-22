@@ -89,8 +89,8 @@ window.WEDDING = {
 
   // Mừng cưới ✏️ (thay ảnh QR trong /assets và số tài khoản)
   gifts: [
-    { who: 'Chú rể', name: 'TEN CHU RE', bank: 'Ngân hàng …', account: '0000000000', qr: 'assets/qr-chure.png' },
-    { who: 'Cô dâu', name: 'TEN CO DAU', bank: 'Ngân hàng …', account: '0000000000', qr: 'assets/qr-codau.png' }
+    { who: 'Chú rể', side: 'trai', name: 'TEN CHU RE', bank: 'Ngân hàng …', account: '0000000000', qr: 'assets/qr-chure.png' },
+    { who: 'Cô dâu', side: 'gai', name: 'PHAM THI HOAI THU', bank: 'Vietcombank', account: '1033762689', qr: 'assets/qr-codau.png' }
   ],
 
   music: 'assets/music.mp3',
