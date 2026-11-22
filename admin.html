@@ -41,7 +41,7 @@ legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
 .sides span small{display:block;color:var(--ink-soft);font-size:11px}
 .sides input:checked+span{border-color:var(--gold);background:#eef5e6;font-weight:500}
 .sides input:focus-visible+span{outline:2px solid var(--gold);outline-offset:2px}
-#msgTpl{min-height:90px}
+#msgTpl{min-height:260px}
 .pics{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:thin}
 .pics label{flex:none;display:block;cursor:pointer;position:relative}
 .pics input{position:absolute;opacity:0;width:1px;height:1px}
@@ -94,7 +94,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   <label>Danh sách khách mời
     <textarea id="names" placeholder="Anh Hùng và gia đình&#10;Chị Lan&#10;Cô Mai, chú Bình"></textarea>
   </label>
-  <label>Lời nhắn gửi kèm <span class="hint">({ten} = tên khách, {link} = link thiệp)</span>
+  <label>Lời nhắn gửi kèm <span class="hint">({ten} = tên khách, {link} = link thiệp, {ngay} {gio} {diadiem} tự điền theo bên nhà trai / nhà gái)</span>
     <textarea id="msgTpl"></textarea>
   </label>
   <fieldset>
@@ -140,18 +140,25 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     render();
   }
   var tpl=document.getElementById('msgTpl'),onlyTodo=document.getElementById('onlyTodo');
-  var TPL={'':'{ten} ơi, tụi mình cưới rồi nè! 💌 Mời {ten} ghé xem thiệp và tới chung vui với tụi mình nha:\n{link}',
-    chi:'Em gửi {ten} thiệp cưới của tụi em ạ 💌 Mong {ten} sắp xếp tới chung vui cùng tụi em nha:\n{link}',
-    anh:'Em gửi {ten} thiệp cưới của tụi em ạ 💌 Mong {ten} sắp xếp tới chung vui cùng tụi em nha:\n{link}',
-    anhchi:'Em gửi {ten} thiệp cưới của tụi em ạ 💌 Mong {ten} sắp xếp tới chung vui cùng tụi em nha:\n{link}'};
-  function tplKey(){return 'tpl_'+xhVal}
+  // Lời nhắn dạng "thiệp nhỏ" bằng biểu tượng cảm xúc: Messenger không hiện ảnh xem trước thì tin nhắn vẫn đẹp
+  var BAN='💌 ━━ THIỆP MỜI CƯỚI ━━ 💌\n\n🤵 {chure} 💍 {codau} 👰\n\n{ten} ơi, tụi mình cưới rồi nè! 🥰\nThân mời {ten} tới chung vui cùng tụi mình nha 🥂\n\n📅 {ngay}\n⏰ {gio}\n📍 {diadiem}\n\n👉 Mở thiệp: {link}\n\n🌸 Rất mong được gặp {ten}! 🌸';
+  var EM='💌 ━━ THIỆP MỜI CƯỚI ━━ 💌\n\n🤵 {chure} 💍 {codau} 👰\n\nEm gửi {ten} thiệp cưới của tụi em ạ 🥰\nMong {ten} sắp xếp tới chung vui cùng tụi em nha 🥂\n\n📅 {ngay}\n⏰ {gio}\n📍 {diadiem}\n\n👉 Mở thiệp: {link}\n\n🌸 Tụi em cảm ơn {ten} nhiều ạ! 🌸';
+  var TPL={'':BAN,chi:EM,anh:EM,anhchi:EM};
+  var SIDEINFO={
+    'nha-trai/':{chure:'Tuấn Nghĩa',codau:'Hoài Thu',ngay:'Thứ Bảy, 28/11/2026',gio:'11:00 trưa',diadiem:'Khách sạn Hải Đăng (Cung Happy Place, tầng 1), Số 19 Trần Khánh Dư, phường Ngô Quyền, TP. Hải Phòng'},
+    'nha-gai/':{chure:'Hoài Thu',codau:'Tuấn Nghĩa',ngay:'Chủ Nhật, 29/11/2026',gio:'10:30 sáng',diadiem:'Tư gia nhà gái, Số nhà 15, đường Cây Chè, TDP Cách Thượng, phường An Dương, TP. Hải Phòng'},
+    '':{chure:'Tuấn Nghĩa',codau:'Hoài Thu',ngay:'Thứ Bảy 28/11 (nhà trai) & Chủ Nhật 29/11/2026 (nhà gái)',gio:'11:00 (28/11) · 10:30 (29/11)',diadiem:'Khách sạn Hải Đăng, phường Ngô Quyền & Tư gia nhà gái, phường An Dương, TP. Hải Phòng'}
+  };
+  function tplKey(){return 'tpl3_'+xhVal}
   function loadTpl(){var v='';try{v=localStorage.getItem(tplKey())||''}catch(e){}tpl.value=v||TPL[xhVal]||TPL['']}
   loadTpl();
   tpl.oninput=function(){try{localStorage.setItem(tplKey(),tpl.value)}catch(e){}};
   document.querySelectorAll('input[name=xh]').forEach(function(r){r.addEventListener('change',loadTpl)});
   var sent={};try{sent=JSON.parse(localStorage.getItem('sent')||'{}')}catch(e){}
   function saveSent(){try{localStorage.setItem('sent',JSON.stringify(sent))}catch(e){}}
-  function msgFor(l){return tpl.value.split('{ten}').join(l.n).split('{link}').join(l.u)}
+  function msgFor(l){var inf=SIDEINFO[sideVal]||SIDEINFO[''],t=tpl.value.split('{ten}').join(l.n).split('{link}').join(l.u);
+    ['chure','codau','ngay','gio','diadiem'].forEach(function(k){t=t.split('{'+k+'}').join(inf[k])});
+    if(sideVal==='nha-gai/')t=t.replace('🤵 Hoài Thu 💍 Tuấn Nghĩa 👰','👰 Hoài Thu 💍 Tuấn Nghĩa 🤵');return t}
   function toast(t){var x=document.getElementById('toast');x.textContent=t;x.hidden=false;clearTimeout(x._t);x._t=setTimeout(function(){x.hidden=true},2000)}
   function when(ts){var d=new Date(ts);function p(n){return n<10?'0'+n:n}return 'Gửi lúc '+p(d.getHours())+':'+p(d.getMinutes())+' · '+p(d.getDate())+'/'+p(d.getMonth()+1)}
   function render(){
