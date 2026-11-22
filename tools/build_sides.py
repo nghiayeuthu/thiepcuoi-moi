@@ -12,7 +12,7 @@ js/config.js, mục sides.
 import os, re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_URL = 'https://nghiayeuthu.github.io/thiepcuoi-moi/'
+BASE_URL = 'https://thiepcuoi-thunghia.pages.dev/'
 
 SIDES = {
     'trai': {

@@ -84,7 +84,7 @@ Tài khoản GitHub `nghiayeuthu` của bạn đã dùng cho thiệp cũ, nên l
 3. Trong repo, vào **Settings → Pages**:
    - **Source:** *Deploy from a branch*
    - **Branch:** `main`, thư mục `/ (root)`, bấm **Save**.
-4. Đợi 1–2 phút. Thiệp sẽ có tại `https://nghiayeuthu.github.io/thiepcuoi-moi/` và trang tạo link tại `https://nghiayeuthu.github.io/thiepcuoi-moi/admin.html`.
+4. Đợi 1–2 phút. Thiệp sẽ có tại `https://thiepcuoi-thunghia.pages.dev/` và trang tạo link tại `https://thiepcuoi-thunghia.pages.dev/admin.html`.
 5. Kiểm tra ảnh xem trước khi share: dán link vào https://developers.facebook.com/tools/debug/ và bấm **Scrape Again**. Zalo thường cập nhật sau vài giờ.
 
 Nếu bạn đặt tên repo khác, sửa 2 dòng `og:url` và `og:image` trong `index.html` cho đúng địa chỉ mới.
