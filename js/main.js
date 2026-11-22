@@ -398,14 +398,34 @@
 
   // ---------- Lời chúc bay lên (kiểu livestream) + thanh gửi nhanh ----------
   var live = $('#live'), bubbles = $('#bubbles'), liveOn = true, liveTimer = 0, li0 = 0;
+  // Dòng bình luận trôi lên kiểu TikTok live: dòng mới đẩy dòng cũ lên, dòng trên cùng mờ dần
+  var AVC = ['#fe2c55', '#25c4ee', '#f7b500', '#8f5cf7', '#3cc47c', '#ff7a45', '#e84393'];
+  function push(node) {
+    var before = [].map.call(bubbles.children, function (n) { return n.getBoundingClientRect().top; });
+    bubbles.appendChild(node);
+    while (bubbles.children.length > 7) { bubbles.firstChild.remove(); before.shift(); }
+    if (calmFx) return;
+    [].forEach.call(bubbles.children, function (n, k) {
+      if (n === node) return;
+      var d = before[k] - n.getBoundingClientRect().top;
+      if (!d) return;
+      n.style.transition = 'none'; n.style.transform = 'translateY(' + d + 'px)';
+      requestAnimationFrame(function () { requestAnimationFrame(function () { n.style.transition = 'transform .45s cubic-bezier(.2,.8,.2,1)'; n.style.transform = ''; }); });
+    });
+  }
   function bubble(w) {
     var key = w.name + '|' + w.message;
-    for (var i = 0; i < bubbles.children.length; i++) if (bubbles.children[i]._k === key) return; // không lặp lời chúc đang hiện
-    var b = el('li', 'bub'); b._k = key; b.append(el('b', '', w.name + ': '), document.createTextNode(w.message));
-    bubbles.appendChild(b);
-    while (bubbles.children.length > 4) bubbles.firstChild.remove();
-    setTimeout(function () { b.classList.add('out'); setTimeout(function () { b.remove(); }, 700); }, 6500);
+    for (var i = 0; i < bubbles.children.length; i++) if (bubbles.children[i]._k === key) return; // không lặp dòng đang hiện
+    var b = el('li', 'bub'); b._k = key;
+    var av = el('span', 'bav', (w.name.replace(/^(Anh|Chị|Cô|Bác|Chú|Bạn|Em|Gia đình)\s+/i, '').trim()[0] || '?').toUpperCase());
+    av.style.background = AVC[(w.name.length + w.name.charCodeAt(0)) % AVC.length];
+    var tx = el('span', 'btx'); tx.append(el('b', '', w.name), document.createTextNode(' ' + w.message));
+    b.append(av, tx); push(b);
   }
+  function liveEvent(name, text) { // dòng phụ: vừa vào xem, vừa thả tim…
+    var b = el('li', 'bub ev'); b.append(el('b', '', name), document.createTextNode(' ' + text)); push(b);
+  }
+  var EVT = ['đã tham gia 👋', 'đã thả ❤️ x5', 'đã chia sẻ thiệp 🔁', 'đã thả 🥰', 'đã tặng 🌹 hoa hồng', 'đang xem cùng bạn 👀'];
   // Lời chúc mẫu: trộn ngẫu nhiên, hiện sau lời chúc thật của khách
   var seeds = (C.seedWishes || []).slice().sort(function () { return Math.random() - .5; });
   function startLive() {
@@ -416,8 +436,9 @@
     liveTimer = setInterval(function () {
       var pool = wishes.concat(seeds);
       if (!liveOn || document.hidden || !pool.length) return;
+      if (li0 % 4 === 3) { var w0 = pool[(li0 * 7) % pool.length]; liveEvent(w0.name, EVT[li0 % EVT.length]); li0++; return; }
       bubble(pool[li0++ % pool.length]);
-    }, 2200);
+    }, 1900);
   }
   $('#liveX').onclick = function () {
     liveOn = !liveOn; bubbles.classList.toggle('off', !liveOn); this.setAttribute('aria-pressed', !liveOn);

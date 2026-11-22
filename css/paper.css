@@ -312,3 +312,16 @@ footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 .rail{transition:opacity .35s ease,transform .35s ease}
 .rail.dim{opacity:.28;transform:translateX(6px)}
 .rail-b svg{width:40px;height:40px;padding:8px}
+
+/* ============ Bình luận trôi kiểu TikTok live (ghi đè) ============ */
+.bubbles{max-width:74%;height:236px;justify-content:flex-end;overflow:hidden;gap:6px;margin-bottom:10px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.35) 22%,#000 50%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.35) 22%,#000 50%)}
+.bub{display:flex;align-items:flex-start;gap:7px;max-width:100%;background:rgba(15,15,15,.2);border:0;border-radius:16px;padding:4px 11px 4px 4px;
+  color:#fff;font-size:12.5px;line-height:1.38;text-shadow:0 1px 2px rgba(0,0,0,.75),0 0 6px rgba(0,0,0,.35);backdrop-filter:none;-webkit-backdrop-filter:none;
+  -webkit-line-clamp:unset;overflow:visible;animation:ttIn .45s cubic-bezier(.2,.8,.2,1)}
+.bav{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:600 11px/1 var(--f-body);color:#fff;text-shadow:none;box-shadow:0 0 0 1.5px rgba(255,255,255,.7)}
+.btx{padding-top:2px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:anywhere}
+.bub b{font-weight:600;color:#ffe3ea;margin-right:2px}
+.bub.ev{padding:3px 11px;background:rgba(15,15,15,.14);font-size:11.5px;color:#f3f3f3}
+.bub.ev b{color:#a6f0ff}
+@keyframes ttIn{from{opacity:0;transform:translateY(18px) scale(.96)}}
