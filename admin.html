@@ -98,7 +98,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     <textarea id="msgTpl"></textarea>
   </label>
   <fieldset>
-    <legend>Ảnh gửi kèm <span class="hint">(gửi cùng lời nhắn để Messenger / Zalo luôn có ảnh đẹp)</span></legend>
+    <legend>Ảnh gửi kèm <span class="hint">(mặc định “Không gửi ảnh”: chỉ gửi lời nhắn + link thành 1 tin, Messenger tự hiện khung ảnh của thiệp. Chọn ảnh thì ảnh sẽ thành 1 tin riêng)</span></legend>
     <div class="pics" id="pics"></div>
     <label class="check"><input type="file" id="picFile" accept="image/*" hidden><span class="up" id="picUp">＋ Chọn ảnh khác từ máy</span></label>
   </fieldset>
@@ -109,7 +109,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   <div class="bar"><p class="count" id="count" aria-live="polite"></p><div class="prog" aria-hidden="true"><i id="progBar"></i></div></div>
   <label class="check"><input type="checkbox" id="onlyTodo"> Chỉ hiện người chưa gửi</label>
   <p class="hint" id="shareCap"></p>
-  <p class="hint">• <b>Gửi</b>: trên điện thoại mở Zalo / Messenger với ảnh, lời nhắn và link có sẵn.<br>• <b>① Chép ảnh</b> → dán ảnh vào ô chat Messenger / Zalo / Facebook → bấm <b>② Chép lời</b> → dán lời nhắn → gửi. Người nhận có ảnh cưới kèm lời mời và link.<br>Khách nào đã gửi hoặc đã chép sẽ được đánh dấu “đã gửi” (lưu trên máy này).</p>
+  <p class="hint">• <b>Gửi</b>: trên điện thoại mở Zalo / Messenger với lời nhắn + link có sẵn → chọn người nhận → gửi. Đợi 1–2 giây cho khung ảnh thiệp hiện ra.<br>• <b>Chép lời</b>: chép lời nhắn + link để dán vào ô chat.<br>Khách nào đã gửi hoặc đã chép sẽ được đánh dấu “đã gửi” (lưu trên máy này).</p>
   <div class="toast" id="toast" hidden></div>
   <ul id="out"><li class="empty">Danh sách link sẽ hiện ở đây.</li></ul>
 </main>
@@ -187,8 +187,8 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   onlyTodo.onchange=render;
   // ---- Ảnh gửi kèm ----
   var PICS=[['og-2611.jpg','assets/og-2611.jpg'],['62','assets/photos/62.jpg'],['73','assets/photos/73.jpg'],['67','assets/photos/67.jpg'],['78','assets/photos/78.jpg'],['82','assets/photos/82.jpg'],['63','assets/photos/63.jpg'],['61','assets/photos/61.jpg']];
-  var picVal='assets/og-2611.jpg',picFile=null,picsBox=document.getElementById('pics');
-  try{var pv=localStorage.getItem('pic');if(pv!==null)picVal=pv}catch(e){}
+  var picVal='',picFile=null,picsBox=document.getElementById('pics');
+  try{var pv=localStorage.getItem('pic2');if(pv!==null)picVal=pv}catch(e){}
   // Chép cả ảnh lẫn lời nhắn: dán vào Messenger / Zalo / Facebook trên máy tính sẽ có ảnh kèm chữ
   var picPng=null;
   function makePng(file){
@@ -218,7 +218,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     picsBox.innerHTML='';
     var none=document.createElement('label');none.innerHTML='<input type="radio" name="pic" value=""><span>Không<br>gửi ảnh</span>';picsBox.appendChild(none);
     PICS.forEach(function(p){var lb=document.createElement('label');lb.innerHTML='<input type="radio" name="pic" value="'+p[1]+'"><span><img src="'+(p[1].indexOf('photos/')>-1?p[1].replace('photos/','photos/thumb/'):p[1])+'" alt="Ảnh '+p[0]+'" loading="lazy"></span>';picsBox.appendChild(lb)});
-    picsBox.querySelectorAll('input').forEach(function(r){r.checked=r.value===picVal;r.onchange=function(){picVal=r.value;try{localStorage.setItem('pic',picVal)}catch(e){}loadPic()}});
+    picsBox.querySelectorAll('input').forEach(function(r){r.checked=r.value===picVal;r.onchange=function(){picVal=r.value;try{localStorage.setItem('pic2',picVal)}catch(e){}loadPic();render()}});
   }
   drawPics();loadPic();
   (function(){var c=document.getElementById('shareCap'),f=new File([new Blob(['x'],{type:'image/jpeg'})],'a.jpg',{type:'image/jpeg'});
