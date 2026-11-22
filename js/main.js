@@ -379,18 +379,21 @@
     for (var i = 0; i < bubbles.children.length; i++) if (bubbles.children[i]._k === key) return; // không lặp lời chúc đang hiện
     var b = el('li', 'bub'); b._k = key; b.append(el('b', '', w.name + ': '), document.createTextNode(w.message));
     bubbles.appendChild(b);
-    while (bubbles.children.length > 3) bubbles.firstChild.remove();
+    while (bubbles.children.length > 4) bubbles.firstChild.remove();
     setTimeout(function () { b.classList.add('out'); setTimeout(function () { b.remove(); }, 700); }, 6500);
   }
+  // Lời chúc mẫu: trộn ngẫu nhiên, hiện sau lời chúc thật của khách
+  var seeds = (C.seedWishes || []).slice().sort(function () { return Math.random() - .5; });
   function startLive() {
     live.hidden = false;
     var giftOk = $('.gift') && $('.gift').style.display !== 'none' && document.getElementById('giftModal');
     if (!giftOk) $('#liveGift').hidden = true;
     clearInterval(liveTimer);
     liveTimer = setInterval(function () {
-      if (!liveOn || document.hidden || !wishes.length) return;
-      bubble(wishes[li0++ % wishes.length]);
-    }, 3200);
+      var pool = wishes.concat(seeds);
+      if (!liveOn || document.hidden || !pool.length) return;
+      bubble(pool[li0++ % pool.length]);
+    }, 2200);
   }
   $('#liveX').onclick = function () {
     liveOn = !liveOn; bubbles.classList.toggle('off', !liveOn); this.setAttribute('aria-pressed', !liveOn);
