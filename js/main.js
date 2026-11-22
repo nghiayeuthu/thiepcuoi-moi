@@ -495,7 +495,7 @@
   }
   function setNick(n) { nick = n; try { localStorage.setItem('tn_nick', n); } catch (e) {} paintNick(); showGuest(n, true); }
   function openNick(ask) {
-    $('#nickTitle').textContent = ask ? cap(P.you) + ' tên là gì?' : 'Đặt biệt danh';
+    $('#nickTitle').textContent = ask ? (guest ? 'Đây có phải tên ' + P.you + ' không?' : cap(P.you) + ' tên là gì?') : 'Đặt biệt danh';
     $('.nick-sub').textContent = ask ? 'Cho ' + P.we + ' biết tên hoặc biệt danh của ' + P.you + ', thiệp sẽ mời đúng tên ' + P.you + P.nha + ' 💌' : 'Thiệp sẽ mời đúng tên này, và tên này cũng hiện cùng lời chúc của ' + P.you + '.';
     nickIn.value = nick || guest || ''; $('#nickMsg').textContent = '';
     var big = $('#nickBig'); big.textContent = nickIn.value ? initial(nickIn.value) : '?'; big.style.background = nickIn.value ? avColor(nickIn.value) : '#b9bfb3';
@@ -507,10 +507,9 @@
   $('#invEdit').onclick = function () { openNick(!nick); };
   // Chưa biết tên (link không có tên, chưa đặt biệt danh): hỏi một lần sau khi mở thiệp
   function askNameOnce() {
-    var asked = false; try { asked = !!localStorage.getItem('tn_nick_asked'); } catch (e) {}
-    if (nick || guest || asked) return;
-    try { localStorage.setItem('tn_nick_asked', '1'); } catch (e) {}
-    setTimeout(function () { if (nickModal.hidden && $('#sv').hidden) openNick(true); }, 2600);
+    // Chưa đặt biệt danh thì lần nào mở thiệp cũng hỏi (link có tên thì điền sẵn để khách xác nhận)
+    if (nick) return;
+    setTimeout(function () { if (!nick && nickModal.hidden && $('#sv').hidden) openNick(true); }, 2200);
   }
   $('.sheet-x', nickModal).onclick = function () { pendingMsg = ''; closeNick(); };
   nickModal.addEventListener('click', function (e) { if (e.target === nickModal) { pendingMsg = ''; closeNick(); } });
