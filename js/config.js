@@ -48,7 +48,7 @@ window.WEDDING = {
       address: 'Số 19 Trần Khánh Dư, Ngô Quyền, Hải Phòng',
       copy: 'Cung Happy Place, tầng 1, Trung tâm tiệc cưới Hải Đăng, Số 19 Trần Khánh Dư, Ngô Quyền, Hải Phòng',
       map: 'https://www.google.com/maps/search/?api=1&query=Trung%20t%C3%A2m%20ti%E1%BB%87c%20c%C6%B0%E1%BB%9Bi%20H%E1%BA%A3i%20%C4%90%C4%83ng%2C%20S%E1%BB%91%2019%20Tr%E1%BA%A7n%20Kh%C3%A1nh%20D%C6%B0%2C%20Ng%C3%B4%20Quy%E1%BB%81n%2C%20H%E1%BA%A3i%20Ph%C3%B2ng',
-      photo: 'assets/photos/59.jpg', photoPos: '50% 62%'
+      photo: 'assets/photos/82.jpg', photoPos: '50% 62%'
     },
     {
       label: 'Tiệc tại nhà gái · Chủ Nhật 29/11/2026',
@@ -57,7 +57,7 @@ window.WEDDING = {
       hall: 'Số 15 đường Cây Chè',
       address: 'Số 15 đường Cây Chè, Cách Thượng, Nam Sơn, An Dương, Hải Phòng',
       map: 'https://www.google.com/maps/search/?api=1&query=S%E1%BB%91%2015%20%C4%91%C6%B0%E1%BB%9Dng%20C%C3%A2y%20Ch%C3%A8%2C%20C%C3%A1ch%20Th%C6%B0%E1%BB%A3ng%2C%20Nam%20S%C6%A1n%2C%20An%20D%C6%B0%C6%A1ng%2C%20H%E1%BA%A3i%20Ph%C3%B2ng',
-      photo: 'assets/photos/60.jpg', photoPos: '50% 62%'
+      photo: 'assets/photos/73.jpg', photoPos: '50% 48%'
     }
   ],
 
@@ -87,6 +87,26 @@ window.WEDDING = {
     { when: 'Lời cầu hôn', text: 'Rồi một ngày, anh ngỏ lời và em gật đầu. Sau 7 năm, chúng mình về chung một nhà.' }
   ],
 
+  // Love story dạng tin nhắn Messenger (b = Thu, g = Nghĩa)
+  chat: [
+    { from: 'b', text: 'Anh ơi, mình quen nhau ở Nhật được bao lâu rồi nhỉ? 🤔' },
+    { from: 'g', text: '7 năm rồi đó em. Từ hôm hai đứa tình cờ gặp nhau nơi xứ người 🇯🇵' },
+    { from: 'b', text: 'Bảy mùa hoa anh đào, bảy mùa tuyết trắng… nhanh ghê 🌸❄️' },
+    { from: 'g', text: 'Cùng học, cùng làm, cùng đi qua cả những lúc nhớ nhà 🏠' },
+    { from: 'g', text: 'Giờ anh muốn cùng em đi tiếp cả đời. Em đồng ý nhé? 💍' },
+    { from: 'b', text: 'Em đồng ý! ❤️', react: '❤️' },
+    { from: 'g', text: 'Vậy mời cả nhà tới chung vui với tụi mình nha 🥂🎉' }
+  ],
+
+  // Tin (story) kiểu Facebook / Instagram: mỗi nhóm vài ảnh
+  stories: [
+    { name: 'Cầu hôn 💍', photos: ['64', '65', '63'] },
+    { name: 'Song hỷ 囍', photos: ['67', '66', '68', '69'] },
+    { name: 'Vườn hoa 🌸', photos: ['73', '61', '72', '70', '71'] },
+    { name: 'Garden 🤍', photos: ['62', '74', '76', '75'] },
+    { name: 'Hoàng hôn 🌇', photos: ['82', '78', '79'] }
+  ],
+
   // Mừng cưới ✏️ (thay ảnh QR trong /assets và số tài khoản)
   gifts: [
     { who: 'Chú rể', side: 'trai', name: 'TEN CHU RE', bank: 'Ngân hàng …', account: '0000000000', qr: 'assets/qr-chure.png' },
@@ -106,7 +126,6 @@ window.WEDDING = {
     { name: 'Quang Huy', message: 'Happy wedding! Chúc vợ chồng son luôn vui vẻ, hạnh phúc.' },
     { name: 'Bác Hùng', message: 'Chúc hai cháu thuận vợ thuận chồng, tát biển Đông cũng cạn.' },
     { name: 'Phương Thảo', message: 'Từ Nhật về Việt Nam, chúc tình yêu của hai bạn luôn nở hoa 🌸' },
-    { name: 'Team công ty', message: 'Cả team chúc anh chị trăm năm hạnh phúc, đầu bạc răng long!' },
     { name: 'Linh Chi', message: 'Khóc mất thôi, chúc mừng Thu nhiều nhiều 😭❤️' },
     { name: 'Đức Anh', message: 'Chúc mừng hai bạn, hẹn gặp ở tiệc cưới nhé!' },
     { name: 'Chị Nga', message: 'Chúc hai em luôn yêu thương, nhường nhịn và hạnh phúc.' },
@@ -119,7 +138,6 @@ window.WEDDING = {
     { name: 'Bảo Ngọc', message: 'Chúc mừng hạnh phúc! Nhớ mời mình ăn kẹo cưới nha 🍬' },
     { name: 'Khánh Linh', message: 'Chúc hai bạn có một đám cưới thật trọn vẹn và đáng nhớ.' },
     { name: 'Anh Sơn', message: 'Chúc mừng Nghĩa và Thu, hạnh phúc nhé hai em!' },
-    { name: 'Hội đồng hương Osaka', message: 'Chúc mừng hai bạn! Mãi là cặp đôi đẹp nhất hội mình.' },
     { name: 'Yến Nhi', message: 'Chúc vợ chồng mình luôn yêu nhau, hiểu nhau và cùng nhau đi thật xa.' },
     { name: 'Chị Thu Hà', message: 'Chúc em có một gia đình thật ấm áp, hạnh phúc.' },
     { name: 'Việt Hoàng', message: 'Chúc mừng đám cưới! Hai bạn sinh ra là để dành cho nhau.' },
@@ -134,7 +152,6 @@ window.WEDDING = {
     { name: 'Hồng Nhung', message: 'Chúc mừng Thu nhé, cô dâu đẹp nhất năm nay luôn ❤️' },
     { name: 'Anh Quốc', message: 'Chúc mừng hai em, chúc mọi điều tốt đẹp nhất!' },
     { name: 'Lan Hương', message: 'Chúc hai bạn luôn giữ được nụ cười rạng rỡ như hôm nay.' },
-    { name: 'Bạn cùng phòng ở Nhật', message: 'Từ những ngày ở ký túc xá đến hôm nay, chúc mừng hai bạn thật nhiều!' }
   ],
 
   music: 'assets/music.mp3',

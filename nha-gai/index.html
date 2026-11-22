@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>Thiệp cưới Tuấn Nghĩa &amp; Hoài Thu</title>
-<meta name="description" content="Trân trọng kính mời bạn đến dự tiệc cưới Hoài Thu &amp; Tuấn Nghĩa: 10 giờ sáng Chủ Nhật 29/11/2026 tại tư gia nhà gái, An Dương, Hải Phòng.">
+<meta name="description" content="Thân mời bạn tới chung vui đám cưới Hoài Thu &amp; Tuấn Nghĩa: 10 giờ sáng Chủ Nhật 29/11/2026 tại tư gia nhà gái, An Dương, Hải Phòng.">
 <!-- TỰ SINH từ index.html bằng tools/build_sides.py, đừng sửa trực tiếp. -->
 <!-- Open Graph: đổi đường dẫn https://... cho đúng địa chỉ trang của bạn sau khi deploy (xem HUONG-DAN.md) -->
 <meta property="og:type" content="website">
@@ -15,7 +15,7 @@
 <meta property="og:image:alt" content="Ảnh cưới Tuấn Nghĩa và Hoài Thu">
 <meta property="og:url" content="https://nghiayeuthu.github.io/thiepcuoi-moi/nha-gai/">
 <meta property="og:title" content="Thiệp cưới Hoài Thu &amp; Tuấn Nghĩa · 29.11.2026">
-<meta property="og:description" content="Trân trọng kính mời bạn đến dự tiệc cưới Hoài Thu &amp; Tuấn Nghĩa: 10 giờ sáng Chủ Nhật 29/11/2026 tại tư gia nhà gái, An Dương, Hải Phòng.">
+<meta property="og:description" content="Thân mời bạn tới chung vui đám cưới Hoài Thu &amp; Tuấn Nghĩa: 10 giờ sáng Chủ Nhật 29/11/2026 tại tư gia nhà gái, An Dương, Hải Phòng.">
 <meta property="og:image" content="https://nghiayeuthu.github.io/thiepcuoi-moi/assets/og-2611.jpg">
 <meta property="og:image:secure_url" content="https://nghiayeuthu.github.io/thiepcuoi-moi/assets/og-2611.jpg">
 <meta property="og:image:type" content="image/jpeg">
@@ -27,8 +27,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Be+Vietnam+Pro:wght@300;400;500&display=swap">
-<link rel="stylesheet" href="css/style.css?v=20261122d">
-<link rel="stylesheet" href="css/paper.css?v=20261122d">
+<link rel="stylesheet" href="css/style.css?v=20261122f">
+<link rel="stylesheet" href="css/paper.css?v=20261122f">
 </head>
 <body class="locked">
 
@@ -73,12 +73,17 @@
   <header class="hero">
     <img src="assets/photos/62.jpg" alt="Tuấn Nghĩa và Hoài Thu" fetchpriority="high" style="object-position:50% 40%">
     <div class="hero-in">
-      <p class="eyebrow light">Trân trọng kính mời</p>
-      <p class="hero-guest" id="heroGuest">quý khách</p>
+      <p class="eyebrow light">Thân mời</p>
+      <p class="hero-guest" id="heroGuest">bạn thân yêu</p>
       <h1><span>Tuấn Nghĩa</span><i>&amp;</i><span>Hoài Thu</span></h1>
       <p class="hero-date" data-dates>28 &amp; 29 · 11 · 2026</p>
     </div>
   </header>
+
+  <!-- Tin kiểu Facebook / Instagram -->
+  <section class="stories" aria-label="Khoảnh khắc">
+    <div class="st-row" id="stRow"></div>
+  </section>
 
   <!-- 3. Hai họ + lời mời -->
   <section class="families reveal">
@@ -98,7 +103,7 @@
         <p class="addr" data-bind="bride.address"></p>
       </div>
     </div>
-    <p class="announce">Trân trọng báo tin lễ thành hôn của con chúng tôi</p>
+    <p class="announce">Sau 7 năm bên nhau, chúng mình chính thức về chung một nhà</p>
     <div class="couple">
       <img class="orchid o-tr" src="assets/orchid.svg" alt="" aria-hidden="true">
       <div class="arch wide"><img src="assets/photos/63.jpg" alt="Chú rể Tuấn Nghĩa và cô dâu Hoài Thu" loading="lazy"></div>
@@ -115,9 +120,9 @@
     <img class="orchid o-tl" src="assets/orchid.svg" alt="" aria-hidden="true">
     <img class="orchid o-br" src="assets/orchid.svg" alt="" aria-hidden="true">
     <div class="inv-names"><span class="n1">Tuấn Nghĩa</span><span class="amp">&amp;</span><span class="n2">Hoài Thu</span></div>
-    <p class="inv-kinh">Trân trọng kính mời</p>
-    <p class="inv-guest" id="invGuest">Quý khách</p>
-    <p class="inv-to">Tham dự tiệc chung vui<br>cùng gia đình chúng tôi</p>
+    <p class="inv-kinh">Thân mời</p>
+    <p class="inv-guest" id="invGuest">Bạn</p>
+    <p class="inv-to">Tới chung vui<br>trong ngày cưới của chúng mình</p>
     <div id="days"></div>
   </section>
 
@@ -131,8 +136,16 @@
   <section class="story reveal">
     <img class="orchid o-tr" src="assets/orchid.svg" alt="" aria-hidden="true">
     <h2>Our story</h2>
-    <p class="story-lead">Gặp nhau nơi xứ người, bảy năm cùng nhau ở Nhật Bản, và giờ là ngày chúng mình về chung một nhà.</p>
-    <ol class="story-list" id="story"></ol>
+    <div class="chat" id="chat">
+      <div class="chat-top">
+        <div class="chat-av"><img src="assets/photos/thumb/81.jpg" alt=""><img src="assets/photos/thumb/80.jpg" alt=""></div>
+        <div class="chat-who"><b>Thu &amp; Nghĩa</b><span><i></i>Đang hoạt động</span></div>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11z"/></svg>
+      </div>
+      <div class="chat-day">Tokyo · 7 năm trước</div>
+      <div class="chat-body" id="chatBody" aria-live="polite"></div>
+    </div>
   </section>
 
   <!-- Ảnh bìa xen giữa -->
@@ -192,7 +205,6 @@
       <button type="button" class="ph" data-full="assets/photos/70.jpg"><img src="assets/photos/thumb/70.jpg" alt="Ảnh cưới" loading="lazy"></button>
       <button type="button" class="ph" data-full="assets/photos/71.jpg"><img src="assets/photos/thumb/71.jpg" alt="Ảnh cưới" loading="lazy"></button>
       <button type="button" class="ph" data-full="assets/photos/72.jpg"><img src="assets/photos/thumb/72.jpg" alt="Ảnh cưới" loading="lazy"></button>
-      <button type="button" class="ph" data-full="assets/photos/77.jpg"><img src="assets/photos/thumb/77.jpg" alt="Ảnh cưới" loading="lazy"></button>
       <button type="button" class="ph" data-full="assets/photos/79.jpg"><img src="assets/photos/thumb/79.jpg" alt="Ảnh cưới" loading="lazy"></button>
       <button type="button" class="ph" data-full="assets/photos/66.jpg"><img src="assets/photos/thumb/66.jpg" alt="Ảnh cưới" loading="lazy"></button>
       <button type="button" class="ph wide" data-full="assets/photos/75.jpg"><img src="assets/photos/thumb/75.jpg" alt="Ảnh cưới" loading="lazy"></button>
@@ -256,13 +268,32 @@
     <img src="assets/photos/76.jpg" alt="" loading="lazy" style="object-position:50% 25%">
     <div class="thanks-in">
       <h2>Thank you</h2>
-      <p>Cảm ơn bạn đã dành thời gian đọc tấm thiệp này. Sự hiện diện và lời chúc của bạn là món quà ý nghĩa nhất với chúng mình.</p>
+      <p>Cảm ơn bạn đã ghé xem thiệp của tụi mình. Có bạn tới chung vui là món quà ý nghĩa nhất với chúng mình đó!</p>
       <p class="sig">Tuấn Nghĩa &amp; Hoài Thu</p>
     </div>
   </section>
   <footer data-dates>28 &amp; 29 · 11 · 2026 · Hải Phòng</footer>
 </main>
 
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<!-- Thanh nút kiểu TikTok -->
+<div class="rail" id="rail" hidden>
+  <button type="button" class="rail-b" id="railHeart" aria-label="Thả tim"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.3 2.4h2c.7-1.2 2.2-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z" fill="currentColor"/></svg><span id="heartN">0</span></button>
+  <button type="button" class="rail-b" id="railChat" aria-label="Lời chúc"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M12 3C6.5 3 2 6.9 2 11.7c0 2.6 1.3 4.9 3.4 6.5L5 22l4.1-2.1c.9.2 1.9.3 2.9.3 5.5 0 10-3.9 10-8.7S17.5 3 12 3z" fill="currentColor"/></svg><span id="chatN">0</span></button>
+  <button type="button" class="rail-b" id="railShare" aria-label="Chia sẻ thiệp"><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M14 4l8 7.5-8 7.5v-4.5C8 14.5 4.5 16.5 2 21c.8-6 4-11.5 12-12.5z" fill="currentColor"/></svg><span>Chia sẻ</span></button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<!-- Xem tin (story) -->
+<div class="sv" id="sv" hidden role="dialog" aria-modal="true" aria-label="Xem khoảnh khắc">
+  <div class="sv-bars" id="svBars"></div>
+  <div class="sv-head"><img id="svAv" alt=""><b id="svName"></b><span id="svTime">vừa xong</span><button type="button" class="sv-x" aria-label="Đóng">×</button></div>
+  <img class="sv-img" id="svImg" alt="Ảnh cưới">
+  <p class="sv-cap" id="svCap"></p>
+  <div class="sv-tap prev" aria-hidden="true"></div><div class="sv-tap next" aria-hidden="true"></div>
+</div>
 
 <!-- Lời chúc bay lên + thanh gửi lời chúc -->
 <div class="live" id="live" hidden>
@@ -295,8 +326,8 @@
   </div>
 </div>
 
-<script src="js/config.js?v=20261122d"></script>
-<script src="js/lunar.js?v=20261122d"></script>
-<script src="js/main.js?v=20261122d"></script>
+<script src="js/config.js?v=20261122f"></script>
+<script src="js/lunar.js?v=20261122f"></script>
+<script src="js/main.js?v=20261122f"></script>
 </body>
 </html>

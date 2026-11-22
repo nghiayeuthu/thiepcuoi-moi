@@ -217,3 +217,98 @@ footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
   .doors.open .door.l,.doors.open .door.r{transform:none}
 }
 .opener>.doors{position:absolute!important;inset:0;z-index:20!important}
+
+/* ============ Tin kiểu Facebook / Instagram ============ */
+.stories{padding:18px 0 6px;text-align:left}
+.st-row{display:flex;gap:14px;overflow-x:auto;padding:4px 16px 8px;scrollbar-width:none;scroll-snap-type:x proximity}
+.st-row::-webkit-scrollbar{display:none}
+.st{flex:none;width:74px;border:0;background:none;padding:0;cursor:pointer;display:grid;justify-items:center;gap:6px;scroll-snap-align:start;color:var(--ink)}
+.st .ring{width:70px;height:70px;border-radius:50%;padding:3px;background:conic-gradient(from 210deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5,#feda75);display:block;animation:ringSpin 6s linear infinite}
+.st .ring img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid var(--cream)}
+.st.seen .ring{background:#cfc8b9;animation:none}
+.st-n{font-size:11px;line-height:1.25;text-align:center;max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@keyframes ringSpin{to{filter:hue-rotate(360deg)}}
+.sv{position:fixed;inset:0;z-index:80;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.sv-img{width:100%;height:100%;max-width:480px;object-fit:cover}
+.sv-img.kb{animation:kb 4.6s ease-out both}
+@keyframes kb{from{transform:scale(1.12)}to{transform:scale(1)}}
+.sv-bars{position:absolute;z-index:3;top:calc(8px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:min(100%,480px);padding:0 8px;display:flex;gap:4px}
+.sv-bars i{flex:1;height:2.5px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden}
+.sv-bars i b{display:block;height:100%;width:0;background:#fff}
+.sv-bars i.done b{width:100%!important}
+.sv-head{position:absolute;z-index:3;top:calc(20px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:min(100%,480px);padding:0 10px;display:flex;align-items:center;gap:8px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.sv-head img{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1.5px solid #fff}
+.sv-head b{font-weight:600;font-size:14px}
+.sv-head span{font-size:12px;opacity:.8}
+.sv-x{margin-left:auto;width:44px;height:44px;border:0;background:none;color:#fff;font:300 34px/1 var(--f-body);cursor:pointer}
+.sv-cap{position:absolute;z-index:3;bottom:calc(28px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;color:#fff;font:400 30px/1.2 var(--f-script);text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.sv-tap{position:absolute;z-index:2;top:0;bottom:0;width:35%}
+.sv-tap.prev{left:0}.sv-tap.next{right:0;width:65%}
+.sv::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.45),transparent 18%,transparent 78%,rgba(0,0,0,.5))}
+
+/* ============ Love story kiểu Messenger ============ */
+.chat{position:relative;z-index:2;max-width:380px;margin:0 auto;background:#fff;border-radius:22px;box-shadow:0 22px 50px -24px rgba(30,40,30,.5);overflow:hidden;text-align:left;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",var(--f-body),sans-serif}
+.chat-top{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #eee;color:#7b3fe4}
+.chat-av{position:relative;width:42px;height:42px;flex:none}
+.chat-av img{position:absolute;width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid #fff}
+.chat-av img:first-child{left:0;top:0}.chat-av img:last-child{right:0;bottom:0}
+.chat-who{flex:1;display:grid;line-height:1.25;color:#050505}
+.chat-who b{font-weight:600;font-size:15px}
+.chat-who span{font-size:12px;color:#65676b;display:flex;align-items:center;gap:5px}
+.chat-who i{width:8px;height:8px;border-radius:50%;background:#31a24c;display:inline-block}
+.chat-top svg{margin-left:6px}
+.chat-day{text-align:center;font-size:11px;color:#8a8d91;padding:12px 0 4px}
+.chat-body{padding:4px 12px 14px;display:flex;flex-direction:column;gap:5px;min-height:120px}
+.msg-row{display:flex;align-items:flex-end;gap:6px;animation:msgIn .35s cubic-bezier(.2,.8,.2,1)}
+.msg-row.me{justify-content:flex-end}
+.m-av{width:26px;height:26px;border-radius:50%;object-fit:cover;flex:none}
+.bubble{position:relative;max-width:76%;padding:8px 12px;border-radius:18px;font-size:14.5px;line-height:1.4;overflow-wrap:anywhere}
+.them .bubble{background:#f0f0f0;color:#050505;border-bottom-left-radius:6px}
+.me .bubble{background:linear-gradient(135deg,#0a7cff,#a033ff 70%,#ff5280);background-attachment:fixed;color:#fff;border-bottom-right-radius:6px}
+.bubble.typing{display:flex;gap:4px;padding:12px 14px;background:#f0f0f0!important}
+.bubble.typing i{width:7px;height:7px;border-radius:50%;background:#a8abaf;animation:dot 1s infinite}
+.bubble.typing i:nth-child(2){animation-delay:.15s}.bubble.typing i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px) scale(.96)}}
+.react{position:absolute;right:-4px;bottom:-12px;background:#fff;border-radius:999px;padding:1px 4px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2);animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+.msg-row.them:has(.react){margin-bottom:10px}
+.seen{display:flex;justify-content:flex-end;padding-top:2px}
+.seen img{width:15px;height:15px;border-radius:50%;object-fit:cover}
+@keyframes pop{from{transform:scale(0)}}
+
+/* ============ Thanh nút kiểu TikTok ============ */
+.rail{position:fixed;z-index:41;right:max(8px,calc(50vw - 240px + 8px));bottom:calc(132px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;align-items:center}
+.rail-b{border:0;background:none;padding:0;cursor:pointer;color:#fff;display:grid;justify-items:center;gap:1px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.55))}
+.rail-b span{font:600 11px/1.2 var(--f-body);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+.rail-b svg{display:block}
+#railHeart.on svg{color:#fe2c55}
+#railHeart.pop svg{animation:pop .45s cubic-bezier(.3,1.8,.5,1)}
+.music{top:auto;bottom:calc(72px + env(safe-area-inset-bottom,0px));right:max(10px,calc(50vw - 240px + 10px));width:44px;height:44px}
+.fly{position:fixed;z-index:90;pointer-events:none;animation:fly 2.1s cubic-bezier(.2,.6,.4,1) forwards}
+@keyframes fly{0%{transform:translate(0,0) scale(.4);opacity:0}15%{opacity:1;transform:translate(calc(var(--dx)*.2),-30px) scale(1.1)}100%{transform:translate(var(--dx),-260px) rotate(var(--r)) scale(.9);opacity:0}}
+.bigheart{position:fixed;z-index:90;pointer-events:none;font-size:96px;line-height:1;transform:translate(-50%,-50%);animation:big .9s ease forwards;filter:drop-shadow(0 6px 16px rgba(254,44,85,.5))}
+@keyframes big{0%{transform:translate(-50%,-50%) scale(0) rotate(-15deg);opacity:0}25%{transform:translate(-50%,-50%) scale(1.2) rotate(-8deg);opacity:1}45%{transform:translate(-50%,-50%) scale(.95) rotate(-12deg)}80%{opacity:1}100%{transform:translate(-50%,-120%) scale(1.1);opacity:0}}
+.toast{position:fixed;z-index:95;left:50%;bottom:calc(140px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:rgba(20,20,20,.85);color:#fff;font-size:13px;padding:9px 16px;border-radius:999px;animation:fade .2s}
+.progress{position:fixed;z-index:45;top:0;left:0;right:0;height:3px;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#fe2c55,#a033ff,#25f4ee);pointer-events:none}
+.bubbles{max-width:72%}
+
+/* ============ Hiệu ứng thêm ============ */
+.banner img{animation:kbSlow 18s ease-in-out infinite alternate}
+@keyframes kbSlow{from{transform:scale(1)}to{transform:scale(1.09)}}
+.inv-names span:not(.amp){background:linear-gradient(100deg,var(--forest) 40%,#9cc483 50%,var(--forest) 60%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+@keyframes shine{from{background-position:120% 0}to{background-position:-120% 0}}
+.reveal{transition:opacity 1s ease,transform 1s cubic-bezier(.2,.7,.2,1),filter 1s ease;filter:blur(4px)}
+.reveal.in{filter:none}
+.arch.wide{transition:transform .6s ease}
+.arch.wide:hover{transform:rotate(0) scale(1.02)}
+
+@media (prefers-reduced-motion:reduce){
+  .banner img,.inv-names span,.st .ring,.sv-img.kb{animation:none}
+  .reveal{filter:none}
+}
+.rail-b svg{width:44px;height:44px;padding:9px;border-radius:50%;background:rgba(28,38,28,.38);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.rail-b span{margin-top:3px;padding:1px 7px;border-radius:999px;background:rgba(28,38,28,.42);font-size:10.5px}
+.rail{gap:10px}
+.rail{transition:opacity .35s ease,transform .35s ease}
+.rail.dim{opacity:.28;transform:translateX(6px)}
+.rail-b svg{width:40px;height:40px;padding:8px}

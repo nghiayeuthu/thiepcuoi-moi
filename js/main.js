@@ -38,7 +38,7 @@
     $('#invGuest').textContent = guest;
     var og = $('#openerGuest'); og.textContent = 'Thân gửi ' + guest; og.hidden = false;
     var dg = $('#doorGuest'); dg.textContent = 'Thân gửi ' + guest; dg.hidden = false;
-    document.title = 'Kính mời ' + guest + (SIDE === 'gai' ? ' · Hoài Thu & Tuấn Nghĩa' : ' · Tuấn Nghĩa & Hoài Thu');
+    document.title = 'Thân mời ' + guest + (SIDE === 'gai' ? ' · Hoài Thu & Tuấn Nghĩa' : ' · Tuấn Nghĩa & Hoài Thu');
     $('#rsvpName').value = guest; $('#wishName').value = guest;
   }
 
@@ -51,8 +51,32 @@
   });
 
   // Câu chuyện
-  var st = $('#story');
-  C.story.forEach(function (s) { var li = el('li'); li.append(el('h3', '', s.when), el('p', '', s.text)); st.appendChild(li); });
+  // Love story dạng chat Messenger: hiện "đang nhập…" rồi tới tin nhắn, lần lượt khi cuộn tới
+  (function () {
+    var body = $('#chatBody'); if (!body || !C.chat) return;
+    var AV = { b: 'assets/photos/thumb/81.jpg', g: 'assets/photos/thumb/80.jpg' };
+    function row(m) {
+      var r = el('div', 'msg-row ' + (m.from === 'g' ? 'me' : 'them'));
+      if (m.from !== 'g') { var a = el('img', 'm-av'); a.src = AV.b; a.alt = ''; r.appendChild(a); }
+      return r;
+    }
+    function run() {
+      var i = 0;
+      (function next() {
+        if (i >= C.chat.length) { var seen = el('div', 'seen'); var a = el('img'); a.src = AV.b; a.alt = ''; seen.append(a); body.appendChild(seen); return; }
+        var m = C.chat[i++], r = row(m), t = el('div', 'bubble typing'); t.innerHTML = '<i></i><i></i><i></i>'; r.appendChild(t); body.appendChild(r);
+        setTimeout(function () {
+          t.className = 'bubble'; t.textContent = m.text;
+          if (m.react) { var rc = el('span', 'react', m.react); t.appendChild(rc); if (!calm) setTimeout(function () { heartsAt(t.getBoundingClientRect(), 8); }, 300); }
+          setTimeout(next, calm ? 0 : 450);
+        }, calm ? 0 : 650 + Math.min(900, m.text.length * 18));
+      })();
+    }
+    if ('IntersectionObserver' in window) {
+      var o = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { o.disconnect(); run(); } }, { rootMargin: '0px 0px -25% 0px' });
+      o.observe(body);
+    } else run();
+  })();
 
   // Lịch trình
   var tl = $('#timeline');
@@ -341,7 +365,7 @@
     if (!need(name, rsvpForm, '[name=name]', 'Bạn điền tên giúp mình nhé.')) return null;
     var attend = f.get('attend');
     return { type: 'rsvp', name: name, attend: attend, guests: attend === 'Có' ? +(f.get('guests') || 1) : 0, side: f.get('side'), invitedAs: guest };
-  }, 'Cảm ơn bạn đã xác nhận!');
+  }, 'Cảm ơn bạn đã xác nhận!', function (d) { if (d.attend === 'Có') confetti(); });
 
   var wishForm = $('#wishForm'), list = $('#wishList');
   function renderWishes(items) {
@@ -385,7 +409,7 @@
   // Lời chúc mẫu: trộn ngẫu nhiên, hiện sau lời chúc thật của khách
   var seeds = (C.seedWishes || []).slice().sort(function () { return Math.random() - .5; });
   function startLive() {
-    live.hidden = false;
+    live.hidden = false; $('#rail').hidden = false; $('#chatN').textContent = wishes.length + seeds.length;
     var giftOk = $('.gift') && $('.gift').style.display !== 'none' && document.getElementById('giftModal');
     if (!giftOk) $('#liveGift').hidden = true;
     clearInterval(liveTimer);
@@ -431,6 +455,125 @@
     if (lb.hidden) return;
     if (e.key === 'Escape') closeLb(); else if (e.key === 'ArrowRight') showShot(cur + 1); else if (e.key === 'ArrowLeft') showShot(cur - 1);
   });
+
+  // ---------- Tin kiểu Facebook / Instagram ----------
+  var calmFx = calm;
+  (function () {
+    var rowEl = $('#stRow'), sv = $('#sv'), groups = C.stories || [];
+    if (!rowEl || !groups.length) { if (rowEl) rowEl.closest('section').remove(); return; }
+    groups.forEach(function (g, gi) {
+      var b = el('button', 'st'); b.type = 'button';
+      b.innerHTML = '<span class="ring"><img src="assets/photos/thumb/' + g.photos[0] + '.jpg" alt="" loading="lazy"></span>';
+      b.appendChild(el('span', 'st-n', g.name)); b.onclick = function () { open(gi, 0); };
+      rowEl.appendChild(b);
+    });
+    var G = 0, P = 0, timer = 0, t0 = 0, left = 0, DUR = 4500, paused = false, raf = 0;
+    function bars() {
+      var bx = $('#svBars'); bx.innerHTML = '';
+      groups[G].photos.forEach(function (_, i) { var b = el('i'); b.appendChild(el('b')); if (i < P) b.className = 'done'; bx.appendChild(b); });
+    }
+    function show() {
+      var g = groups[G], im = $('#svImg');
+      im.classList.remove('kb'); void im.offsetWidth; im.src = 'assets/photos/' + g.photos[P] + '.jpg'; im.classList.add('kb');
+      $('#svAv').src = 'assets/photos/thumb/' + g.photos[0] + '.jpg'; $('#svName').textContent = g.name;
+      $('#svCap').textContent = (SIDE === 'gai' ? 'Hoài Thu & Tuấn Nghĩa' : 'Tuấn Nghĩa & Hoài Thu');
+      bars(); left = DUR; start();
+    }
+    function start() { t0 = performance.now(); cancelAnimationFrame(raf); tick(); }
+    function tick() {
+      raf = requestAnimationFrame(function () {
+        if (paused) { tick(); return; }
+        var el2 = performance.now() - t0, f = Math.min(1, 1 - (left - el2) / DUR), cur = $('#svBars').children[P];
+        if (cur) cur.firstChild.style.width = (f * 100) + '%';
+        if (el2 >= left) step(1); else tick();
+      });
+    }
+    function step(d) {
+      P += d;
+      if (P >= groups[G].photos.length) { G++; P = 0; if (G >= groups.length) return close(); }
+      if (P < 0) { G--; if (G < 0) { G = 0; P = 0; } else P = groups[G].photos.length - 1; }
+      show();
+    }
+    function open(g, p) { G = g; P = p; sv.hidden = false; document.body.style.overflow = 'hidden'; show(); rowEl.children[g].classList.add('seen'); }
+    function close() { cancelAnimationFrame(raf); sv.hidden = true; document.body.style.overflow = ''; }
+    $('.sv-x', sv).onclick = close;
+    $('.sv-tap.prev', sv).onclick = function () { step(-1); };
+    $('.sv-tap.next', sv).onclick = function () { rowEl.children[G] && rowEl.children[G].classList.add('seen'); step(1); };
+    sv.addEventListener('pointerdown', function () { if (!paused) { paused = true; left -= performance.now() - t0; } });
+    function resume() { if (paused) { paused = false; t0 = performance.now(); } }
+    sv.addEventListener('pointerup', resume); sv.addEventListener('pointercancel', resume);
+    var ty = 0; sv.addEventListener('touchstart', function (e) { ty = e.touches[0].clientY; }, { passive: true });
+    sv.addEventListener('touchend', function (e) { if (e.changedTouches[0].clientY - ty > 90) close(); });
+    document.addEventListener('keydown', function (e) { if (sv.hidden) return; if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') step(1); else if (e.key === 'ArrowLeft') step(-1); });
+  })();
+
+  // ---------- Tim bay, chạm đúp, chia sẻ, pháo giấy, thanh tiến độ ----------
+  var EMO = ['❤️', '💖', '🥰', '😍', '💕', '🤍', '🎉', '💐'];
+  function heartsAt(r, n) {
+    if (calmFx) return;
+    for (var i = 0; i < n; i++) {
+      var h = el('span', 'fly', EMO[Math.random() * EMO.length | 0]);
+      h.style.left = (r.left + r.width / 2 - 12 + (Math.random() * 40 - 20)) + 'px'; h.style.top = (r.top + r.height / 2 - 12) + 'px';
+      h.style.setProperty('--dx', (Math.random() * 120 - 60) + 'px'); h.style.setProperty('--r', (Math.random() * 60 - 30) + 'deg');
+      h.style.animationDelay = (i * 70) + 'ms'; h.style.fontSize = (18 + Math.random() * 14) + 'px';
+      document.body.appendChild(h); setTimeout(function (x) { return function () { x.remove(); }; }(h), 2200 + i * 70);
+    }
+  }
+  var hn = 0, baseN = 0;
+  try { hn = +localStorage.getItem('tn_hearts') || 0; } catch (e) {}
+  baseN = 1200 + (C.seedWishes || []).length * 23; // số tim ban đầu cho rộn ràng
+  function setHearts() { var v = baseN + hn; $('#heartN').textContent = v >= 1000 ? (v / 1000).toFixed(1).replace('.', ',') + 'K' : v; }
+  setHearts();
+  function like(r) {
+    hn++; try { localStorage.setItem('tn_hearts', hn); } catch (e) {}
+    setHearts(); var b = $('#railHeart'); b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop', 'on');
+    heartsAt(r || b.getBoundingClientRect(), 6);
+  }
+  $('#railHeart').onclick = function () { like(); };
+  $('#railChat').onclick = function () { $('#liveMsg').focus(); };
+  function toast(t) { var x = $('#toast'); x.textContent = t; x.hidden = false; clearTimeout(x._t); x._t = setTimeout(function () { x.hidden = true; }, 2200); }
+  $('#railShare').onclick = function () {
+    var url = location.origin + location.pathname, title = document.title.replace(/^Thân mời [^·]*· /, 'Thiệp cưới ');
+    if (navigator.share) navigator.share({ title: title, url: url }).catch(function () {});
+    else copyText(url, function () { toast('Đã sao chép link thiệp'); });
+  };
+  function copyText(t, ok) {
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(ok, function () { prompt('Sao chép link:', t); });
+    else prompt('Sao chép link:', t);
+  }
+  // Chạm đúp vào ảnh: tim lớn nổ ra như TikTok / Instagram
+  var lastTap = 0;
+  document.addEventListener('pointerup', function (e) {
+    var img = e.target.closest && e.target.closest('.hero, .banner, .calph, .q-ph, .arch, .venue-item figure');
+    if (!img) return;
+    var now = Date.now();
+    if (now - lastTap < 320) {
+      e.preventDefault();
+      var big = el('span', 'bigheart', '❤️'); big.style.left = e.clientX + 'px'; big.style.top = e.clientY + 'px';
+      document.body.appendChild(big); setTimeout(function () { big.remove(); }, 900);
+      like({ left: e.clientX, top: e.clientY, width: 0, height: 0 }); lastTap = 0;
+    } else lastTap = now;
+  });
+  // Pháo giấy khi khách xác nhận sẽ đến
+  function confetti() {
+    if (calmFx) return;
+    var c = el('canvas', 'shower'); document.body.appendChild(c);
+    var cv = canvasOf(c), x = cv.x, P2 = [], COL = ['#2f4a34', '#8fae7a', '#f2c96b', '#e8899d', '#ffffff', '#c23d4e'];
+    for (var i = 0; i < 160; i++) P2.push({ x: cv.W / 2, y: cv.H * .55, vx: (Math.random() - .5) * 16, vy: -8 - Math.random() * 10, w: 6 + Math.random() * 6, h: 3 + Math.random() * 4, a: Math.random() * 6, va: (Math.random() - .5) * .4, c: COL[i % COL.length] });
+    var t0c = Date.now();
+    (function f() {
+      x.clearRect(0, 0, cv.W, cv.H);
+      P2.forEach(function (p) { p.x += p.vx; p.y += p.vy; p.vx *= .985; p.vy += .32; p.a += p.va; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); x.restore(); });
+      if (Date.now() - t0c < 3500) requestAnimationFrame(f); else c.remove();
+    })();
+  }
+  // Thanh tiến độ cuộn trang
+  (function () {
+    var bar = $('#progress');
+    function upd() { var h = document.documentElement.scrollHeight - innerHeight; bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, scrollY / h) : 0) + ')'; }
+    var rail = $('#rail'), rt = 0;
+    addEventListener('scroll', function () { upd(); rail.classList.add('dim'); clearTimeout(rt); rt = setTimeout(function () { rail.classList.remove('dim'); }, 700); }, { passive: true }); upd();
+  })();
 
   // ---------- Hiệu ứng trong khung ảnh: hoa anh đào rơi, pháo hoa ----------
   // Chỉ chạy khi khung ảnh đang hiện trên màn hình và tab đang mở.
