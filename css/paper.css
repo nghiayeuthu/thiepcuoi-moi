@@ -355,3 +355,6 @@ footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 .couple-names{gap:2px}
 .sheet-x{z-index:3}
 .sheet-close{width:100%;max-width:340px;margin:20px auto 0}
+/* Chữ viết tay có nét vươn ra ngoài khung (đầu chữ N, đuôi chữ g): chừa chỗ để hiệu ứng ánh sáng không cắt mất */
+.inv-names span:not(.amp){display:inline-block;padding:.08em .35em .32em;margin:-.08em -.35em -.32em}
+.couple-names .script,.hero h1 span,.dlabel,.inv-guest{overflow:visible;padding-inline:.12em}
