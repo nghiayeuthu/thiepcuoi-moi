@@ -21,6 +21,7 @@
       // Thiệp nhà gái: tên cô dâu đứng trước
       var h = $('.hero h1'), sp = h.querySelectorAll('span'); h.insertBefore(sp[1], sp[0]); h.appendChild(sp[0]);
       var es = $('.env-letter .script'); if (es) es.innerHTML = 'Thu <i>&amp;</i> Nghĩa';
+      var n1 = $('.inv-names .n1'), n2 = $('.inv-names .n2'); n1.textContent = 'Hoài Thu'; n2.textContent = 'Tuấn Nghĩa';
       var sg = $('.thanks .sig'); if (sg) sg.textContent = 'Hoài Thu & Tuấn Nghĩa';
       document.title = document.title.replace('Tuấn Nghĩa & Hoài Thu', 'Hoài Thu & Tuấn Nghĩa');
     }
@@ -34,8 +35,9 @@
   } catch (e) {}
   if (guest) {
     $('#heroGuest').textContent = guest;
-    $('#inviteGuest').textContent = guest;
+    $('#invGuest').textContent = guest;
     var og = $('#openerGuest'); og.textContent = 'Thân gửi ' + guest; og.hidden = false;
+    var dg = $('#doorGuest'); dg.textContent = 'Thân gửi ' + guest; dg.hidden = false;
     document.title = 'Kính mời ' + guest + (SIDE === 'gai' ? ' · Hoài Thu & Tuấn Nghĩa' : ' · Tuấn Nghĩa & Hoài Thu');
     $('#rsvpName').value = guest; $('#wishName').value = guest;
   }
@@ -55,11 +57,21 @@
   // Lịch trình
   var tl = $('#timeline');
   if (!C.schedule.length) tl.closest('section').style.display = 'none';
-  C.schedule.forEach(function (s) {
-    var li = el('li'), c = el('div', 'c');
-    c.append(el('h3', '', s.title)); if (s.note) c.append(el('p', '', s.note));
-    li.append(el('div', 't', s.time), el('div', 'bar'), c); tl.appendChild(li);
+  var ICON = {
+    cam: '<path d="M6 16h7l3-4h16l3 4h7v24H6z"/><circle cx="24" cy="28" r="8"/><circle cx="24" cy="28" r="4"/><path d="M10 12h5"/>',
+    ring: '<circle cx="18" cy="30" r="10"/><circle cx="30" cy="30" r="10"/><path d="M14 12l4-5 4 5-4 4zM18 16v4"/><path d="M28 6l1.5 2M34 7l-1 2.2M31 4v2"/>',
+    toast: '<path d="M10 6h10l-1 11a4 4 0 0 1-8 0z"/><path d="M15 21v15M10 37h10"/><path d="M27.5 6.8l9.6 2.6-3.8 10.4a4 4 0 0 1-7.7-2.1z"/><path d="M29.8 22.4l-3.9 14.5M21 35.4l9.6 2.6"/><path d="M23 3l1 2M25.5 2l-.5 2.4"/>',
+    heart: '<path d="M24 40S8 30 8 18a8 8 0 0 1 16-2 8 8 0 0 1 16 2c0 12-16 22-16 22z"/>'
+  };
+  function iconFor(t, i) { t = (t || '').toLowerCase(); return /đón|check|chụp/.test(t) ? 'cam' : /lễ|nhẫn|thành hôn/.test(t) ? 'ring' : /tiệc|ly|khai/.test(t) ? 'toast' : ['cam', 'ring', 'toast', 'heart'][i % 4]; }
+  tl.style.setProperty('--n', Math.min(C.schedule.length, 4));
+  C.schedule.forEach(function (s, i) {
+    var li = el('li');
+    li.innerHTML = '<svg viewBox="0 0 48 48" width="58" height="58" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICON[iconFor(s.title, i)] + '</svg>';
+    li.append(el('b', 't', s.time), el('h3', '', s.title)); if (s.note) li.append(el('p', '', s.note));
+    tl.appendChild(li);
   });
+
 
   // Địa điểm
   var vbox = $('#venues');
@@ -75,36 +87,33 @@
     b.append(go, cp); a.append(b); vbox.appendChild(a);
   });
 
-  // ---------- Ngày cưới, âm lịch, lịch tháng ----------
-  var D = C.date, wd = new Date(D.year, D.month - 1, D.day);
+  // ---------- Ngày cưới, âm lịch ----------
+  var D = C.date;
   var DOW = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-  $('#dowText').textContent = DOW[wd.getDay()];
-  $('#dayNum').textContent = pad(D.day);
-  $('#monthText').textContent = 'Tháng ' + D.month;
-  $('#yearText').textContent = D.year;
-  var h = D.hour, part = h < 11 ? 'sáng' : h < 13 ? 'trưa' : h < 18 ? 'chiều' : 'tối';
-  $('#timeText').textContent = (h > 12 ? h - 12 : h) + ' giờ ' + pad(D.minute) + ' ' + part + ', ' + DOW[wd.getDay()];
-  var L = Lunar.solarToLunar(D.day, D.month, D.year, 7);
-  $('#lunarText').textContent = 'Tức ngày ' + L.day + ' tháng ' + L.month + (L.leap ? ' nhuận' : '') + ' năm ' + Lunar.yearName(L.year) + ' (âm lịch)';
-
-  function placeHtml(p) { return p ? '<b>' + esc(p.name) + '</b>' + esc(p.address) : ''; }
   function esc(t) { var d = el('div'); d.textContent = t || ''; return d.innerHTML; }
-  $('#placeText').innerHTML = placeHtml(C.date.place);
-  if (C.secondDay) {
-    var S = C.secondDay, sd = new Date(D.year, D.month - 1, S.day), sh = S.hour;
-    $('#d2Dow').textContent = DOW[sd.getDay()];
-    $('#d2Day').textContent = pad(S.day);
-    $('#d2Month').textContent = 'Tháng ' + D.month;
-    $('#d2Time').textContent = (sh > 12 ? sh - 12 : sh) + ' giờ ' + pad(S.minute) + ' ' + (sh < 11 ? 'sáng' : sh < 13 ? 'trưa' : sh < 18 ? 'chiều' : 'tối') + ', ' + DOW[sd.getDay()];
-    var L2 = Lunar.solarToLunar(S.day, D.month, D.year, 7);
-    $('#d2Lunar').textContent = 'Tức ngày ' + L2.day + ' tháng ' + L2.month + (L2.leap ? ' nhuận' : '') + ' năm ' + Lunar.yearName(L2.year) + ' (âm lịch)';
-    $('#d2Place').innerHTML = placeHtml(S.place);
-    $('#day2').hidden = false;
+  function venueOf(p) { for (var i = 0; i < C.venues.length; i++) if (p && C.venues[i].name === p.name) return C.venues[i]; return null; }
+  function dayBlock(day, hour, minute, place, label) {
+    var wd = new Date(D.year, D.month - 1, day), L = Lunar.solarToLunar(day, D.month, D.year, 7), v = venueOf(place);
+    var b = el('div', 'dblock');
+    b.innerHTML = (label ? '<p class="dlabel">' + esc(label) + '</p>' : '') +
+      '<p class="dtime">' + pad(hour) + ':' + pad(minute) + ' · ' + DOW[wd.getDay()] + '</p>' +
+      '<div class="drow"><span>Tháng ' + D.month + '</span><b>' + pad(day) + '</b><span>Năm ' + D.year + '</span></div>' +
+      '<p class="dlunar">(Tức ngày ' + L.day + ' tháng ' + L.month + (L.leap ? ' nhuận' : '') + ' năm ' + Lunar.yearName(L.year) + ')</p>' +
+      (place ? '<p class="dat">' + (place.name.indexOf('Tư gia') === 0 ? 'Tiệc được tổ chức tại' : 'Tiệc cưới được tổ chức tại') + '</p><p class="dplace">' + esc(place.name) + '</p><p class="daddr">' + esc(v && v.copy || place.address) + '</p>' : '');
+    if (v && v.map) {
+      var a = el('a', 'dmap'); a.href = v.map; a.target = '_blank'; a.rel = 'noopener';
+      a.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.3 7 13 7 13s7-7.7 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>Chỉ đường';
+      b.appendChild(a);
+    }
+    return b;
   }
+  var days = $('#days');
+  days.appendChild(dayBlock(D.day, D.hour, D.minute, D.place, C.secondDay ? 'Tiệc cưới' : ''));
+  if (C.secondDay) { var S2 = C.secondDay; days.appendChild(dayBlock(S2.day, S2.hour, S2.minute, S2.place, 'Tiệc tại nhà gái')); }
 
   (function cal() {
     var g = $('#cal'), html = '', days = new Date(D.year, D.month, 0).getDate();
-    $('#calHead').textContent = 'Tháng ' + D.month + ' · ' + D.year;
+    $('#calHead').textContent = 'Tháng ' + D.month;
     ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].forEach(function (d) { html += '<div class="dow">' + d + '</div>'; });
     var first = (new Date(D.year, D.month - 1, 1).getDay() + 6) % 7;
     for (var i = 0; i < first; i++) html += '<div></div>';
@@ -243,12 +252,21 @@
     setTimeout(function () { env.classList.add('open'); }, calm ? 0 : 250);
     setTimeout(function () { if (!calm) { opener.classList.add('zoom'); shower(); } }, calm ? 0 : 1500);
     setTimeout(function () {
-      opener.classList.add('gone'); document.body.classList.remove('locked'); mbtn.hidden = audio.error ? true : false;
+      opener.classList.add('gone'); document.body.classList.remove('locked'); mbtn.hidden = audio.error ? true : false; startLive();
       window.scrollTo(0, 0);
     }, calm ? 900 : 1900);
     setTimeout(function () { if (opFx) opFx.stop(); opener.remove(); }, calm ? 1900 : 3000);
   }
   env.addEventListener('click', openCard);
+  // Hai cánh cửa: chạm dấu sáp để mở, rồi tới phong bì
+  var doors = $('#doors'), doorsOpen = false;
+  function openDoors() {
+    if (doorsOpen) return; doorsOpen = true;
+    play();
+    doors.classList.add('open');
+    setTimeout(function () { doors.remove(); var b = $('#openBtn'); if (b) b.focus({ preventScroll: true }); }, calm ? 300 : 1500);
+  }
+  if (doors) { doors.addEventListener('click', openDoors); }
   $('#openBtn').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCard(); } });
 
   // ---------- Hiện dần khi cuộn ----------
@@ -353,6 +371,63 @@
     renderWishes(wishes); wishForm.message.value = '';
   });
   loadWishes();
+
+  // ---------- Lời chúc bay lên (kiểu livestream) + thanh gửi nhanh ----------
+  var live = $('#live'), bubbles = $('#bubbles'), liveOn = true, liveTimer = 0, li0 = 0;
+  function bubble(w) {
+    var key = w.name + '|' + w.message;
+    for (var i = 0; i < bubbles.children.length; i++) if (bubbles.children[i]._k === key) return; // không lặp lời chúc đang hiện
+    var b = el('li', 'bub'); b._k = key; b.append(el('b', '', w.name + ': '), document.createTextNode(w.message));
+    bubbles.appendChild(b);
+    while (bubbles.children.length > 3) bubbles.firstChild.remove();
+    setTimeout(function () { b.classList.add('out'); setTimeout(function () { b.remove(); }, 700); }, 6500);
+  }
+  function startLive() {
+    live.hidden = false;
+    var giftOk = $('.gift') && $('.gift').style.display !== 'none' && document.getElementById('giftModal');
+    if (!giftOk) $('#liveGift').hidden = true;
+    clearInterval(liveTimer);
+    liveTimer = setInterval(function () {
+      if (!liveOn || document.hidden || !wishes.length) return;
+      bubble(wishes[li0++ % wishes.length]);
+    }, 3200);
+  }
+  $('#liveX').onclick = function () {
+    liveOn = !liveOn; bubbles.classList.toggle('off', !liveOn); this.setAttribute('aria-pressed', !liveOn);
+    this.setAttribute('aria-label', liveOn ? 'Ẩn lời chúc' : 'Hiện lời chúc');
+  };
+  $('#liveGift').onclick = function () { $('#giftBtn').click(); };
+  $('#liveBar').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var inp = $('#liveMsg'), msg = inp.value.trim(), name = (wishForm.name.value || guest || '').trim();
+    if (!msg) { inp.focus(); return; }
+    if (!name) { // chưa biết tên: chuyển xuống ô lời chúc để khách điền tên
+      wishForm.message.value = msg; inp.value = '';
+      $('#loi-chuc').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(function () { wishForm.name.focus(); }, 700); return;
+    }
+    inp.value = ''; inp.blur();
+    var w = { name: name, message: msg, time: new Date().toISOString() };
+    wishes.unshift(w); renderWishes(wishes); bubble(w);
+    send({ type: 'wish', name: name, message: msg }).catch(function () {});
+  });
+
+  // ---------- Album: xem ảnh lớn ----------
+  var lb = $('#lightbox'), lbImg = $('#lbImg'), shots = [].slice.call(document.querySelectorAll('.album .ph')), cur = 0;
+  function showShot(i) { cur = (i + shots.length) % shots.length; lbImg.src = shots[cur].getAttribute('data-full'); }
+  shots.forEach(function (b, i) { b.onclick = function () { showShot(i); lb.hidden = false; document.body.style.overflow = 'hidden'; }; });
+  function closeLb() { lb.hidden = true; lbImg.removeAttribute('src'); document.body.style.overflow = ''; }
+  $('.lb-x', lb).onclick = closeLb;
+  $('.lb-nav.prev', lb).onclick = function (e) { e.stopPropagation(); showShot(cur - 1); };
+  $('.lb-nav.next', lb).onclick = function (e) { e.stopPropagation(); showShot(cur + 1); };
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+  var tx = 0;
+  lb.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', function (e) { var d = e.changedTouches[0].clientX - tx; if (Math.abs(d) > 50) showShot(cur + (d < 0 ? 1 : -1)); });
+  document.addEventListener('keydown', function (e) {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') closeLb(); else if (e.key === 'ArrowRight') showShot(cur + 1); else if (e.key === 'ArrowLeft') showShot(cur - 1);
+  });
 
   // ---------- Hiệu ứng trong khung ảnh: hoa anh đào rơi, pháo hoa ----------
   // Chỉ chạy khi khung ảnh đang hiện trên màn hình và tab đang mở.

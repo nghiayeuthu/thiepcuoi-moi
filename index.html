@@ -20,21 +20,28 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#f4f8ef">
+<meta name="theme-color" content="#2f4a34">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23a8843f'/><text x='50' y='66' font-size='44' text-anchor='middle' fill='%23fffaf0' font-family='serif'>N&amp;T</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Be+Vietnam+Pro:wght@300;400;500&display=swap">
-<link rel="stylesheet" href="css/style.css?v=20261122b">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Be+Vietnam+Pro:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="css/style.css?v=20261122c">
+<link rel="stylesheet" href="css/paper.css?v=20261122c">
 </head>
 <body class="locked">
 
 <!-- 1. Màn hình mở thiệp -->
 <div class="opener" id="opener">
+  <div class="doors" id="doors">
+    <div class="door l"></div><div class="door r"></div>
+    <button class="door-seal" id="doorSeal" type="button" aria-label="Mở thiệp"><span>N<i>&amp;</i>T</span></button>
+    <p class="door-hint">Chạm vào dấu sáp để mở</p>
+    <p class="door-guest" id="doorGuest" hidden></p>
+  </div>
   <canvas class="op-fx" id="opFx" aria-hidden="true"></canvas>
   <div class="op-leaf tl" aria-hidden="true"></div><div class="op-leaf tr" aria-hidden="true"></div>
   <div class="op-leaf bl" aria-hidden="true"></div><div class="op-leaf br" aria-hidden="true"></div>
-  <p class="opener-top">Thiệp mời cưới</p>
+  <p class="opener-top">Save our date</p>
   <div class="env-wrap" id="envWrap">
   <div class="env" id="env">
     <div class="env-back"></div>
@@ -53,6 +60,7 @@
 </div>
 
 <button class="music" id="musicBtn" type="button" aria-label="Bật nhạc" aria-pressed="false" hidden>
+  <span class="disc" aria-hidden="true"></span>
   <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="16" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
 </button>
 <audio id="bgm" loop preload="none"></audio>
@@ -80,6 +88,7 @@
         <p class="parent" data-bind="groom.mother"></p>
         <p class="addr" data-bind="groom.address"></p>
       </div>
+      <div class="cheers" aria-hidden="true"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h10l-1 11a4 4 0 0 1-8 0z"/><path d="M15 21v15M10 37h10"/><path d="M27.5 6.8l9.6 2.6-3.8 10.4a4 4 0 0 1-7.7-2.1z"/><path d="M29.8 22.4l-3.9 14.5M21 35.4l9.6 2.6"/><path d="M11 12h8M26.6 11.5l8 2.1"/><path d="M23 3l1 2M25.5 2l-.5 2.4M20.5 2.5l1.3 1.8"/></svg></div>
       <div>
         <p class="eyebrow">Nhà gái</p>
         <p class="parent" data-bind="bride.father"></p>
@@ -89,6 +98,7 @@
     </div>
     <p class="announce">Trân trọng báo tin lễ thành hôn của con chúng tôi</p>
     <div class="couple">
+      <img class="orchid o-tr" src="assets/orchid.svg" alt="" aria-hidden="true">
       <div class="arch wide"><img src="assets/photos/63.jpg" alt="Chú rể Tuấn Nghĩa và cô dâu Hoài Thu" loading="lazy"></div>
       <div class="couple-names">
         <p class="person"><span class="role">Chú rể</span><span class="script" data-bind="groom.display"></span></p>
@@ -96,7 +106,17 @@
         <p class="person"><span class="role">Cô dâu</span><span class="script" data-bind="bride.display"></span></p>
       </div>
     </div>
-    <p class="lead">Sự hiện diện của <b id="inviteGuest">quý khách</b> là niềm vinh hạnh cho gia đình chúng tôi. Trân trọng kính mời đến dự bữa tiệc chung vui cùng hai gia đình.</p>
+  </section>
+
+  <!-- 5. Lời mời + ngày giờ -->
+  <section class="invite reveal" id="ngay-cuoi">
+    <img class="orchid o-tl" src="assets/orchid.svg" alt="" aria-hidden="true">
+    <img class="orchid o-br" src="assets/orchid.svg" alt="" aria-hidden="true">
+    <div class="inv-names"><span class="n1">Tuấn Nghĩa</span><span class="amp">&amp;</span><span class="n2">Hoài Thu</span></div>
+    <p class="inv-kinh">Trân trọng kính mời</p>
+    <p class="inv-guest" id="invGuest">Quý khách</p>
+    <p class="inv-to">Tham dự tiệc chung vui<br>cùng gia đình chúng tôi</p>
+    <div id="days"></div>
   </section>
 
   <!-- Ảnh bìa xen giữa -->
@@ -107,8 +127,9 @@
 
   <!-- 4. Câu chuyện tình yêu -->
   <section class="story reveal">
-    <p class="eyebrow">Chuyện của chúng mình</p>
-    <h2>Love <em>story</em></h2>
+    <img class="orchid o-tr" src="assets/orchid.svg" alt="" aria-hidden="true">
+    <h2>Our story</h2>
+    <p class="story-lead">Gặp nhau nơi xứ người, bảy năm cùng nhau ở Nhật Bản, và giờ là ngày chúng mình về chung một nhà.</p>
     <ol class="story-list" id="story"></ol>
   </section>
 
@@ -118,30 +139,9 @@
     <div class="banner-in"><p class="banner-l">Về chung một nhà</p><p class="banner-s" data-dates>28 &amp; 29 · 11 · 2026</p></div>
   </section>
 
-  <!-- 5. Ngày cưới + lịch -->
-  <section class="when reveal" id="ngay-cuoi">
-    <p class="eyebrow">Ngày chung đôi</p>
-    <h2>Save the <em>date</em></h2>
-    <div class="bigdate">
-      <span class="side" id="dowText">Thứ Bảy</span>
-      <span class="day" id="dayNum">28</span>
-      <span class="side" id="monthText">Tháng 11</span>
-    </div>
-    <p class="year" id="yearText">2026</p>
-    <p class="time" id="timeText">11 giờ 00</p>
-    <p class="lunar" id="lunarText"></p>
-    <p class="place" id="placeText"></p>
-    <div class="day2" id="day2" hidden>
-      <p class="eyebrow">Ngày thứ hai</p>
-      <div class="bigdate">
-        <span class="side" id="d2Dow"></span>
-        <span class="day" id="d2Day"></span>
-        <span class="side" id="d2Month"></span>
-      </div>
-      <p class="time" id="d2Time"></p>
-      <p class="lunar" id="d2Lunar"></p>
-      <p class="place" id="d2Place"></p>
-    </div>
+  <!-- Lịch tháng trên ảnh -->
+  <section class="calph reveal" aria-label="Lịch tháng cưới">
+    <img src="assets/photos/68.jpg" alt="" loading="lazy">
     <div class="cal">
       <div class="cal-h" id="calHead"></div>
       <div class="cal-grid" id="cal" role="grid"></div>
@@ -150,37 +150,56 @@
 
   <!-- 6. Lịch trình -->
   <section class="timeline reveal">
-    <p class="eyebrow">Lịch trình</p>
-    <h2>Ngày <em>trọng đại</em></h2>
+    <h2>Timeline</h2>
     <ol class="tl" id="timeline"></ol>
+  </section>
+
+  <!-- Khối xanh: ảnh + câu trích -->
+  <section class="quote reveal" aria-hidden="true">
+    <div class="q-ph"><img src="assets/photos/74.jpg" alt="" loading="lazy"></div>
+    <p class="q-tx">Cảm ơn vì đã đến bên nhau, để mỗi ngày bình thường đều thành kỷ niệm.</p>
+    <img class="orchid o-q" src="assets/orchid.svg" alt="">
   </section>
 
   <!-- 7. Đếm ngược -->
   <section class="countdown reveal">
-    <img src="assets/photos/75.jpg" alt="" loading="lazy">
-    <div class="cd-in">
-      <p class="eyebrow light">Còn lại</p>
-      <div class="count" id="count">
-        <div><b id="cd-d">--</b><span>Ngày</span></div>
-        <div><b id="cd-h">--</b><span>Giờ</span></div>
-        <div><b id="cd-m">--</b><span>Phút</span></div>
-        <div><b id="cd-s">--</b><span>Giây</span></div>
-      </div>
-      <p class="cd-done" id="cdDone" hidden>Hôm nay là ngày cưới của chúng mình!</p>
+    <h2>Countdown</h2>
+    <div class="count" id="count">
+      <div><b id="cd-d">--</b><span>Ngày</span></div>
+      <div><b id="cd-h">--</b><span>Giờ</span></div>
+      <div><b id="cd-m">--</b><span>Phút</span></div>
+      <div><b id="cd-s">--</b><span>Giây</span></div>
     </div>
+    <p class="cd-done" id="cdDone" hidden>Hôm nay là ngày cưới của chúng mình!</p>
   </section>
 
   <!-- 8. Địa điểm -->
   <section class="venue reveal" id="dia-diem">
-    <p class="eyebrow">Địa điểm</p>
-    <h2>Hẹn gặp <em>bạn tại</em></h2>
+    <h2>Hẹn gặp bạn tại</h2>
     <div id="venues"></div>
+  </section>
+
+  <!-- 9. Album -->
+  <section class="album reveal" id="album">
+    <h2 class="album-h"><span>Album</span><em>of</em><span>Love</span></h2>
+    <div class="grid">
+      <button type="button" class="ph wide" data-full="assets/photos/65.jpg"><img src="assets/photos/thumb/65.jpg" alt="Ảnh cưới" loading="lazy"></button>
+      <button type="button" class="ph" data-full="assets/photos/61.jpg"><img src="assets/photos/thumb/61.jpg" alt="Ảnh cưới" loading="lazy"></button>
+      <button type="button" class="ph" data-full="assets/photos/64.jpg"><img src="assets/photos/thumb/64.jpg" alt="Ảnh cưới" loading="lazy"></button>
+      <button type="button" class="ph" data-full="assets/photos/69.jpg"><img src="assets/photos/thumb/69.jpg" alt="Ảnh cưới" loading="lazy"></button>
+      <button type="button" class="ph" data-full="assets/photos/70.jpg"><img src="assets/photos/thumb/70.jpg" alt="Ảnh cưới" loading="lazy"></button>
+      <button type="button" class="ph" data-full="assets/photos/71.jpg"><img src="assets/photos/thumb/71.jpg" alt="Ảnh cưới" loading="lazy"></button>
+      <button type="button" class="ph" data-full="assets/photos/72.jpg"><img src="assets/photos/thumb/72.jpg" alt="Ảnh cưới" loading="lazy"></button>
+      <button type="button" class="ph" data-full="assets/photos/77.jpg"><img src="assets/photos/thumb/77.jpg" alt="Ảnh cưới" loading="lazy"></button>
+      <button type="button" class="ph" data-full="assets/photos/79.jpg"><img src="assets/photos/thumb/79.jpg" alt="Ảnh cưới" loading="lazy"></button>
+      <button type="button" class="ph" data-full="assets/photos/66.jpg"><img src="assets/photos/thumb/66.jpg" alt="Ảnh cưới" loading="lazy"></button>
+      <button type="button" class="ph wide" data-full="assets/photos/75.jpg"><img src="assets/photos/thumb/75.jpg" alt="Ảnh cưới" loading="lazy"></button>
+    </div>
   </section>
 
   <!-- 10. Xác nhận tham dự -->
   <section class="rsvp reveal" id="xac-nhan">
-    <p class="eyebrow">Xác nhận tham dự</p>
-    <h2>Bạn sẽ <em>đến chứ?</em></h2>
+    <h2>Bạn sẽ đến chứ?</h2>
     <p class="sub">Phản hồi giúp chúng mình chuẩn bị chu đáo hơn.</p>
     <form id="rsvpForm" class="form" novalidate>
       <label>Họ và tên<input name="name" id="rsvpName" required maxlength="80" autocomplete="name" placeholder="Tên của bạn"></label>
@@ -204,8 +223,7 @@
 
   <!-- 11. Lời chúc -->
   <section class="wishes reveal" id="loi-chuc">
-    <p class="eyebrow">Sổ lưu bút</p>
-    <h2>Gửi <em>lời chúc</em></h2>
+    <h2>Gửi lời chúc</h2>
     <form id="wishForm" class="form" novalidate>
       <label>Tên của bạn<input name="name" id="wishName" required maxlength="80" autocomplete="name" placeholder="Tên của bạn"></label>
       <label>Lời chúc<textarea name="message" required maxlength="500" rows="4" placeholder="Viết đôi lời gửi cô dâu chú rể…"></textarea></label>
@@ -218,10 +236,15 @@
   <!-- 12. Mừng cưới -->
   <section class="gift reveal">
     <div class="gift-icon" aria-hidden="true">
-      <svg viewBox="0 0 48 48" width="44" height="44"><rect x="7" y="18" width="34" height="24" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="5" y="12" width="38" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M24 12v30M24 12c-3-6-11-7-11-2 0 3 6 2 11 2zm0 0c3-6 11-7 11-2 0 3-6 2-11 2z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      <svg viewBox="0 0 120 110" width="120" height="110"><defs><linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd3dc"/><stop offset="1" stop-color="#f4a9b8"/></linearGradient><linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe2e8"/><stop offset="1" stop-color="#f7bccb"/></linearGradient><radialGradient id="ht" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#ff8fa6"/><stop offset="1" stop-color="#e0485f"/></radialGradient></defs>
+      <path d="M34 36c-4-12 6-22 14-14 4 4 4 10 4 14M78 36c4-12-6-22-14-14-4 4-4 10-4 14" fill="none" stroke="#e8899d" stroke-width="4" stroke-linecap="round"/>
+      <path d="M48 40c-6-14 8-22 14-10M70 40c6-14-8-20-12-8" fill="url(#ht)"/>
+      <path d="M58 46c-10-8-20-2-16 8 3 7 16 13 16 13s13-6 16-13c4-10-6-16-16-8z" fill="url(#ht)"/>
+      <path d="M44 34c-6-9 4-17 10-9 3 4 2 9 2 9" fill="url(#ht)" opacity=".9"/>
+      <rect x="24" y="58" width="72" height="44" rx="6" fill="url(#gb)"/><rect x="20" y="50" width="80" height="14" rx="5" fill="url(#gl)" transform="rotate(-4 60 57)"/>
+      <rect x="54" y="58" width="12" height="44" fill="#fbe4ea"/><rect x="24" y="58" width="72" height="44" rx="6" fill="none" stroke="#ef9fb1"/></svg>
     </div>
-    <p class="eyebrow">Mừng cưới</p>
-    <h2>Gửi <em>yêu thương</em></h2>
+    <h2>Gửi mừng cưới</h2>
     <p class="sub">Nếu không thể đến chung vui, bạn có thể gửi lời chúc phúc qua đây.</p>
     <button class="btn solid" type="button" id="giftBtn">Mở hộp mừng cưới</button>
   </section>
@@ -239,6 +262,27 @@
 </main>
 
 
+<!-- Lời chúc bay lên + thanh gửi lời chúc -->
+<div class="live" id="live" hidden>
+  <ul class="bubbles" id="bubbles" aria-live="off"></ul>
+  <div class="live-row">
+    <form class="livebar" id="liveBar" novalidate>
+      <input id="liveMsg" maxlength="300" placeholder="Gửi lời chúc…" aria-label="Viết lời chúc" autocomplete="off">
+      <button type="submit" aria-label="Gửi lời chúc"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 12l16-8-6 16-3-6z"/><path d="M11 14l9-10"/></svg></button>
+    </form>
+    <button class="live-btn" id="liveX" type="button" aria-label="Ẩn lời chúc" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></button>
+    <button class="live-btn gold" id="liveGift" type="button" aria-label="Mừng cưới"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="1"/><rect x="3" y="7" width="18" height="3.5" rx="1"/><path d="M12 7v13M12 7c-1.5-3-5.5-3.5-5.5-1 0 1.5 3 1 5.5 1zm0 0c1.5-3 5.5-3.5 5.5-1 0 1.5-3 1-5.5 1z"/></svg></button>
+  </div>
+</div>
+
+<!-- Xem ảnh lớn -->
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Xem ảnh">
+  <button class="lb-x" type="button" aria-label="Đóng">×</button>
+  <button class="lb-nav prev" type="button" aria-label="Ảnh trước">‹</button>
+  <img id="lbImg" alt="Ảnh cưới">
+  <button class="lb-nav next" type="button" aria-label="Ảnh sau">›</button>
+</div>
+
 <!-- Popup mừng cưới -->
 <div class="modal" id="giftModal" hidden role="dialog" aria-modal="true" aria-labelledby="giftTitle">
   <div class="sheet">
@@ -249,8 +293,8 @@
   </div>
 </div>
 
-<script src="js/config.js?v=20261122b"></script>
-<script src="js/lunar.js?v=20261122b"></script>
-<script src="js/main.js?v=20261122b"></script>
+<script src="js/config.js?v=20261122c"></script>
+<script src="js/lunar.js?v=20261122c"></script>
+<script src="js/main.js?v=20261122c"></script>
 </body>
 </html>
