@@ -207,7 +207,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
     if(picVal&&picPng&&window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write){
       navigator.clipboard.write([new ClipboardItem({'image/png':picPng})]).then(function(){
         toast('Đã chép ẢNH. Dán ảnh vào ô chat, rồi bấm ② Chép lời');step2();
-      },function(){copy(text,btn,'① Chép ảnh');toast('Máy này không chép được ảnh, đã chép lời nhắn');markSent()});
+      },function(){copy(text,btn,'① Chép ảnh');toast('Trình duyệt này chặn chép ảnh (đã chép lời nhắn). Hãy mở trang bằng Chrome hoặc Safari');markSent()});
     } else { copy(text,btn,btn.textContent);markSent();if(picVal)toast(picPng?'Máy này không chép được ảnh, đã chép lời nhắn':'Ảnh đang tải, bấm lại sau 1 giây');setTimeout(render,1600) }
   }
   function loadPic(){ // tải sẵn ảnh để lúc bấm Gửi chia sẻ được ngay
@@ -224,6 +224,7 @@ li small.when{display:block;font-size:11px;color:var(--gold)}
   (function(){var c=document.getElementById('shareCap'),f=new File([new Blob(['x'],{type:'image/jpeg'})],'a.jpg',{type:'image/jpeg'});
     var ok=!!(navigator.share&&navigator.canShare&&navigator.canShare({files:[f]}));
     var inApp=/FBAN|FBAV|FB_IAB|Messenger|Instagram|Zalo|Line\//i.test(navigator.userAgent);
+    try{navigator.permissions&&navigator.permissions.query({name:'clipboard-write'}).then(function(p){if(p.state==='denied')c.innerHTML='⚠️ Trình duyệt này chặn chép ảnh. Hãy mở trang này bằng <b>Chrome</b> hoặc <b>Safari</b> để nút “① Chép ảnh” hoạt động.'},function(){})}catch(e){}
     c.innerHTML=inApp?'⚠️ Bạn đang mở trang này trong Messenger/Zalo. Hãy bấm ⋯ → <b>Mở bằng Safari/Chrome</b> để nút Gửi kèm được ảnh.':ok?'✅ Máy này gửi kèm ảnh được.':(navigator.share?'ℹ️ Máy này chỉ gửi được chữ, không kèm ảnh. Link vẫn có ảnh xem trước của thiệp.':'ℹ️ Máy tính: nút Gửi sẽ chép lời nhắn để bạn dán.');})();
   document.getElementById('picUp').onclick=function(){document.getElementById('picFile').click()};
   document.getElementById('picFile').onchange=function(e){
