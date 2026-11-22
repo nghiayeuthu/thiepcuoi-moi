@@ -34,6 +34,7 @@ li.empty{display:block;text-align:center;border-style:dashed;background:transpar
 fieldset{border:0;margin:0;padding:0;display:grid;gap:6px}
 legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
 .sides{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sides.four{grid-template-columns:repeat(4,1fr)}
 .sides label{display:block;cursor:pointer}
 .sides input{position:absolute;opacity:0;width:1px;height:1px}
 .sides span{display:grid;place-items:center;min-height:52px;padding:8px;border:1px solid var(--line);border-radius:6px;background:#fff;text-align:center;font-size:13px;line-height:1.35;font-weight:400}
@@ -60,6 +61,15 @@ legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
       <label><input type="radio" name="side" value=""><span>Chung<small>Cả hai ngày</small></span></label>
     </div>
   </fieldset>
+  <fieldset>
+    <legend>Xưng hô</legend>
+    <div class="sides four">
+      <label><input type="radio" name="xh" value=""><span>Bạn bè<small>bạn – mình</small></span></label>
+      <label><input type="radio" name="xh" value="chi"><span>Chị<small>chị – em</small></span></label>
+      <label><input type="radio" name="xh" value="anh"><span>Anh<small>anh – em</small></span></label>
+      <label><input type="radio" name="xh" value="anhchi"><span>Anh chị<small>anh chị – em</small></span></label>
+    </div>
+  </fieldset>
   <label class="check"><input type="checkbox" id="noqr"> Ẩn phần mừng cưới (mã QR chuyển khoản)</label>
   <label>Danh sách khách mời
     <textarea id="names" placeholder="Anh Hùng và gia đình&#10;Chị Lan&#10;Cô Mai, chú Bình"></textarea>
@@ -78,6 +88,8 @@ legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
   var sideVal='nha-trai/',noqr=document.getElementById('noqr');
   try{ta.value=localStorage.getItem('guests')||'';if(localStorage.getItem('base'))base.value=localStorage.getItem('base');var sv=localStorage.getItem('side');if(sv!==null)sideVal=sv;noqr.checked=localStorage.getItem('noqr')==='1'}catch(e){}
   noqr.onchange=function(){try{localStorage.setItem('noqr',noqr.checked?'1':'0')}catch(e){}if(ta.value.trim())make()};
+  var xhVal='';try{xhVal=localStorage.getItem('xh')||''}catch(e){}
+  document.querySelectorAll('input[name=xh]').forEach(function(r){r.checked=r.value===xhVal;r.onchange=function(){xhVal=r.value;try{localStorage.setItem('xh',xhVal)}catch(e){}if(ta.value.trim())make()}});
   document.querySelectorAll('input[name=side]').forEach(function(r){r.checked=r.value===sideVal;r.onchange=function(){sideVal=r.value;try{localStorage.setItem('side',sideVal)}catch(e){}if(ta.value.trim())make()}});
   function copy(text,btn,label){
     function ok(){btn.textContent='Đã chép';setTimeout(function(){btn.textContent=label},1500)}
@@ -88,7 +100,7 @@ legend{font-size:13px;font-weight:500;padding:0;margin-bottom:6px}
     var b=base.value.trim()||new URL('./',location.href).href;
     try{localStorage.setItem('guests',ta.value);localStorage.setItem('base',b)}catch(e){}
     var seen={},names=ta.value.split('\n').map(function(s){return s.replace(/\s+/g,' ').trim()}).filter(function(s){if(!s||seen[s])return false;return seen[s]=true});
-    links=names.map(function(n){var u=new URL(sideVal,b.replace(/\/?$/,'/'));u.searchParams.set('guestName',n);if(noqr.checked)u.searchParams.set('qr','0');return{n:n,u:u.href.replace(/\+/g,'%20')}});
+    links=names.map(function(n){var u=new URL(sideVal,b.replace(/\/?$/,'/'));u.searchParams.set('guestName',n);if(noqr.checked)u.searchParams.set('qr','0');if(xhVal)u.searchParams.set('xh',xhVal);return{n:n,u:u.href.replace(/\+/g,'%20')}});
     out.innerHTML='';document.getElementById('count').textContent=links.length?links.length+' link':'';
     if(!links.length){var e=document.createElement('li');e.className='empty';e.textContent='Chưa có tên nào.';out.appendChild(e);return}
     links.forEach(function(l){

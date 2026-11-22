@@ -27,6 +27,34 @@
     }
   }
 
+  // ---------- Xưng hô: mặc định bạn – mình (bạn bè); ?xh=chi | anh | anhchi thì xưng em ----------
+  var XH = '';
+  try { XH = (new URLSearchParams(location.search).get('xh') || '').toLowerCase(); } catch (e) {}
+  var YOU = { chi: 'chị', anh: 'anh', anhchi: 'anh chị' }[XH] || '';
+  var P = YOU ? { you: YOU, me: 'em', we: 'tụi em', a: ' ạ', nha: ' nha' } : { you: 'bạn', me: 'mình', we: 'chúng mình', a: '', nha: ' nhé' };
+  function cap(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
+  if (YOU) {
+    document.documentElement.setAttribute('data-xh', XH);
+    var T = function (sel, text, html) { var n = $(sel); if (n) n[html ? 'innerHTML' : 'textContent'] = text; };
+    T('#heroGuest', cap(YOU)); T('#invGuest', cap(YOU)); T('#invEdit', '✎ Đặt tên của ' + YOU);
+    T('.announce', 'Sau 7 năm bên nhau, tụi em chính thức về chung một nhà');
+    T('.inv-to', 'Tới chung vui<br>trong ngày cưới của tụi em', true);
+    T('#cdDone', 'Hôm nay là ngày cưới của tụi em!');
+    T('.venue h2', 'Hẹn gặp ' + YOU + ' tại');
+    T('.rsvp h2', cap(YOU) + ' sẽ đến chứ?');
+    T('.rsvp .sub', cap(YOU) + ' phản hồi giúp tụi em để tụi em chuẩn bị chu đáo hơn ạ.');
+    T('.rsvp legend', cap(YOU) + ' sẽ tham dự chứ?');
+    var sp = document.querySelectorAll('.rsvp .seg span'); if (sp.length > 1) { sp[0].textContent = 'Có, ' + YOU + ' sẽ đến'; sp[1].textContent = 'Tiếc quá, ' + YOU + ' bận mất rồi'; }
+    var sideLb = $('.rsvp .row2 label:last-child'); if (sideLb && sideLb.firstChild) sideLb.firstChild.textContent = cap(YOU) + ' là khách\n          ';
+    var wl = $('#wishForm label'); if (wl && wl.firstChild) wl.firstChild.textContent = 'Tên của ' + YOU;
+    ['#rsvpName', '#wishName'].forEach(function (q) { var x = $(q); if (x) x.placeholder = 'Tên của ' + YOU; });
+    var ta = $('#wishForm textarea'); if (ta) ta.placeholder = 'Viết đôi lời gửi tụi em…';
+    T('.gift .sub', 'Nếu không thể đến chung vui, ' + YOU + ' có thể gửi lời chúc phúc qua đây ạ.');
+    T('.thanks-in p', 'Cảm ơn ' + YOU + ' đã ghé xem thiệp của tụi em. Có ' + YOU + ' tới chung vui là món quà ý nghĩa nhất với tụi em ạ!');
+    T('.nick-sub', 'Thiệp sẽ mời đúng tên này, và tên này cũng hiện cùng lời chúc của ' + YOU + '.');
+    (C.chat || []).forEach(function (m) { m.text = m.text.replace('tụi mình', 'tụi em'); });
+  }
+
   // ---------- Tên khách từ link ?guestName=... (vẫn nhận ?to=... của thiệp cũ) ----------
   var guest = '';
   try {
@@ -43,7 +71,7 @@
     var og = $('#openerGuest'); if (og) { og.textContent = 'Thân gửi ' + n; og.hidden = false; }
     var dg = $('#doorGuest'); if (dg) { dg.textContent = 'Thân gửi ' + n; dg.hidden = false; }
     document.title = 'Thân mời ' + n + (SIDE === 'gai' ? ' · Hoài Thu & Tuấn Nghĩa' : ' · Tuấn Nghĩa & Hoài Thu');
-    var ie = $('#invEdit'); if (ie) ie.textContent = '✎ Không phải bạn? Đổi tên';
+    var ie = $('#invEdit'); if (ie) ie.textContent = '✎ Không phải ' + P.you + '? Đổi tên';
     var rn = $('#rsvpName'); if (rn && (!rn.value || flash)) rn.value = n;
     if (flash) ['#invGuest', '#heroGuest'].forEach(function (q) { var x = $(q); x.classList.remove('flash'); void x.offsetWidth; x.classList.add('flash'); });
   }
@@ -353,7 +381,7 @@
         msg.className = 'msg ok'; msg.textContent = okText + (r.demo ? ' (chạy thử, chưa nối Google Sheets)' : '');
         if (after) after(data, r);
       }).catch(function () {
-        msg.className = 'msg err'; msg.textContent = 'Chưa gửi được, bạn thử lại giúp mình nhé.';
+        msg.className = 'msg err'; msg.textContent = 'Chưa gửi được, ' + P.you + ' thử lại giúp ' + P.me + P.nha + '.';
       }).then(function () { btn.disabled = false; btn.textContent = label; });
     });
   }
@@ -369,10 +397,10 @@
   rsvpForm.addEventListener('change', function () { gs.disabled = rsvpForm.attend.value === 'Không'; });
   bindForm(rsvpForm, function (f) {
     var name = (f.get('name') || '').trim();
-    if (!need(name, rsvpForm, '[name=name]', 'Bạn điền tên giúp mình nhé.')) return null;
+    if (!need(name, rsvpForm, '[name=name]', cap(P.you) + ' điền tên giúp ' + P.me + P.nha + '.')) return null;
     var attend = f.get('attend');
     return { type: 'rsvp', name: name, attend: attend, guests: attend === 'Có' ? +(f.get('guests') || 1) : 0, side: f.get('side'), invitedAs: guest };
-  }, 'Cảm ơn bạn đã xác nhận!', function (d) { if (d.attend === 'Có') confetti(); });
+  }, 'Cảm ơn ' + P.you + ' đã xác nhận' + P.a + '!', function (d) { if (d.attend === 'Có') confetti(); });
 
   var wishForm = $('#wishForm'), list = $('#wishList');
   function renderWishes(items) {
@@ -394,10 +422,10 @@
   }
   bindForm(wishForm, function (f) {
     var name = (f.get('name') || '').trim(), message = (f.get('message') || '').trim();
-    if (!need(name, wishForm, '[name=name]', 'Bạn điền tên giúp mình nhé.')) return null;
-    if (!need(message, wishForm, '[name=message]', 'Bạn viết vài lời chúc nhé.')) return null;
+    if (!need(name, wishForm, '[name=name]', cap(P.you) + ' điền tên giúp ' + P.me + P.nha + '.')) return null;
+    if (!need(message, wishForm, '[name=message]', cap(P.you) + ' viết vài lời chúc' + P.nha + '.')) return null;
     return { type: 'wish', name: name, message: message };
-  }, 'Cảm ơn lời chúc của bạn!', function (d) {
+  }, 'Cảm ơn lời chúc của ' + P.you + P.a + '!', function (d) {
     if (d.name && d.name !== nick) setNick(d.name);
     wishes.unshift({ name: d.name, message: d.message, time: new Date().toISOString() });
     renderWishes(wishes); wishForm.message.value = '';
@@ -433,7 +461,7 @@
   function liveEvent(name, text) { // dòng phụ: vừa vào xem, vừa thả tim…
     var b = el('li', 'bub ev'); b.append(el('b', '', name), document.createTextNode(' ' + text)); push(b);
   }
-  var EVT = ['đã tham gia 👋', 'đã thả ❤️ x5', 'đã chia sẻ thiệp 🔁', 'đã thả 🥰', 'đã tặng 🌹 hoa hồng', 'đang xem cùng bạn 👀'];
+  var EVT = ['đã tham gia 👋', 'đã thả ❤️ x5', 'đã chia sẻ thiệp 🔁', 'đã thả 🥰', 'đã tặng 🌹 hoa hồng', 'đang xem cùng ' + P.you + ' 👀'];
   // Lời chúc mẫu: trộn ngẫu nhiên, hiện sau lời chúc thật của khách
   var seeds = (C.seedWishes || []).slice().sort(function () { return Math.random() - .5; });
   function startLive() {
@@ -467,8 +495,8 @@
   }
   function setNick(n) { nick = n; try { localStorage.setItem('tn_nick', n); } catch (e) {} paintNick(); showGuest(n, true); }
   function openNick(ask) {
-    $('#nickTitle').textContent = ask ? 'Bạn tên là gì?' : 'Đặt biệt danh';
-    $('.nick-sub').textContent = ask ? 'Cho tụi mình biết tên hoặc biệt danh của bạn, thiệp sẽ mời đúng tên bạn nhé 💌' : 'Thiệp sẽ mời đúng tên này, và tên này cũng hiện cùng lời chúc của bạn.';
+    $('#nickTitle').textContent = ask ? cap(P.you) + ' tên là gì?' : 'Đặt biệt danh';
+    $('.nick-sub').textContent = ask ? 'Cho ' + P.we + ' biết tên hoặc biệt danh của ' + P.you + ', thiệp sẽ mời đúng tên ' + P.you + P.nha + ' 💌' : 'Thiệp sẽ mời đúng tên này, và tên này cũng hiện cùng lời chúc của ' + P.you + '.';
     nickIn.value = nick || guest || ''; $('#nickMsg').textContent = '';
     var big = $('#nickBig'); big.textContent = nickIn.value ? initial(nickIn.value) : '?'; big.style.background = nickIn.value ? avColor(nickIn.value) : '#b9bfb3';
     nickModal.hidden = false; setTimeout(function () { nickIn.focus(); nickIn.select(); }, 60);
@@ -489,7 +517,7 @@
   $('#nickForm').addEventListener('submit', function (e) {
     e.preventDefault();
     var v = nickIn.value.replace(/\s+/g, ' ').trim();
-    if (v.length < 2) { $('#nickMsg').className = 'msg err'; $('#nickMsg').textContent = 'Bạn đặt biệt danh ít nhất 2 ký tự nhé.'; nickIn.focus(); return; }
+    if (v.length < 2) { $('#nickMsg').className = 'msg err'; $('#nickMsg').textContent = cap(P.you) + ' đặt biệt danh ít nhất 2 ký tự' + P.nha + '.'; nickIn.focus(); return; }
     setNick(v); closeNick(); toast('Đã lưu biệt danh: ' + v);
     if (pendingMsg) { var m = pendingMsg; pendingMsg = ''; postWish(m); }
   });
