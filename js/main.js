@@ -543,10 +543,6 @@
     var tx = el('span', 'btx'); tx.append(el('b', '', w.name), document.createTextNode(' ' + w.message));
     b.append(av, tx); push(b);
   }
-  function liveEvent(name, text) { // dòng phụ: vừa vào xem, vừa thả tim…
-    var b = el('li', 'bub ev'); b.append(el('b', '', name), document.createTextNode(' ' + text)); push(b);
-  }
-  var EVT = JA ? ['が参加しました 👋', 'が ❤️ x5', 'が招待状をシェアしました 🔁', 'が 🥰', 'が 🌹 を贈りました', 'が一緒に見ています 👀'] : ['đã tham gia 👋', 'đã thả ❤️ x5', 'đã chia sẻ thiệp 🔁', 'đã thả 🥰', 'đã tặng 🌹 hoa hồng', 'đang xem cùng ' + P.you + ' 👀'];
   // Lời chúc mẫu: trộn ngẫu nhiên, hiện sau lời chúc thật của khách
   var seeds = (C.seedWishes || []).slice().sort(function () { return Math.random() - .5; });
   function startLive() {
@@ -557,7 +553,6 @@
     liveTimer = setInterval(function () {
       var pool = wishes.concat(seeds);
       if (!liveOn || document.hidden || !pool.length) return;
-      if (li0 % 4 === 3) { var w0 = pool[(li0 * 7) % pool.length]; liveEvent(w0.name, EVT[li0 % EVT.length]); li0++; return; }
       bubble(pool[li0++ % pool.length]);
     }, 1900);
   }
